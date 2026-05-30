@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Al-Kahfi — Amalan Jumaat</title>
+<title>Al-Kahfi — Bacaan Harian</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -26,7 +26,7 @@
     --shadow-gold: 0 0 40px rgba(201, 168, 76, 0.08);
     --radius-card: 16px;
     --header-height: 64px;
-    /* Quran page colours (like image — light parchment) */
+    --bottom-nav-height: 60px;
     --page-bg: #f8f4ec;
     --page-text: #1a1409;
     --page-border: #e2d9c5;
@@ -70,16 +70,6 @@
   .header-logo {
     display: flex; align-items: center; gap: 10px;
     direction: rtl;
-  }
-
-  .logo-icon {
-    width: 34px; height: 34px;
-    background: linear-gradient(135deg, var(--accent-gold), #8b6914);
-    border-radius: 9px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-    box-shadow: 0 2px 12px rgba(201,168,76,0.3);
-    flex-shrink: 0;
   }
 
   .logo-text {
@@ -157,7 +147,7 @@
   /* ─── MAIN ─── */
   main {
     padding-top: calc(var(--header-height) + 24px);
-    padding-bottom: 32px;
+    padding-bottom: calc(var(--bottom-nav-height) + 20px);
     min-height: 100vh;
     position: relative; z-index: 1;
   }
@@ -246,14 +236,11 @@
   }
 
   .infaq-text { flex: 1; }
-
   .infaq-label {
     font-size: 9px; color: var(--accent-gold); font-weight: 600;
     letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1px;
   }
-
   .infaq-title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 1px; }
-
   .infaq-desc {
     font-size: 11px; color: var(--text-secondary);
     font-style: italic; font-family: 'Amiri', serif;
@@ -269,20 +256,40 @@
   .infaq-card:hover .infaq-arrow { background: rgba(201,168,76,0.2); transform: translateX(2px); }
   .infaq-arrow svg { width: 12px; height: 12px; stroke: var(--accent-gold); fill: none; }
 
-  /* ─── MAIN TABS ─── */
-  .tabs-wrapper {
+  /* ─── CONTENT WRAPPER ─── */
+  .content-wrapper {
     max-width: 800px; margin: 0 auto; padding: 0 16px;
   }
 
-  .tabs-nav {
+  /* ─── TAB PANELS ─── */
+  .tab-panel { display: none; overflow: visible; }
+  .tab-panel.active { display: block; overflow: visible; }
+
+  /* ─── BOTTOM TAB NAV (fixed) ─── */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: var(--bottom-nav-height);
+    background: rgba(8, 12, 20, 0.97);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-top: 1px solid var(--border-subtle);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000;
+    padding: 0 16px;
+  }
+
+  .bottom-nav-inner {
+    width: 100%; max-width: 800px;
     display: flex;
     background: var(--bg-card);
     border: 1px solid var(--border-card);
-    border-radius: 12px; padding: 4px; margin-bottom: 20px; gap: 4px;
+    border-radius: 12px;
+    padding: 4px; gap: 4px;
   }
 
   .tab-btn {
-    flex: 1; padding: 10px 16px;
+    flex: 1; padding: 9px 16px;
     background: transparent; border: none;
     color: var(--text-secondary);
     font-family: 'IBM Plex Sans Arabic', sans-serif;
@@ -296,10 +303,6 @@
     border: 1px solid rgba(201,168,76,0.25);
     box-shadow: 0 2px 12px rgba(201,168,76,0.1);
   }
-
-  /* ─── TAB PANELS — click only, no swipe ─── */
-  .tab-panel { display: none; overflow: visible; }
-  .tab-panel.active { display: block; overflow: visible; }
 
   /* ─── QURAN READER CARD ─── */
   .reader-card {
@@ -316,6 +319,11 @@
     display: flex; align-items: center; justify-content: space-between;
     background: rgba(201,168,76,0.04);
     direction: ltr;
+    position: relative;
+  }
+
+  .reader-header-left {
+    display: flex; align-items: center; gap: 8px;
   }
 
   .reader-title {
@@ -329,13 +337,187 @@
     font-weight: 600; border: 1px solid rgba(201,168,76,0.2);
   }
 
+  /* ─── TITIK TIGA (⋯) MENU ─── */
+  .dots-btn {
+    width: 30px; height: 30px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 16px; font-weight: 700; letter-spacing: 1px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .dots-btn:hover {
+    background: rgba(201,168,76,0.1);
+    border-color: rgba(201,168,76,0.3);
+    color: var(--accent-gold);
+  }
+
+  .dots-menu-wrap {
+    position: relative;
+  }
+
+  .dots-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    background: #1a2438;
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    overflow: hidden;
+    min-width: 190px;
+    z-index: 500;
+    opacity: 0; pointer-events: none;
+    transform: translateY(-6px) scale(0.97);
+    transition: all 0.18s ease;
+  }
+
+  .dots-menu.open {
+    opacity: 1; pointer-events: all;
+    transform: translateY(0) scale(1);
+  }
+
+  .dots-menu-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 16px;
+    font-size: 13px; font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background 0.15s;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    direction: ltr;
+    white-space: nowrap;
+  }
+
+  .dots-menu-item:last-child { border-bottom: none; }
+
+  .dots-menu-item:hover { background: rgba(201,168,76,0.08); color: var(--accent-gold-light); }
+
+  .dots-menu-item .mi-icon {
+    font-size: 15px; width: 20px; text-align: center; flex-shrink: 0;
+  }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .modal-overlay.open {
+    opacity: 1; pointer-events: all;
+  }
+
+  .modal-box {
+    background: #1a2438;
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 16px;
+    padding: 24px;
+    width: min(340px, 90vw);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    direction: ltr;
+    transform: scale(0.95);
+    transition: transform 0.2s ease;
+  }
+
+  .modal-overlay.open .modal-box {
+    transform: scale(1);
+  }
+
+  .modal-title {
+    font-size: 14px; font-weight: 600;
+    color: var(--accent-gold-light);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .modal-title .mt-icon { font-size: 16px; }
+
+  .modal-input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 9px;
+    padding: 10px 14px;
+    color: var(--text-primary);
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 14px;
+  }
+
+  .modal-input:focus { border-color: var(--accent-gold); }
+
+  .modal-hint {
+    font-size: 11px; color: var(--text-muted);
+    margin-bottom: 16px; line-height: 1.5;
+  }
+
+  .modal-btns {
+    display: flex; gap: 8px;
+  }
+
+  .modal-btn {
+    flex: 1; padding: 9px 12px;
+    border-radius: 9px; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+  }
+
+  .modal-btn-cancel {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-secondary);
+  }
+
+  .modal-btn-cancel:hover { background: rgba(255,255,255,0.1); }
+
+  .modal-btn-confirm {
+    background: var(--accent-gold);
+    border: 1px solid var(--accent-gold);
+    color: #080c14;
+  }
+
+  .modal-btn-confirm:hover { background: var(--accent-gold-light); }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed; bottom: calc(var(--bottom-nav-height) + 16px); left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #1a2438;
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--text-primary);
+    font-size: 12px; font-weight: 500;
+    padding: 8px 18px; border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    z-index: 3000;
+    opacity: 0;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    direction: ltr;
+  }
+
+  .toast.show {
+    opacity: 1; transform: translateX(-50%) translateY(0);
+  }
+
   /* ─── SUB-TOGGLE (Awal / Akhir) ─── */
   .sub-toggle {
     display: flex;
     background: #0a1220;
     border-bottom: 1px solid var(--border-subtle);
-    padding: 6px 10px;
-    gap: 6px;
+    padding: 6px 10px; gap: 6px;
     direction: ltr;
   }
 
@@ -347,8 +529,7 @@
     font-family: 'IBM Plex Sans Arabic', sans-serif;
     font-size: 13px; font-weight: 600;
     border-radius: 9px; cursor: pointer;
-    transition: all 0.25s ease;
-    white-space: nowrap;
+    transition: all 0.25s ease; white-space: nowrap;
   }
 
   .sub-toggle-btn.active {
@@ -358,11 +539,8 @@
     box-shadow: 0 2px 14px rgba(201,168,76,0.35);
   }
 
-  /* ─── PAGE SWIPE (inner) ─── */
-  .page-swipe-wrap {
-    overflow: hidden;
-    touch-action: pan-y;
-  }
+  /* ─── PAGE SWIPE ─── */
+  .page-swipe-wrap { overflow: hidden; touch-action: pan-y; }
 
   .page-swipe-track {
     display: flex;
@@ -370,7 +548,7 @@
     will-change: transform;
   }
 
-  /* ─── QURAN PAGE — parchment style like image ─── */
+  /* ─── QURAN PAGE ─── */
   .quran-page {
     background: var(--page-bg);
     margin: 10px;
@@ -382,17 +560,9 @@
     flex-direction: column;
   }
 
-  /* page-verses akan kembang mengisi saki-baki ruang */
-  .quran-page .page-verses {
-    flex: 1;
-  }
+  .quran-page .page-verses { flex: 1; }
 
-  /* Page panel tidak ada overflow scroll sendiri */
-  .page-panel {
-    flex: 0 0 100%;
-    width: 100%;
-    overflow: hidden;
-  }
+  .page-panel { flex: 0 0 100%; width: 100%; overflow: hidden; }
 
   .page-top-info {
     padding: 8px 16px 7px;
@@ -403,13 +573,10 @@
 
   .page-surah-label {
     font-size: 10px; font-weight: 700;
-    color: var(--page-num); letter-spacing: 0.1em;
-    text-transform: uppercase;
+    color: var(--page-num); letter-spacing: 0.1em; text-transform: uppercase;
   }
 
-  .page-surah-sub {
-    font-size: 11px; color: #8a7050; margin-top: 1px;
-  }
+  .page-surah-sub { font-size: 11px; color: #8a7050; margin-top: 1px; }
 
   .page-ayat-range {
     background: rgba(122, 92, 30, 0.1);
@@ -429,12 +596,8 @@
     border-bottom: 1px solid rgba(200, 185, 155, 0.4);
   }
 
-  .page-verses {
-    padding: 2px 0 4px;
-    direction: rtl;
-  }
+  .page-verses { padding: 2px 0 4px; direction: rtl; }
 
-  /* Each ayah row on the parchment */
   .page-verse-item {
     padding: 10px 16px 8px;
     border-bottom: 1px solid rgba(200, 185, 155, 0.3);
@@ -491,16 +654,7 @@
 
   .page-nav-btn:disabled { opacity: 0.25; cursor: default; }
 
-  .page-counter {
-    font-size: 12px; color: var(--text-muted);
-    letter-spacing: 0.05em;
-  }
-
-  .page-counter span { color: var(--accent-gold); font-weight: 600; }
-
-  .page-dots-row {
-    display: flex; gap: 5px; align-items: center;
-  }
+  .page-dots-row { display: flex; gap: 5px; align-items: center; }
 
   .pdot {
     width: 5px; height: 5px; border-radius: 50%;
@@ -512,7 +666,7 @@
   /* ─── LOADING / ERROR ─── */
   .loading-state {
     padding: 50px 24px; text-align: center; direction: ltr;
-    background: var(--page-bg); margin: 12px; border-radius: 12px;
+    background: var(--page-bg); margin: 10px; border-radius: 12px;
   }
 
   .loader-ring {
@@ -527,9 +681,7 @@
 
   .loading-text { color: #8a7050; font-size: 13px; letter-spacing: 0.06em; }
 
-  .error-state {
-    padding: 40px 24px; text-align: center; direction: ltr;
-  }
+  .error-state { padding: 40px 24px; text-align: center; direction: ltr; }
   .error-icon { font-size: 30px; margin-bottom: 10px; }
   .error-msg { color: var(--text-secondary); font-size: 13px; margin-bottom: 14px; }
   .retry-btn {
@@ -545,7 +697,7 @@
   /* ─── RESPONSIVE ─── */
   @media (max-width: 600px) {
     header { padding: 0 16px; }
-    .tabs-wrapper, .infaq-wrapper { padding: 0 12px; }
+    .content-wrapper, .infaq-wrapper { padding: 0 12px; }
     .logo-sub { display: none; }
     .study-bubble { font-size: 10px; padding: 6px 11px; }
     .page-verse-arabic { font-size: 22px; line-height: 2.0; }
@@ -571,7 +723,6 @@
 <!-- HEADER -->
 <header>
   <div class="header-logo">
-    <div class="logo-icon">☽</div>
     <div>
       <div class="logo-text">Al-Kahfi</div>
       <div class="logo-sub" style="direction:ltr;">Surah ke-18</div>
@@ -622,73 +773,108 @@
     </a>
   </div>
 
-  <!-- MAIN TABS -->
-  <div class="tabs-wrapper">
-    <div class="tabs-nav">
-      <button class="tab-btn active" id="tab0" onclick="switchMainTab(0)">Surah Al-Kahfi Penuh</button>
-      <button class="tab-btn" id="tab1" onclick="switchMainTab(1)">10 Ayat Al-Kahfi</button>
+  <!-- TAB PANELS -->
+  <div class="content-wrapper">
+
+    <!-- ═══ TAB 0: SURAH PENUH ═══ -->
+    <div class="tab-panel active" id="tabPanel0">
+      <div class="reader-card">
+        <div class="reader-header">
+          <div class="reader-header-left">
+            <span class="reader-title">📖 Surah Al-Kahfi Penuh</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;direction:ltr;">
+            <span class="reader-badge" id="fullPageBadge">Muka 1 / ?</span>
+            <div class="dots-menu-wrap">
+              <button class="dots-btn" id="dotsBtn" onclick="toggleDotsMenu(event)" title="Pilihan lanjut">⋯</button>
+              <div class="dots-menu" id="dotsMenu">
+                <div class="dots-menu-item" onclick="tandaMuka()">
+                  <span class="mi-icon">🔖</span> Tanda Muka
+                </div>
+                <div class="dots-menu-item" onclick="pergiMukaTerakhir()">
+                  <span class="mi-icon">↩️</span> Muka yang Terakhir
+                </div>
+                <div class="dots-menu-item" onclick="bukaModalNombor()">
+                  <span class="mi-icon">🔢</span> Ubah Nombor Muka
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="page-swipe-wrap" id="fullSwipeWrap">
+          <div class="page-swipe-track" id="fullSwipeTrack">
+            <div class="page-panel">
+              <div class="loading-state">
+                <div class="loader-ring"></div>
+                <div class="loading-text">Memuatkan ayat suci...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="page-footer">
+          <button class="page-nav-btn" id="fullPrev" onclick="shiftFullPage(-1)" disabled>← Sebelum</button>
+          <div id="fullDots" class="page-dots-row"></div>
+          <button class="page-nav-btn" id="fullNext" onclick="shiftFullPage(1)">Seterus →</button>
+        </div>
+      </div>
     </div>
 
-        <!-- ═══ TAB 0: SURAH PENUH ═══ -->
-        <div class="tab-panel active" id="tabPanel0">
-          <div class="reader-card">
-            <div class="reader-header">
-              <span class="reader-title">📖 Surah Al-Kahfi Penuh</span>
-              <span class="reader-badge" id="fullPageBadge" style="direction:ltr;">Muka 1 / 11</span>
-            </div>
-            <div class="page-swipe-wrap" id="fullSwipeWrap">
-              <div class="page-swipe-track" id="fullSwipeTrack">
-                <!-- Pages rendered by JS -->
-                <div class="page-panel">
-                  <div class="loading-state">
-                    <div class="loader-ring"></div>
-                    <div class="loading-text">Memuatkan ayat suci...</div>
-                  </div>
-                </div>
+    <!-- ═══ TAB 1: 10 AYAT ═══ -->
+    <div class="tab-panel" id="tabPanel1">
+      <div class="reader-card">
+        <div class="reader-header">
+          <span class="reader-title">✨ 10 Ayat Al-Kahfi</span>
+          <span class="reader-badge" id="tenBadge" style="direction:ltr;">Ayat 1–10</span>
+        </div>
+        <div class="sub-toggle">
+          <button class="sub-toggle-btn active" id="subBtn0" onclick="switchSubPage(0)">Al-Kahfi (Awal)</button>
+          <button class="sub-toggle-btn" id="subBtn1" onclick="switchSubPage(1)">Al-Kahfi (Akhir)</button>
+        </div>
+        <div class="page-swipe-wrap" id="subSwipeWrap">
+          <div class="page-swipe-track" id="subSwipeTrack">
+            <div class="page-panel">
+              <div class="loading-state">
+                <div class="loader-ring"></div>
+                <div class="loading-text">Memuatkan ayat pilihan...</div>
               </div>
             </div>
-            <div class="page-footer">
-              <button class="page-nav-btn" id="fullPrev" onclick="shiftFullPage(-1)" disabled>← Sebelum</button>
-              <div id="fullDots" class="page-dots-row"></div>
-              <button class="page-nav-btn" id="fullNext" onclick="shiftFullPage(1)">Seterus →</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- ═══ TAB 1: 10 AYAT ═══ -->
-        <div class="tab-panel" id="tabPanel1">
-          <div class="reader-card">
-            <div class="reader-header">
-              <span class="reader-title">✨ 10 Ayat Al-Kahfi</span>
-              <span class="reader-badge" id="tenBadge" style="direction:ltr;">Ayat 1–10</span>
-            </div>
-            <!-- Toggle buttons -->
-            <div class="sub-toggle">
-              <button class="sub-toggle-btn active" id="subBtn0" onclick="switchSubPage(0)">Al-Kahfi (Awal)</button>
-              <button class="sub-toggle-btn" id="subBtn1" onclick="switchSubPage(1)">Al-Kahfi (Akhir)</button>
-            </div>
-            <!-- Sub page swipe -->
-            <div class="page-swipe-wrap" id="subSwipeWrap">
-              <div class="page-swipe-track" id="subSwipeTrack">
-                <div class="page-panel">
-                  <div class="loading-state">
-                    <div class="loader-ring"></div>
-                    <div class="loading-text">Memuatkan ayat pilihan...</div>
-                  </div>
-                </div>
-                <div class="page-panel">
-                  <div class="loading-state">
-                    <div class="loader-ring"></div>
-                    <div class="loading-text">Memuatkan ayat pilihan...</div>
-                  </div>
-                </div>
+            <div class="page-panel">
+              <div class="loading-state">
+                <div class="loader-ring"></div>
+                <div class="loading-text">Memuatkan ayat pilihan...</div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-  </div><!-- /tabs-wrapper -->
+  </div><!-- /content-wrapper -->
 </main>
+
+<!-- BOTTOM TAB NAV (fixed) -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="tab-btn active" id="tab0" onclick="switchMainTab(0)">📖 Surah Penuh</button>
+    <button class="tab-btn" id="tab1" onclick="switchMainTab(1)">✨ 10 Ayat</button>
+  </div>
+</nav>
+
+<!-- MODAL: Ubah Nombor Muka -->
+<div class="modal-overlay" id="modalNombor" onclick="tutupModalNombor(event)">
+  <div class="modal-box">
+    <div class="modal-title"><span class="mt-icon">🔢</span> Pergi ke Nombor Muka</div>
+    <input type="number" class="modal-input" id="inputNombor" placeholder="Masukkan nombor muka..." min="1">
+    <div class="modal-hint" id="modalHint">Masukkan nombor antara 1 dan ?</div>
+    <div class="modal-btns">
+      <button class="modal-btn modal-btn-cancel" onclick="tutupModalNombor()">Batal</button>
+      <button class="modal-btn modal-btn-confirm" onclick="sahkanNombor()">Pergi</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
 <script>
 // ═══ BUBBLE ═══
@@ -702,6 +888,14 @@ function showBubble() {
 }
 setTimeout(showBubble, 1500);
 
+// ═══ TOAST ═══
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+
 // ═══ MAIN TAB SWITCH ═══
 let currentMainTab = 0;
 
@@ -711,50 +905,93 @@ function switchMainTab(idx) {
   document.getElementById('tab1').classList.toggle('active', idx === 1);
   document.getElementById('tabPanel0').classList.toggle('active', idx === 0);
   document.getElementById('tabPanel1').classList.toggle('active', idx === 1);
+  closeDotsMenu();
 }
+
+// ═══ TITIK TIGA MENU ═══
+function toggleDotsMenu(e) {
+  e.stopPropagation();
+  document.getElementById('dotsMenu').classList.toggle('open');
+}
+
+function closeDotsMenu() {
+  document.getElementById('dotsMenu').classList.remove('open');
+}
+
+document.addEventListener('click', () => closeDotsMenu());
+
+// ═══ TANDA MUKA ═══
+const BOOKMARK_KEY = 'alkahfi_bookmark';
+
+function tandaMuka() {
+  closeDotsMenu();
+  localStorage.setItem(BOOKMARK_KEY, currentFullPage);
+  showToast('🔖 Muka ' + (currentFullPage + 1) + ' telah ditanda');
+}
+
+function pergiMukaTerakhir() {
+  closeDotsMenu();
+  const saved = localStorage.getItem(BOOKMARK_KEY);
+  if (saved === null) {
+    showToast('Tiada tanda muka disimpan');
+    return;
+  }
+  const idx = parseInt(saved);
+  if (idx >= 0 && idx < fullPages.length) {
+    currentFullPage = idx;
+    updateFullPageUI();
+    showToast('↩️ Kembali ke muka ' + (idx + 1));
+  } else {
+    showToast('Tanda muka tidak sah');
+  }
+}
+
+function bukaModalNombor() {
+  closeDotsMenu();
+  document.getElementById('inputNombor').value = '';
+  document.getElementById('modalHint').textContent = 'Masukkan nombor antara 1 dan ' + fullPages.length;
+  document.getElementById('inputNombor').max = fullPages.length;
+  document.getElementById('modalNombor').classList.add('open');
+  setTimeout(() => document.getElementById('inputNombor').focus(), 200);
+}
+
+function tutupModalNombor(e) {
+  if (e && e.target !== document.getElementById('modalNombor')) return;
+  document.getElementById('modalNombor').classList.remove('open');
+}
+
+function sahkanNombor() {
+  const val = parseInt(document.getElementById('inputNombor').value);
+  if (!val || val < 1 || val > fullPages.length) {
+    document.getElementById('inputNombor').style.borderColor = '#e05555';
+    setTimeout(() => document.getElementById('inputNombor').style.borderColor = '', 1200);
+    return;
+  }
+  document.getElementById('modalNombor').classList.remove('open');
+  currentFullPage = val - 1;
+  updateFullPageUI();
+  showToast('📄 Muka ' + val + ' / ' + fullPages.length);
+}
+
+document.getElementById('inputNombor').addEventListener('keydown', e => {
+  if (e.key === 'Enter') sahkanNombor();
+  if (e.key === 'Escape') document.getElementById('modalNombor').classList.remove('open');
+});
 
 // ═══ FULL SURAH PAGINATION — same-height pages ═══
 let fullPages = [];
 let currentFullPage = 0;
-let targetPageHeight = 0;  // dikira sekali selepas render
+let targetPageHeight = 0;
 
-// Ukur ketinggian satu ayat secara diam-diam untuk kira berapa ayat muat per halaman
-function measureVerseHeight(verse, showBismi) {
-  const probe = document.createElement('div');
-  probe.style.cssText = 'position:absolute;visibility:hidden;top:-9999px;left:0;width:' +
-    (document.getElementById('fullSwipeWrap').offsetWidth - 20) + 'px';
-  probe.innerHTML = `
-    <div class="quran-page" style="margin:0;border-radius:0;">
-      ${showBismi ? '<div class="page-bismillah">بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ</div>' : ''}
-      <div class="page-verses">
-        <div class="page-verse-item">
-          <div class="page-verse-num">${verse.numberInSurah}</div>
-          <div class="page-verse-arabic">${verse.text}</div>
-        </div>
-      </div>
-    </div>`;
-  document.body.appendChild(probe);
-  const h = probe.offsetHeight;
-  document.body.removeChild(probe);
-  return h;
-}
-
-// Kira ketinggian header info (page-top-info)
-const HEADER_H = 42;   // px — page-top-info
-const BISMI_H  = 68;   // px — page-bismillah
-const MARGIN_H = 20;   // margin 10px atas + bawah pada .quran-page
+const HEADER_H = 42;
+const MARGIN_H = 20;
 
 function buildEqualHeightPages(verses) {
-  // Dapatkan lebar container sebenar
   const wrapW = document.getElementById('fullSwipeWrap').offsetWidth;
-
-  // Buat probe container
   const probe = document.createElement('div');
-  probe.style.cssText =
-    'position:absolute;visibility:hidden;top:-9999px;left:0;width:' + (wrapW - 20) + 'px;';
+  probe.style.cssText = 'position:absolute;visibility:hidden;top:-9999px;left:0;width:' + (wrapW - 20) + 'px;';
   document.body.appendChild(probe);
 
-  // Ukur ketinggian setiap ayat
   const verseHeights = verses.map(v => {
     probe.innerHTML = `<div class="page-verses"><div class="page-verse-item">
       <div class="page-verse-num">${v.numberInSurah}</div>
@@ -765,50 +1002,40 @@ function buildEqualHeightPages(verses) {
 
   document.body.removeChild(probe);
 
-  // Kira ketinggian halaman 0 (ada bismillah) sebagai rujukan
-  let page0H = HEADER_H + BISMI_H + MARGIN_H;
-  let i = 0;
-  while (i < verses.length) {
-    page0H += verseHeights[i];
-    i++;
-    // Ambil sekurang-kurangnya 7 ayat untuk halaman pertama, kemudian stop bila dah cukup
-    if (i >= 7) break;
-  }
-  // Sambung tambah sehingga lebih dari min height
-  // targetPageHeight = ketinggian halaman pertama
+  // Guna 8 ayat pertama sebagai rujukan ketinggian sasaran
+  let page0H = HEADER_H + MARGIN_H;
+  for (let i = 0; i < Math.min(8, verses.length); i++) page0H += verseHeights[i];
   targetPageHeight = page0H;
 
-  // Bahagikan semua ayat mengikut targetPageHeight
   fullPages = [];
   let j = 0;
   while (j < verses.length) {
-    const isFirst = fullPages.length === 0;
-    let budget = targetPageHeight - HEADER_H - MARGIN_H - (isFirst ? BISMI_H : 0);
+    const budget = targetPageHeight - HEADER_H - MARGIN_H;
     let used = 0;
     let batch = [];
     while (j < verses.length) {
       const h = verseHeights[j];
-      if (batch.length > 0 && used + h > budget + 20) break; // +20 toleran kecil
+      if (batch.length > 0 && used + h > budget + 15) break;
       batch.push(verses[j]);
       used += h;
       j++;
     }
-    if (batch.length === 0) { batch.push(verses[j]); j++; } // jangan terkunci
+    if (batch.length === 0) { batch.push(verses[j]); j++; }
     fullPages.push(batch);
   }
 }
 
 function renderFullPages(verses) {
   buildEqualHeightPages(verses);
-
   const track = document.getElementById('fullSwipeTrack');
   track.innerHTML = '';
+
   fullPages.forEach((pageVerses, pi) => {
     const startNum = pageVerses[0].numberInSurah;
     const endNum = pageVerses[pageVerses.length - 1].numberInSurah;
     const panel = document.createElement('div');
     panel.className = 'page-panel';
-    const showBismi = pi === 0;
+    // Tiada bismillah — sudah ada di header quran-page sebagai hiasan (dibuang seperti permintaan)
     panel.innerHTML = `
       <div class="quran-page" style="min-height:${targetPageHeight}px;">
         <div class="page-top-info">
@@ -818,7 +1045,6 @@ function renderFullPages(verses) {
           </div>
           <div class="page-ayat-range">Ayat ${startNum}–${endNum}</div>
         </div>
-        ${showBismi ? `<div class="page-bismillah">بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ</div>` : ''}
         <div class="page-verses">
           ${pageVerses.map(a => `
             <div class="page-verse-item">
@@ -830,7 +1056,6 @@ function renderFullPages(verses) {
     track.appendChild(panel);
   });
 
-  // Build dots
   const dotsEl = document.getElementById('fullDots');
   dotsEl.innerHTML = fullPages.map((_, i) =>
     `<div class="pdot${i===0?' active':''}" data-pi="${i}" onclick="goFullPage(${i})"></div>`
@@ -861,7 +1086,6 @@ function goFullPage(idx) {
   updateFullPageUI();
 }
 
-// Swipe on full surah pages
 setupSwipe(
   document.getElementById('fullSwipeWrap'),
   () => currentFullPage,
@@ -875,7 +1099,6 @@ function renderSubPages(verses) {
   const first10 = verses.slice(0, 10);
   const last10 = verses.slice(-10);
   const panels = document.querySelectorAll('#subSwipeTrack .page-panel');
-
   panels[0].innerHTML = buildTenPage(first10, 'Al-Kahfi — 10 Ayat Pertama', 'Ayat 1–10', true);
   panels[1].innerHTML = buildTenPage(last10, 'Al-Kahfi — 10 Ayat Terakhir', 'Ayat 101–110', false);
 }
@@ -909,7 +1132,6 @@ function switchSubPage(idx) {
   document.getElementById('tenBadge').textContent = idx === 0 ? 'Ayat 1–10' : 'Ayat 101–110';
 }
 
-// Swipe on sub pages
 setupSwipe(
   document.getElementById('subSwipeWrap'),
   () => currentSubPage,
