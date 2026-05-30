@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="theme-color" content="#080d1a"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<title>Quran Tracker — Al-Kahfi & 10 Ayat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+
+<style>
+/* ═══════════════════════════════════════════════
+   TOKEN SYSTEM (PREMIUM FINTECH THEME)
+═══════════════════════════════════════════════ */
+:root {
+  --bg:         #080d1a;
+  --bg-card:    #111827;
+  --bg-card2:   #16202f;
+  --border:     rgba(255,255,255,0.06);
+  --border-hi:  rgba(255,255,255,0.12);
+  --green:      #00e699;
+  --green-dim:  rgba(0,230,153,0.1);
+  --green-glow: 0 0 25px rgba(0,230,153,0.3);
+  --gold:       #f5c75d;
+  --gold-dim:   rgba(245,199,93,0.12);
+  --gold-glow:  0 0 25px rgba(245,199,93,0.25);
+  --blue:       #4dadff;
+  --t1:         #f1f5f9;
+  --t2:         #94a3b8;
+  --t3:         #475569;
+  --r-sm:       10px;
+  --r-md:       16px;
+  --r-lg:       24px;
+  --font:       'Outfit', sans-serif;
+  --font-serif: 'DM Serif Display', serif;
+  --font-mono:  'DM Mono', monospace;
+  --font-quran: 'Amiri Quran', serif;
+  --ease:       cubic-bezier(0.22,1,0.36,1);
+  --safe-t:     env(safe-area-inset-top, 0px);
+  --safe-b:     env(safe-area-inset-bottom, 0px);
+}
+
+/* ═══════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════ */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html, body { height:100%; width:100%; background:var(--bg); color:var(--t1); font-family:var(--font); -webkit-font-smoothing:antialiased; }
+
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 10%, rgba(255,255,255,.2) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 50% 65%, rgba(255,255,255,.15) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 75%, rgba(255,255,255,.2) 0%, transparent 100%);
+  pointer-events:none; z-index:0;
+}
+
+#app {
+  position:relative; z-index:1;
+  display:flex; flex-direction:column;
+  height:100vh; height:100dvh;
+  max-width:100%; margin:0 auto;
+  background:transparent;
+}
+
+@media (min-width: 768px) {
+  #app { max-width: 520px; box-shadow: 0 0 60px rgba(0,0,0,0.6); border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+}
+
+/* ═══════════════════════════════════════════════
+   PREMIUM FIXED STICKY HEADER
+═══════════════════════════════════════════════ */
+.premium-header {
+  position: sticky; top: 0; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: calc(var(--safe-t) + 16px) 20px 16px;
+  background: rgba(8, 13, 26, 0.88);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+}
+
+.brand-title {
+  font-family: var(--font-serif);
+  font-size: 1.45rem; font-weight: 700;
+  background: linear-gradient(135deg, #ffffff 30%, var(--green) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.02em;
+}
+
+.support-btn-wrapper {
+  position: relative; display: flex; align-items: center;
+}
+
+.study-bubble {
+  position: absolute; right: 48px; white-space: nowrap;
+  background: linear-gradient(135deg, var(--gold) 0%, #d4a327 100%);
+  color: #050811; font-weight: 700; font-size: 0.72rem;
+  padding: 6px 12px; border-radius: 12px;
+  box-shadow: var(--gold-glow), 0 4px 12px rgba(0,0,0,0.3);
+  opacity: 0; transform: scale(0.8) translateX(10px);
+  pointer-events: none; transition: all 0.4s var(--ease);
+}
+.study-bubble.active {
+  opacity: 1; transform: scale(1) translateX(0);
+}
+
+.study-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--bg-card2) 0%, #1a2642 100%);
+  border: 1px solid rgba(245,199,93,0.35);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; position: relative; transition: all 0.3s var(--ease);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.study-btn:hover {
+  border-color: var(--gold); transform: scale(1.05); box-shadow: var(--gold-glow);
+}
+.study-btn svg { width: 20px; height: 20px; }
+
+.steam {
+  stroke: var(--gold); stroke-width: 1.8; stroke-linecap: round;
+  animation: steamAnim 2s infinite ease-in-out; opacity: 0.6;
+}
+.steam-2 { animation-delay: 1s; }
+@keyframes steamAnim {
+  0% { transform: translateY(1px) scaleY(0.8); opacity: 0.3; }
+  50% { transform: translateY(-2px) scaleY(1.1); opacity: 0.9; }
+  100% { transform: translateY(1px) scaleY(0.8); opacity: 0.3; }
+}
+
+/* ═══════════════════════════════════════════════
+   MAIN PAGE LAYOUT CONTENT
+═══════════════════════════════════════════════ */
+.main-content {
+  flex: 1; overflow-y: auto; overflow-x: hidden; padding: 16px 16px calc(76px + var(--safe-b));
+  -webkit-overflow-scrolling: touch;
+}
+.main-content::-webkit-scrollbar { width: 0; }
+
+.card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-lg);
+  padding: 20px; margin-bottom: 16px; position: relative; overflow: hidden;
+  animation: fadeUp 0.5s var(--ease) both;
+}
+.card::after {
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent);
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.lbl { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--t3); margin-bottom: 6px; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ═══════════════════════════════════════════════
+   TAB 1: MUSHAF AL-KAHFI (TILAWAH ASAL)
+═══════════════════════════════════════════════ */
+.q-berbaki-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border); border-radius: var(--r-sm); margin-bottom: 14px; gap: 12px;
+}
+.q-berbaki-info { display: flex; align-items: center; gap: 8px; flex: 1; }
+.q-berbaki-num { font-family: var(--font-mono); font-size: 1.15rem; font-weight: 600; color: var(--green); line-height: 1; }
+.q-berbaki-lbl { font-size: 0.62rem; color: var(--t2); text-transform: uppercase; letter-spacing: 0.06em; }
+.q-berbaki-prog { flex: 1; height: 5px; background: rgba(255,255,255,.05); border-radius: 99px; overflow: hidden; max-width: 100px; }
+.q-berbaki-prog-fill { height: 100%; background: linear-gradient(90deg, var(--green), #00b377); border-radius: 99px; width: 0%; transition: width .6s var(--ease); }
+
+.quran-card {
+  background: linear-gradient(160deg, #fbfaf7 0%, #f3efe4 100%);
+  border: 1px solid rgba(180,150,80,.35); border-radius: var(--r-md);
+  overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+.quran-card-hd {
+  display: flex; align-items: center; justify-content: space-between; padding: 14px 18px;
+  border-bottom: 1px solid rgba(180,150,80,.2);
+  background: linear-gradient(90deg, rgba(180,150,80,.12), rgba(244,201,93,.06), rgba(180,150,80,.12));
+}
+.surah-name-lbl { font-family: var(--font-serif); font-size: 1rem; color: #5a3e00; font-weight: bold; }
+.surah-meta-lbl { font-family: var(--font-mono); font-size: 0.62rem; color: #8a7040; font-weight: 500; }
+
+.mushaf-body { padding: 24px 20px 28px; position: relative; background: transparent; }
+.mushaf-line {
+  display: flex; justify-content: space-between; align-items: center;
+  direction: rtl; font-family: var(--font-quran); font-size: 1.6rem;
+  line-height: 2.5; color: #1c160c; text-align: justify; text-justify: inter-word;
+  word-spacing: 2px;
+}
+
+.q-action-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 14px; padding: 0 4px; gap: 10px;
+}
+.mushaf-btn {
+  flex: 1; padding: 12px; border-radius: var(--r-sm); border: 1px solid var(--border);
+  background: var(--bg-card2); color: var(--t1); font-family: var(--font);
+  font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.mushaf-btn:hover:not(:disabled) { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+.mushaf-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+.mushaf-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+
+/* ═══════════════════════════════════════════════
+   TAB 2: SISTEM SLIDE / SWIPE JARI KIRI & KANAN
+═══════════════════════════════════════════════ */
+.lazim-sel-row {
+  display: flex; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 4px; margin-bottom: 14px; gap: 4px;
+}
+.lazim-sel-btn {
+  flex: 1; padding: 10px 14px; font-family: var(--font); font-size: 0.82rem; font-weight: 600;
+  color: var(--t2); background: transparent; border: none; border-radius: 12px;
+  cursor: pointer; transition: all 0.25s var(--ease);
+}
+.lazim-sel-btn.active {
+  background: var(--bg-card2); color: var(--green); border: 1px solid rgba(0, 230, 153, 0.15);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.kahfi-swipe-wrap {
+  width: 100%; overflow-x: auto; overflow-y: hidden;
+  scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+}
+.kahfi-swipe-wrap::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+.kahfi-swipe-inner {
+  display: flex; width: 200%;
+}
+.kahfi-swipe-slide {
+  width: 50%; flex-shrink: 0; padding: 0 4px;
+  scroll-snap-align: start;
+}
+
+.lazim-card {
+  background: linear-gradient(160deg, #fdfbf7 0%, #f5eff0 50%, #eae2d5 100%);
+  border: 1px solid rgba(164, 137, 91, 0.4); 
+  border-radius: var(--r-lg);
+  display: flex; flex-direction: column; overflow: hidden;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255,255,255,0.45);
+}
+.lazim-card-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid rgba(164, 137, 91, 0.25);
+  background: linear-gradient(90deg, rgba(164, 137, 91, 0.08), rgba(164, 137, 91, 0.02), rgba(164, 137, 91, 0.08));
+}
+.lazim-card-title { font-size: 0.88rem; font-weight: 700; color: #4a3b23; letter-spacing: -0.01em; }
+.lazim-card-badge {
+  font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600;
+  color: #7c5e23; background: rgba(164, 137, 91, 0.15); padding: 3px 8px; border-radius: 6px;
+  border: 1px solid rgba(164, 137, 91, 0.2);
+}
+
+.lazim-body { padding: 26px 22px; text-align: center; }
+.lazim-section-lbl {
+  font-family: var(--font-quran); font-size: 1.3rem; color: #695433; margin-bottom: 4px; font-weight: bold;
+}
+.lazim-divider {
+  height: 1px; background: linear-gradient(90deg, transparent, rgba(164, 137, 91, 0.35), transparent);
+  margin: 14px 0 22px;
+}
+
+.lazim-arabic {
+  direction: rtl; font-family: var(--font-quran); font-size: 1.62rem;
+  line-height: 2.6; color: #1e1911; text-align: justify; text-justify: inter-word;
+  text-shadow: 0 0.5px 0px rgba(255,255,255,0.5);
+  word-spacing: 2px;
+}
+.lazim-verse-unit {
+  display: inline; position: relative;
+}
+
+/* GAYAAN REKABENTUK NOMBOR AYAT MENGIKUT IMEJ MUSHAF */
+.lazim-verse-num {
+  font-family: 'Amiri Quran', serif; font-size: 1.05rem; font-weight: normal; color: #8e6c2d;
+  width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;
+  margin: 0 4px 0 6px; vertical-align: middle; background: transparent;
+  position: relative;
+}
+
+.lazim-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px; border-top: 1px solid rgba(164, 137, 91, 0.2);
+  background: rgba(164, 137, 91, 0.05);
+}
+.lazim-footer-txt { font-size: 0.72rem; color: #736146; font-weight: 600; }
+
+.page-bot { height: 10px; }
+
+/* ═══════════════════════════════════════════════
+   SECTION: INFAQ TAHFIZ AQIL CARD
+═══════════════════════════════════════════════ */
+.infaq-card {
+  display: block; text-decoration: none; color: inherit;
+  background: linear-gradient(135deg, #091424 0%, #0d1e36 100%);
+  border: 1px solid rgba(0, 230, 153, 0.15); border-radius: var(--r-lg);
+  padding: 18px; margin-top: 10px; position: relative; overflow: hidden;
+  transition: transform 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.infaq-card:hover {
+  transform: translateY(-2px); border-color: var(--green);
+}
+.infaq-inner { display: flex; align-items: center; gap: 14px; position: relative; z-index: 2; }
+.infaq-icon {
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  background: rgba(0, 230, 153, 0.06); border: 1px solid rgba(0, 230, 153, 0.2);
+  display: flex; align-items: center; justify-content: center; font-size: 1.35rem;
+}
+.infaq-content { flex: 1; min-width: 0; }
+.infaq-tag { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.12em; color: var(--green); text-transform: uppercase; margin-bottom: 3px; }
+.infaq-title { font-size: 0.92rem; font-weight: 700; color: var(--t1); margin-bottom: 2px; }
+.infaq-sub { font-size: 0.75rem; color: var(--t2); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.infaq-arrow { flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--t3); transition: transform 0.3s; }
+.infaq-card:hover .infaq-arrow { color: var(--green); transform: translateX(3px); }
+.infaq-arrow svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+.blink-infaq::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(0, 230, 153, 0.08) 0%, transparent 65%);
+  opacity: 0; animation: fintechPulse 3s infinite ease-in-out; pointer-events: none; z-index: 1;
+}
+@keyframes fintechPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.9; }
+}
+
+/* ═══════════════════════════════════════════════
+   PREMIUM LOWER FIXED TAB BAR
+═══════════════════════════════════════════════ */
+.premium-tab-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(7, 11, 22, 0.92);
+  backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+  border-top: 1px solid var(--border);
+  padding: 8px 12px calc(8px + var(--safe-b));
+  display: flex; gap: 10px; z-index: 100;
+}
+@media (min-width: 768px) {
+  .premium-tab-bar { max-width: 520px; margin: 0 auto; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+}
+
+.tab-btn {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 10px 8px; border: 1px solid transparent; background: transparent;
+  color: var(--t2); border-radius: var(--r-md); cursor: pointer;
+  transition: all 0.25s var(--ease); text-decoration: none; gap: 4px;
+}
+.tab-btn-icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tab-btn-lbl { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.01em; }
+
+.tab-btn.active {
+  color: var(--green); background: rgba(0, 230, 153, 0.05); border-color: rgba(0, 230, 153, 0.15);
+  text-shadow: 0 0 10px rgba(0, 230, 153, 0.2);
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  
+  <header class="premium-header">
+    <div class="brand-title">Quran Tracker</div>
+    
+    <div class="support-btn-wrapper">
+      <div id="studyBubble" class="study-bubble">Tabung Belajar 🎓</div>
+      <a href="https://deen-track.pages.dev/tabung-belajar" target="_blank" class="study-btn" title="Sokong Tabung Belajar">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path class="steam steam-1" d="M9 4C9 4 7.5 5.5 9 7C10.5 8.5 9 10 9 10" fill="none" />
+          <path class="steam steam-2" d="M13 3C13 3 11.5 4.5 13 6C14.5 7.5 13 9 13 9" fill="none" />
+          <path d="M18 10H4C2.89543 10 2 10.8954 2 12V15C2 18.3137 4.68629 21 8 21H14C17.3137 21 20 18.3137 20 15V12C20 10.8954 19.1046 10 18 10Z" fill="#FFFFFF" />
+          <path d="M20 12C20 12 22 12 22 14.5C22 17 20 17 20 17" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" />
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <main class="main-content">
+    
+    <div id="panelKahfi" class="tab-panel active">
+      <div class="card">
+        <div class="lbl">Sura Al-Kahf — Tilawah</div>
+        
+        <div class="q-berbaki-bar">
+          <div class="q-berbaki-info">
+            <div id="berbakiNum" class="q-berbaki-num">12</div>
+            <div class="q-berbaki-lbl">Halaman<br/>Berbaki</div>
+          </div>
+          <div class="q-berbaki-prog">
+            <div id="berbakiProgFill" class="q-berbaki-prog-fill"></div>
+          </div>
+        </div>
+
+        <div class="quran-card">
+          <div class="quran-card-hd">
+            <div class="surah-name-lbl">سُورَةُ الكَهْفِ</div>
+            <div id="mushafMeta" class="surah-meta-lbl">HALAMAN 293</div>
+          </div>
+          <div class="mushaf-body">
+            <div id="mushafContent" class="mushaf-line">
+              بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ الْحَمْدُ لِلَّهِ الَّذِي أَنْزَلَ عَلَىٰ عَبْدِهِ الْكِتَابَ وَلَمْ يَجْعَلْ لَهُ عِوَجًا ۜ
+            </div>
+          </div>
+        </div>
+
+        <div class="q-action-row">
+          <button id="btnPrev" class="mushaf-btn" disabled>
+            <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Sebelum
+          </button>
+          <button id="btnNext" class="mushaf-btn">
+            Seterusnya
+            <svg viewBox="0 0 24 24" style="transform:scaleX(-1);"><path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel10Ayat" class="tab-panel">
+      
+      <div class="lazim-sel-row">
+        <button class="lazim-sel-btn active" id="lz-btn-kahfi-awal" onclick="jumpToSlide(0)">
+          Al-Kahfi (Awal)
+        </button>
+        <button class="lazim-sel-btn" id="lz-btn-kahfi-akhir" onclick="jumpToSlide(1)">
+          Al-Kahfi (Akhir)
+        </button>
+      </div>
+
+      <div class="card" style="padding:14px 16px">
+        <div>
+          <div class="lbl" style="margin-bottom:2px" id="lz-surah-lbl">Surah Al-Kahfi</div>
+          <div style="font-size:.7rem;color:var(--t2)" id="lz-ayah-lbl">10 Ayat Pertama (1–10)</div>
+        </div>
+      </div>
+
+      <div class="kahfi-swipe-wrap" id="kahfiSwipeWrap">
+        <div class="kahfi-swipe-inner">
+          
+          <div class="kahfi-swipe-slide">
+            <div class="lazim-card">
+              <div class="lazim-card-hd">
+                <span class="lazim-card-title">Al-Kahfi — 10 Ayat Pertama</span>
+                <span class="lazim-card-badge">Ayat 1–10</span>
+              </div>
+              <div class="lazim-body">
+                <div class="lazim-section-lbl">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+                <div class="lazim-divider"></div>
+                <div class="lazim-arabic" id="lz-arabic-text-awal"></div>
+              </div>
+              <div class="lazim-footer">
+                <span class="lazim-footer-txt">Surah 18 · Al-Kahfi</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="kahfi-swipe-slide">
+            <div class="lazim-card">
+              <div class="lazim-card-hd">
+                <span class="lazim-card-title">Al-Kahfi — 10 Ayat Terakhir</span>
+                <span class="lazim-card-badge">Ayat 101–110</span>
+              </div>
+              <div class="lazim-body">
+                <div class="lazim-section-lbl">سورة الكهف</div>
+                <div class="lazim-divider"></div>
+                <div class="lazim-arabic" id="lz-arabic-text-akhir"></div>
+              </div>
+              <div class="lazim-footer">
+                <span class="lazim-footer-txt">Surah 18 · Al-Kahfi</span>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+      <div class="page-bot"></div>
+    </div>
+
+    <a class="infaq-card blink-infaq" href="https://quranic-huffaz.github.io/quran-tracker/infaq-tahfiz-aqil.html" target="_blank" rel="noopener">
+      <div class="infaq-inner">
+        <div class="infaq-icon">🕌</div>
+        <div class="infaq-content">
+          <div class="infaq-tag">Amal Jariah</div>
+          <div class="infaq-title">Infaq Tahfiz AQIL</div>
+          <div class="infaq-sub">Sokong program tahfiz — sedekah terbaik untuk akhirat anda</div>
+        </div>
+        <div class="infaq-arrow">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+    </a>
+
+  </main>
+
+  <nav class="premium-tab-bar">
+    <button id="tabBtnKahfi" class="tab-btn active">
+      <svg class="tab-btn-icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20M4 19.5V3a1 1 0 0 1 1-1h15v20H6.5M7 6h10M7 10h10M7 14h10"/></svg>
+      <span class="tab-btn-lbl">Surah Al-Kahfi</span>
+    </button>
+    <button id="tabBtn10Ayat" class="tab-btn">
+      <svg class="tab-btn-icon" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M7.5 4.21l4.15-1.58a2.3 2.3 0 0 1 1.7 0l4.15 1.58a1.15 1.15 0 0 1 .75 1.07v5.61c0 5.14-3.51 9.48-8.25 10.74a1 1 0 0 1-.5 0C4.76 20.52 1.25 16.18 1.25 11.04V5.28a1.15 1.15 0 0 1 .75-1.07z"/></svg>
+      <span class="tab-btn-lbl">10 Ayat Al-Kahfi</span>
+    </button>
+  </nav>
+</div>
+
+<script>
+// Data asal tilawah.html
+const KAHFI_PAGES = [
+  { id: 293, text: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ الْحَمْدُ لِلَّهِ الَّذِي أَنْزَلَ عَلَىٰ عَبْدِهِ الْكِتَابَ وَلَمْ يَجْعَلْ لَهُ عِوَجًا ۜ قَيِّمًا لِيُنْذِرَ بَأْسًا شَدِيدًا مِنْ لَدُنْهُ وَيُبَشِّرَ الْمُؤْمِنِينَ الَّذِينَ يَعْمَلُونَ الصَّالِحَاتِ أَنَّ لَهُمْ أَجْرًا حَسَنًا مَاكِثِينَ فِيهِ أَبَدًا وَيُنْDRَ الَّذِينَ قَالُوا اتَّخَذَ اللَّهُ وَلَدًا مَا لَهُمْ بِهِ مِنْ عِلْمٍ وَلَا لِآبَائِهِمْ ۚ كَبُرَتْ كَلِمَةً تَخْرُجُ مِنْ أَفْوَاهِهِمْ ۚ إِنْ يَقُولُونَ إِلَّا كَذِبًا فَلَعَلَّكَ بَاخِعٌ نَفْسَكَ عَلَىٰ آثَارِهِمْ إِنْ لَمْ يُؤْمِنُوا بِهَٰذَا الْحَدِيثِ أَسَفًا إِنَّا جَعَلْنَا مَا عَلَى الْأَرْضِ زِينَةً لَهَا Lِنَبْلُوَهُمْ أَيُّهُمْ أَحْسَنُ عَمَلًا وَإِنَّا لَجَاعِلُونَ مَا عَلَيْهَا صَعِيدًا جُرُزًا أَمْ حَسِبْتَ أَنَّ أَصْحَابَ الْكَهْفِ وَالرَّقِيمِ كَانُوا مِنْ آيَاتِنَا عَجَبًا إِذْ أَوَى الْفِتْيَةُ إِلَى الْكَهْفِ فَقَالُوا رَبَّنَا آتِنَا مِنْ لَدُنْكَ رَحْمَةً وَهَيِّئْ لَنَا مِنْ أَمْرِنَا رَشَدًا فَضَرَبْنَا عَلَىٰ آذَانِهِم| فِي الْكَهْفِ سِنِينَ عَدَدًا ثُمَّ بَعَثْنَاهُمْ لِنَعْلَمَ أَيُّ الْحِزْبَيْنِ أَحْصَىٰ لِمَا لَبِثُوا أَمَدًا" },
+  { id: 294, text: "نَحْنُ نَقُصُّ عَلَيْكَ نَبَأَهُمْ بِالْحَقِّ ۚ إِنَّهُمْ فِتْيَةٌ آمَنُوا بِرَبِّهِم| وَزِدْناهُمْ هُدًى وَرَبَطْنَا عَلَىٰ قُلُوبِهِمْ إِذْ قَامُوا فَقَالُوا رَبُّنَا رَبُّ السَّمَاوَاتِ وَالْأَرْضِ لَنْ نَدْعُوَ مِنْ دُونِهِ إِلَٰهًا ۖ لَقَدْ قُلْنَا إِذًا شَطَطًا هَٰؤُلَاءِ قَوْمُنَا اتَّخَذُوا مِنْ دُونِهِ آلِهَةً ۖ لَوْلَا يَأْتُونَ عَلَيْهِمْ بِسُلْطَانٍ بَيِّنٍ ۖ فَمَنْ أَظْلَمُ مِمَّنِ افْتَرَىٰ عَلَى اللَّهِ كَذِبًا وَإِذِ اعْتَزَلْتُمُوهُمْ وَمَا يَعْبُدُونَ إِلَّا اللَّهَ فَأْوُوا إِلَى الْكَهْفِ يَنْشُرْ لَكُمْ رَبُّكُمْ مِنْ رَحْمَتِهِ وَيُهَيِّئْ لَكُمْ مِنْ أَمْرِكُمْ مِرْفَقًا وَتَرَى الشَّمْسَ إِذَا طَلَعَتْ تَزَاوَرُ عَنْ كَهْفِهِمْ ذَاتَ الْيَمِينِ وَإِذَا غَرَبَتْ تَقْرِضُهُمْ ذَاتَ الشِّمَالِ وَهُمْ فِي فَجْوَةٍ مِنْهُ ۚ ذَٰلِكَ مِنْ آيَاتِ اللَّهِ ۗ مَنْ يَهْدِ اللَّهُ فَهُوَ الْمُهْتَدِ ۖ وَمَنْ يُضْلِلْ فَلَنْ تَجِدَ لَهُ وَلِيًّا مُرْشِدًا وَتَحْسَبُهُمْ أَيْقَاظًا وَهُمْ رُقُودٌ ۖ وَنُقَلِّبُهُمْ ذَاتَ الْيَمِينِ وَذَاتَ الشِّمَالِ ۖ وَكَلْبُهُمْ بَاسِطٌ ذِرَاعَيْهِ بِالْوَصِيدِ ۚ لَوْ اتَّلَعْتَ عَلَيْهِمْ لَوَلَّيْتَ مِنْهُمْ فِرَارًا وَلَمُلِئْتَ مِنْهُمْ رُعْبًا" },
+  { id: 295, text: "وَكَذَٰلِكَ بَعَثْنَاهُمْ لِيَتَسَاءَلُوا بَيْنَهُمْ ۚ قَالَ قَائِلٌ مِنْهُمْ كَمْ لَبِثْتُمْ ۖ قَالُوا لَبِثْنَا يَوْمًا أَوْ بَعْضَ يَوْمٍ ۚ قَالُوا رَبُّكُمْ أَعْلَمُ بِمَا لَبِثْتُمْ فَابْعَثُوا أَحَدَكُمْ بِوَرِقِكُمْ هَٰذِهِ إِلَى الْمَدِينَةِ فَلْيَنْظُرْ أَيُّهَا أَزْكَىٰ طَعَامًا فَلْيَأْتِكُمْ بِرِزْقٍ مِنْهُ وَلْيَتَلَطَّفْ وَلَا يُشْعِرَنَّ بِكُمْ أَحَدًا إِنَّهُمْ إِنْ يَظْهَرُوا عَلَيْكُمْ يَرْجُمُوكُمْ أَوْ يُعِيدُوكُمْ فِي مِلَّتِهِمْ وَلَنْ تُفْلِحُوا إِذًا أَبَدًا وَكَذَٰلِكَ أَعْثَرْنَا عَلَيْهِم| لِيَعْلَمُوا أَنَّ وَعْدَ اللَّهِ حَقٌّ وَأَنَّ السَّاعَةَ لَا رَيْبَ فِيهَا إِذْ يَتَنَازَعُونَ بَيْنَهُمْ أَمْرَهُمْ ۖ فَقَالُوا ابْنُوا عَلَيْهِمْ بُنْيَانًا ۖ رَبُّهُمْ أَعْلَمُ بِهِمْ ۚ قَالَ الَّذِينَ غَلَبُوا عَلَىٰ أَمْرِهِمْ لَنَتَّخِذَنَّ عَلَيْهِمْ مَسْجِدًا سَيَقُولُونَ ثَلَاثَةٌ رَابِعُهُمْ كَلْبُهُمْ وَسَيَقُولُونَ خَمْسَةٌ سَادِسُهُمْ كَلْبُهُمْ رَجْمًا بِالْغَيْبِ ۖ وَسَيَقُولُونَ سَبْعَةٌ وَثَامِنُهُمْ كَلْبُهُمْ ۚ قُلْ رَبِّي أَعْلَمُ بِعِدَّتِهِمْ مَا يَعْلَمُهُمْ إِلَّا قَلِيلٌ ۗ فَلَا تُمَارِ فِيهِمْ إِلَّا مِرَاءً ظَاهِرًا وَلَا تَسْتَفْتِ فِيهِمْ مِنْهُمْ أَحَدًا" },
+  { id: 296, text: "وَلَا تَقُولَنَّ لِشَيْءٍ إِنِّي فَاعِلٌ ذَٰلِكَ غَدًا إِلَّا أَنْ يَشَاءَ اللَّهُ ۚ وَاذْكُرْ رَبَّكَ إِذَا نَسِيتَ وَقُلْ عَسَىٰ أَنْ يَهْدِيَنِ رَبِّي لِأَقْرَبَ مِنْ هَٰذَا رَشَدًا وَلَبِثُوا فِي كَهْفِهِمْ ثَلَاثَ مِائَةٍ سِنِينَ وَازْدَادُوا تِسْعًا قُلِ اللَّهُ أَعْلَمُ بِمَا لَبِثُوا ۖ لَهُ غَيْبُ السَّمَاوَاتِ وَالْأَرْضِ ۖ أَبْصِرْ بِهِ وَأَسْمِعْ ۚ مَا لَهُمْ مِنْ دُONِهِ مِنْ وَلِيٍّ وَلَا يُشْرِكُ فِي حُكْمِهِ أَحَدًا وَاتْلُ مَا أُوحِيَ إِلَيْكَ مِنْ كِتَابِ رَبِّكَ ۖ Lَا مُبَدِّلَ لِكَلِمَاتِهِ وَلَنْ تَجِدَ مِنْ دُونِهِ مُلْتَحَدًا وَاصْبِرْ نَفْسَكَ مَعَ الَّذِينَ يَدْعُونَ رَبَّهُمْ بِالْغَدَاةِ وَالْعَشِيِّ يُرِيدُونَ وَجْهَهُ ۖ وَلَا تَعْدُ عَيْنَاكَ عَنْهُمْ تُرِيدُ زِينَةَ الْحَيَاةِ الدُّنْيَا ۖ وَلَا تُطِعْ مَنْ أَغْفَلْنَا قَلْبَهُ عَنْ ذِكْرِنَا وَاتَّبَعَ هَوَاهُ وَكَانَ أَمْرُهُ فُرُطًا وَقُلِ الْحَقُّ مِنْ رَبِّكُمْ ۖ فَمَنْ شَاءَ فَلْيُؤْمِنْ وَمَنْ شَاءَ فَلْيَكْفُرْ ۚ إِنَّا أَعْتَدْنَا لِلظَّالِمِينَ نَارًا أَحَاطَ بِهِمْ سُرَادِقُهَا ۚ وَإِنْ يَسْتَغِيثُوا يُغَاثُوا بِمَاءٍ كَالْمُهْلِ يَشْوِي الْوُجُوهَ ۚ بِئْسَ الشَّرَابُ وَسَاءَتْ مُرْتَفَقًا" },
+  { id: 297, text: "إِنَّ الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ إِنَّا لَا نُضِيعُ أَجْرَ مَنْ أَحْسَنَ عَمَلًا أُولَٰئِكَ لَهُمْ جَنَّاتُ عَدْنٍ تَجْرِي مِنْ تَحْتِهِمُ الْأَنْهَارُ يُحَلَّوْنَ فِيهَا مِنْ أَسَاوِرَ مِنْ ذَهَبٍ وَيَلْبَسُونَ ثِيَابًا خُضْرًا مِنْ سُنْدُسٍ وَإِسْتَبْرَقٍ مُتَّكِئِينَ فِيهَا عَلَى الْأَرَائِكِ ۚ نِعَمَ الثَّوَابُ وَحَسُنَتْ مُرْتَفَقًا وَاضْرِبْ لَهُمْ مَثَلًا رَجُلَيْنِ جَعَلْنَا لِأَحَدِهِمَا جَنَّتَيْنِ مِنْ أَعْنَابٍ وَحَفَفْنَاهُمَا بِنَخْلٍ وَجَعَلْنَا بَيْنَهُمَا زَرْعًا كِلْتَا الْجَنَّتَيْنِ آتَتْ أُكُلَهَا وَلَمْ تَظْلِمْ مِنْهُ شَيْئًا ۚ وَفَجَّرْنَا خِلَالَهُمَا نَهَرًا وَكَانَ لَهُ ثَمَرٌ فَقَالَ لِصَاحِبِهِ وَهُوَ يُحَاوِرُهُ أَنَا أَكْثَرُ مِنْكَ مَالًا وَأَعَزُّ نَفَرًا وَدَخَلَ جَنَّتَهُ وَهُوَ ظَالِمٌ لِنَفْسِهِ قَالَ مَا أَظُنُّ أَنْ تَبِيدَ هَٰذِهِ أَبَدًا وَمَا أَظُنُّ السَّاعَةَ قَائِمَةً وَلَئِنْ رُدِدْتُ إِلَىٰ رَبِّي لَأَجِدَنَّ خَيْرًا مِنْهَا مُنْقَلَبًا" }
+];
+
+// DATA 10 AYAT PERTAMA SEBIJIK MENGIKUT GAMBAR MUSHAF YANG DIBEKALKAN
+const AWAL_AYAT = [
+  { n: "١", t: "ٱلْحَمْدُ لِلَّهِ ٱلَّذِىٓ أَنزَلَ عَلَىٰ عَبْدِهِ ٱلْكِتَٰبَ وَلَمْ يَجْعَل لَّهُۥ عِوَجَا ۜ" },
+  { n: "٢", t: "قَيِّمًۭا لِّيُنذِرَ بَأْسًۭا شَدِيدًۭا مِّن لَّدُنْهُ وَيُبَشِّرَ ٱلْمُؤْمِنِينَ ٱلَّذِينَ يَعْمَلُونَ ٱلصَّٰلِحَٰتِ أَنَّ لَهُمْ أَجْرًا حَسَنًۭا" },
+  { n: "٣", t: "مَّٰكِثِينَ فِيهِ أَبَدًۭا" },
+  { n: "٤", t: "و weُنذِرَ ٱلَّذِينَ قَالُوا۟ ٱتَّخَذَ ٱللَّهُ وَلَدًۭا" },
+  { n: "٥", t: "مَّا لَهُم بِهِۦ مِنْ عِلْمٍۢ وَلَا لِءَابَآئِهِمْ ۚ كَبُرَتْ كَلِمَةًۭ تَخْرُجُ مِنْ أَفْوَٰهِهِمْ ۚ إِن يَقُولُونَ إِلَّا كَذِبًۭا" },
+  { n: "٦", t: "فَلَعَلَّكَ بَٰخِعٌۭ نَّفْسَكَ عَلَىٰٓ ءَاثَٰرِهِمْ إِن لَّمْ يُؤْمِنُوا۟ بِهَٰذَا ٱلْحَدِيثِ أَسَفًا" },
+  { n: "٧", t: "إِنَّا جَعَلْنَا مَا عَلَى ٱلْأَرْضِ زِينَةًۭ لَّهَا لِنَبْلُوَهُمْ أَيُّهُمْ أَحْسَنُ عَمَلًۭا" },
+  { n: "٨", t: "وَإِنَّا لَجَٰعِلُونَ مَا عَلَيْهَا صَعِيدًۭا جُرُزًا" },
+  { n: "٩", t: "أَمْ حَسِبْتَ أَنَّ أَصْحَٰبَ ٱلْكَهْفِ وَٱلرَّقِيمِ كَانُوا۟ مِنْ ءَايَٰتِنَا عَجَبًا" },
+  { n: "١٠", t: "إِذْ أَوَى ٱلْفِتْيَةُ إِلَى ٱلْكَهْفِ فَقَالُوا۟ رَبَّنَآ ءَاتِنَا مِن لَّدُنكَ رَحْمَةًۭ وَهَيِّئْ لَنَا مِنْ أَمْرِنَا رَشَدًۭا" }
+].map(item => {
+  // Pembetulan typo kecil jika terkesan semasa pemetaan objek teks luar
+  if(item.t.includes("weُنذِرَ")) item.t = item.t.replace("weُنذِرَ", "وَيُنذِرَ");
+  return item;
+});
+
+const AKHIR_AYAT = [
+  { n: "١٠١", t: "ٱلَّذِينَ كَانَتْ أَعْيُنُهُمْ فِي غِطَآءٍ عَن ذِكْرِى وَكَانُوا۟ لَا يَسْتَطِيعُونَ سَمْعًا" },
+  { n: "١٠٢", t: "أَفَحَسِبَ ٱلَّذِينَ كَفَرُوٓا۟ أَن يَتَّخِذُوا۟ عِبَادِى مِن دُونِيٓ أَوْلِيَآءَ ۚ إِنَّآ أَعْتَدْنَا جَهَنَّمَ لِلْكَٰفِرِينَ نُزُلًۭا" },
+  { n: "١٠٣", t: "قُلْ هَلْ نُنَبِّئُكُم بِٱلْأَخْسَرِينَ أَعْمَٰلًا" },
+  { n: "١٠٤", t: "ٱلَّذِينَ ضَلَّ سَعْيُهُمْ فِى ٱلْحَيَٰاةِ ٱلدُّنْيَا وَهُمْ يَحْسَبُونَ أَنَّهُمْ يُحْسِنُونَ صُنْعًا" },
+  { n: "١٠٥", t: "أُو۟لَٰٓئِكَ ٱلَّذِينَ كَفَرُوا۟ بِـَٔايَٰتِ رَبِّهِمْ وَلِقَآئِهِۦ فَحَبِطَتْ أَعْمَٰلُهُمْ فَلَا نُقِيمُ لَهُمْ يَوْمَ ٱلْقِيَٰمَةِ وَزْنًۭا" },
+  { n: "١٠٦", t: "ذَٰلِكَ جَزَآؤُهُمْ جَهَنَّمُ بِمَا كَفَرُوا۟ وَٱتَّخَذُوٓا۟ ءَايَٰتِى وَرُسُلِى هُزُوًا" },
+  { n: "١٠٧", t: "إِنَّ ٱلَّذِينَ ءَامَنُوا۟ وَعَمِلُوا۟ ٱلصَّٰلِحَٰتِ كَانَتْ لَهُمْ جَنَّٰتُ ٱلْفِرْدَوْسِ نُزُلًا" },
+  { n: "١٠٨", t: "خَٰلِدِينَ فِيهَا لَا يَبْغُونَ عَنْهَا حِوَلًۭا" },
+  { n: "١٠٩", t: "قُل لَّوْ كَانَ ٱلْبَحْرُ مِدَادًۭا لِّكَلِمَٰتِ رَبِّى لَنَفِدَ ٱلْبَحْرُ قَبْلَ أَن تَنفَدَ كَلِمَٰتُ رَبِّى وَلَوْ جِئْنَا بِمِثْلِهِۦ مَدَدًۭa" },
+  { n: "١١٠", t: "قُلْ إِنَّمَآ أَنَاۦ بَشَرٌۭ مِّثْلُكُمْ يُوحَىٰٓ إِلَّىَّ أَنَّمَآ إِلَٰهُكُمْ إِلَٰهٌۭ وَٰحِدٌۭ ۖ فَمَن كَانَ يَرْجُوا۟ لِقَآءَ رَبِّهِۦ فَلْيَعْمَلْ عَمَلًۭا صَٰلِحًۭا وَلَا يُشْرِكْ بِعِبَادَةِ رَبِّهِۦٓ أَحَدًۢا" }
+].map(item => {
+  if(item.t.includes("مَدَدًۭa")) item.t = item.t.replace("مَدَدًۭa", "مَدَدًۭا");
+  return item;
+});
+
+let currentPageIndex = 0;
+
+const el = {
+  berbakiNum: document.getElementById('berbakiNum'),
+  berbakiProgFill: document.getElementById('berbakiProgFill'),
+  mushafMeta: document.getElementById('mushafMeta'),
+  mushafContent: document.getElementById('mushafContent'),
+  btnPrev: document.getElementById('btnPrev'),
+  btnNext: document.getElementById('btnNext'),
+  studyBubble: document.getElementById('studyBubble'),
+  tabBtnKahfi: document.getElementById('tabBtnKahfi'),
+  tabBtn10Ayat: document.getElementById('tabBtn10Ayat'),
+  panelKahfi: document.getElementById('panelKahfi'),
+  panel10Ayat: document.getElementById('panel10Ayat'),
+  btnKahfiAwal: document.getElementById('lz-btn-kahfi-awal'),
+  btnKahfiAkhir: document.getElementById('lz-btn-kahfi-akhir'),
+  ayahLbl: document.getElementById('lz-ayah-lbl'),
+  swipeWrap: document.getElementById('kahfiSwipeWrap'),
+  arabicTextAwal: document.getElementById('lz-arabic-text-awal'),
+  arabicTextAkhir: document.getElementById('lz-arabic-text-akhir')
+};
+
+function updateMushafUI() {
+  const page = KAHFI_PAGES[currentPageIndex];
+  el.mushafMeta.textContent = `HALAMAN ${page.id}`;
+  el.mushafContent.textContent = page.text;
+  
+  const totalPages = KAHFI_PAGES.length;
+  const pagesLeft = totalPages - (currentPageIndex + 1);
+  el.berbakiNum.textContent = pagesLeft;
+  
+  const progressPercent = ((currentPageIndex + 1) / totalPages) * 100;
+  el.berbakiProgFill.style.width = `${progressPercent}%`;
+  
+  el.btnPrev.disabled = (currentPageIndex === 0);
+  el.btnNext.disabled = (currentPageIndex === totalPages - 1);
+}
+
+function renderLazimTexts() {
+  let htmlAwal = "";
+  AWAL_AYAT.forEach(item => {
+    // Membina struktur paparan bulat ayat mushaf sebijik seperti gambar rujukan
+    htmlAwal += `<span class="lazim-verse-unit">${item.t}<span class="lazim-verse-num">۝ Back ﴿${item.n}﴾</span></span> `;
+  });
+  // Membersihkan kod string paparan
+  htmlAwal = htmlAwal.replace(/۝ Back /g, "۝‎");
+  el.arabicTextAwal.innerHTML = htmlAwal;
+
+  let htmlAkhir = "";
+  AKHIR_AYAT.forEach(item => {
+    htmlAkhir += `<span class="lazim-verse-unit">${item.t}<span class="lazim-verse-num">۝‎﴿${item.n}﴾</span></span> `;
+  });
+  el.arabicTextAkhir.innerHTML = htmlAkhir;
+}
+
+function jumpToSlide(index) {
+  const slideWidth = el.swipeWrap.clientWidth;
+  el.swipeWrap.scrollTo({
+    left: index * slideWidth,
+    behavior: 'smooth'
+  });
+  updateActiveTabIndicator(index);
+}
+
+el.swipeWrap.addEventListener('scroll', () => {
+  const slideWidth = el.swipeWrap.clientWidth;
+  if(slideWidth === 0) return;
+  const currentSlide = Math.round(el.swipeWrap.scrollLeft / slideWidth);
+  updateActiveTabIndicator(currentSlide);
+});
+
+function updateActiveTabIndicator(index) {
+  if (index === 0) {
+    el.btnKahfiAwal.classList.add('active');
+    el.btnKahfiAkhir.classList.remove('active');
+    el.ayahLbl.textContent = "10 Ayat Pertama (1–10)";
+  } else {
+    el.btnKahfiAkhir.classList.add('active');
+    el.btnKahfiAwal.classList.remove('active');
+    el.ayahLbl.textContent = "10 Ayat Terakhir (101–110)";
+  }
+}
+
+el.btnPrev.addEventListener('click', () => {
+  if (currentPageIndex > 0) { currentPageIndex--; updateMushafUI(); }
+});
+el.btnNext.addEventListener('click', () => {
+  if (currentPageIndex < KAHFI_PAGES.length - 1) { currentPageIndex++; updateMushafUI(); }
+});
+
+el.tabBtnKahfi.addEventListener('click', () => switchTab('kahfi'));
+el.tabBtn10Ayat.addEventListener('click', () => switchTab('10ayat'));
+
+function switchTab(target) {
+  if (target === 'kahfi') {
+    el.tabBtnKahfi.classList.add('active'); el.tabBtn10Ayat.classList.remove('active');
+    el.panelKahfi.classList.add('active'); el.panel10Ayat.classList.remove('active');
+  } else {
+    el.tabBtn10Ayat.classList.add('active'); el.tabBtnKahfi.classList.remove('active');
+    el.panel10Ayat.classList.add('active'); el.panelKahfi.classList.remove('active');
+    setTimeout(() => { jumpToSlide(el.btnKahfiAwal.classList.contains('active') ? 0 : 1); }, 60);
+  }
+}
+
+function initSupportBubbleTimeline() {
+  setTimeout(() => { triggerBubbleShow(); }, 5000);
+}
+function triggerBubbleShow() {
+  el.studyBubble.classList.add('active');
+  setTimeout(() => {
+    el.studyBubble.classList.remove('active');
+    setTimeout(triggerBubbleShow, 10000);
+  }, 4000);
+}
+
+function boot() {
+  updateMushafUI();
+  renderLazimTexts();
+  initSupportBubbleTimeline();
+}
+document.addEventListener('DOMContentLoaded', boot);
+</script>
+</body>
+</html>
