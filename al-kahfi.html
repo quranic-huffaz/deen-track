@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Al-Kahfi — Amalan Jumaat</title>
+<title>Al-Kahfi — Bacaan Harian</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -296,32 +296,9 @@
     box-shadow: 0 2px 12px rgba(201,168,76,0.1);
   }
 
-  /* Swipe hint */
-  .swipe-hint {
-    text-align: center; padding: 10px; color: var(--text-muted);
-    font-size: 11px; letter-spacing: 0.06em;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-  }
-
-  .swipe-dots { display: flex; gap: 6px; align-items: center; }
-
-  .swipe-dot {
-    width: 6px; height: 6px; border-radius: 3px;
-    background: var(--text-muted); transition: all 0.3s ease;
-  }
-
-  .swipe-dot.active { width: 20px; background: var(--accent-gold); }
-
-  /* ─── OUTER TAB SWIPE ─── */
-  .swipe-container { overflow: hidden; position: relative; touch-action: pan-y; }
-
-  .swipe-track {
-    display: flex;
-    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    will-change: transform;
-  }
-
-  .swipe-panel { flex: 0 0 100%; width: 100%; }
+  /* ─── TAB PANELS — click only, no swipe ─── */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
 
   /* ─── QURAN READER CARD ─── */
   .reader-card {
@@ -635,21 +612,8 @@
       <button class="tab-btn" id="tab1" onclick="switchMainTab(1)">10 Ayat Al-Kahfi</button>
     </div>
 
-    <div class="swipe-hint" style="direction:ltr;">
-      <span>← Leret untuk tukar tab</span>
-      <div class="swipe-dots">
-        <div class="swipe-dot active" id="dot0"></div>
-        <div class="swipe-dot" id="dot1"></div>
-      </div>
-      <span>→</span>
-    </div>
-
-    <!-- OUTER TAB SWIPE -->
-    <div class="swipe-container" id="mainSwipeContainer">
-      <div class="swipe-track" id="mainSwipeTrack">
-
-        <!-- ═══ TAB 0: SURAH PENUH — paginated 10 ayat/page ═══ -->
-        <div class="swipe-panel">
+        <!-- ═══ TAB 0: SURAH PENUH ═══ -->
+        <div class="tab-panel active" id="tabPanel0">
           <div class="reader-card">
             <div class="reader-header">
               <span class="reader-title">📖 Surah Al-Kahfi Penuh</span>
@@ -674,8 +638,9 @@
           </div>
         </div>
 
-        <!-- ═══ TAB 1: 10 AYAT — toggle Awal / Akhir ═══ -->
-        <div class="swipe-panel">
+        <!-- ═══ TAB 1: 10 AYAT ═══ -->
+        </div><!-- /tabPanel0 -->
+        <div class="tab-panel" id="tabPanel1">
           <div class="reader-card">
             <div class="reader-header">
               <span class="reader-title">✨ 10 Ayat Al-Kahfi</span>
