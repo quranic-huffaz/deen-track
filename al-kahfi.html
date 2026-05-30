@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Al-Kahfi — Bacaan Harian</title>
+<title>Al-Kahfi — Amalan Jumaat</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -378,6 +378,13 @@
     border: 1px solid var(--page-border);
     overflow: hidden;
     box-shadow: 0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.8);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* page-verses akan kembang mengisi saki-baki ruang */
+  .quran-page .page-verses {
+    flex: 1;
   }
 
   /* Page panel tidak ada overflow scroll sendiri */
@@ -706,20 +713,94 @@ function switchMainTab(idx) {
   document.getElementById('tabPanel1').classList.toggle('active', idx === 1);
 }
 
-// ═══ FULL SURAH PAGINATION ═══
-const VERSES_PER_PAGE = 10;
+// ═══ FULL SURAH PAGINATION — same-height pages ═══
 let fullPages = [];
 let currentFullPage = 0;
+let targetPageHeight = 0;  // dikira sekali selepas render
 
-function buildFullPages(verses) {
+// Ukur ketinggian satu ayat secara diam-diam untuk kira berapa ayat muat per halaman
+function measureVerseHeight(verse, showBismi) {
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position:absolute;visibility:hidden;top:-9999px;left:0;width:' +
+    (document.getElementById('fullSwipeWrap').offsetWidth - 20) + 'px';
+  probe.innerHTML = `
+    <div class="quran-page" style="margin:0;border-radius:0;">
+      ${showBismi ? '<div class="page-bismillah">بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ</div>' : ''}
+      <div class="page-verses">
+        <div class="page-verse-item">
+          <div class="page-verse-num">${verse.numberInSurah}</div>
+          <div class="page-verse-arabic">${verse.text}</div>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(probe);
+  const h = probe.offsetHeight;
+  document.body.removeChild(probe);
+  return h;
+}
+
+// Kira ketinggian header info (page-top-info)
+const HEADER_H = 42;   // px — page-top-info
+const BISMI_H  = 68;   // px — page-bismillah
+const MARGIN_H = 20;   // margin 10px atas + bawah pada .quran-page
+
+function buildEqualHeightPages(verses) {
+  // Dapatkan lebar container sebenar
+  const wrapW = document.getElementById('fullSwipeWrap').offsetWidth;
+
+  // Buat probe container
+  const probe = document.createElement('div');
+  probe.style.cssText =
+    'position:absolute;visibility:hidden;top:-9999px;left:0;width:' + (wrapW - 20) + 'px;';
+  document.body.appendChild(probe);
+
+  // Ukur ketinggian setiap ayat
+  const verseHeights = verses.map(v => {
+    probe.innerHTML = `<div class="page-verses"><div class="page-verse-item">
+      <div class="page-verse-num">${v.numberInSurah}</div>
+      <div class="page-verse-arabic">${v.text}</div>
+    </div></div>`;
+    return probe.offsetHeight;
+  });
+
+  document.body.removeChild(probe);
+
+  // Kira ketinggian halaman 0 (ada bismillah) sebagai rujukan
+  let page0H = HEADER_H + BISMI_H + MARGIN_H;
+  let i = 0;
+  while (i < verses.length) {
+    page0H += verseHeights[i];
+    i++;
+    // Ambil sekurang-kurangnya 7 ayat untuk halaman pertama, kemudian stop bila dah cukup
+    if (i >= 7) break;
+  }
+  // Sambung tambah sehingga lebih dari min height
+  // targetPageHeight = ketinggian halaman pertama
+  targetPageHeight = page0H;
+
+  // Bahagikan semua ayat mengikut targetPageHeight
   fullPages = [];
-  for (let i = 0; i < verses.length; i += VERSES_PER_PAGE) {
-    fullPages.push(verses.slice(i, i + VERSES_PER_PAGE));
+  let j = 0;
+  while (j < verses.length) {
+    const isFirst = fullPages.length === 0;
+    let budget = targetPageHeight - HEADER_H - MARGIN_H - (isFirst ? BISMI_H : 0);
+    let used = 0;
+    let batch = [];
+    while (j < verses.length) {
+      const h = verseHeights[j];
+      if (batch.length > 0 && used + h > budget + 20) break; // +20 toleran kecil
+      batch.push(verses[j]);
+      used += h;
+      j++;
+    }
+    if (batch.length === 0) { batch.push(verses[j]); j++; } // jangan terkunci
+    fullPages.push(batch);
   }
 }
 
 function renderFullPages(verses) {
-  buildFullPages(verses);
+  buildEqualHeightPages(verses);
+
   const track = document.getElementById('fullSwipeTrack');
   track.innerHTML = '';
   fullPages.forEach((pageVerses, pi) => {
@@ -729,7 +810,7 @@ function renderFullPages(verses) {
     panel.className = 'page-panel';
     const showBismi = pi === 0;
     panel.innerHTML = `
-      <div class="quran-page">
+      <div class="quran-page" style="min-height:${targetPageHeight}px;">
         <div class="page-top-info">
           <div>
             <div class="page-surah-label">SURAH AL-KAHFI</div>
@@ -749,9 +830,11 @@ function renderFullPages(verses) {
     track.appendChild(panel);
   });
 
-  // Build dots (max 11 pages, show dots)
+  // Build dots
   const dotsEl = document.getElementById('fullDots');
-  dotsEl.innerHTML = fullPages.map((_, i) => `<div class="pdot${i===0?' active':''}" data-pi="${i}" onclick="goFullPage(${i})"></div>`).join('');
+  dotsEl.innerHTML = fullPages.map((_, i) =>
+    `<div class="pdot${i===0?' active':''}" data-pi="${i}" onclick="goFullPage(${i})"></div>`
+  ).join('');
 
   currentFullPage = 0;
   updateFullPageUI();
