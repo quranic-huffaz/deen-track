@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ms" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infaq Digital | Akademi Al-Quran Al-Labeeb (AQIL)</title>
+    <meta name="description" content="Sertai misi kami menyebarkan kalam Allah. Infaq Dana Pengurusan, Utiliti, dan Kebajikan Pelajar AQIL.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0B3C5D',
+                        secondary: '#10B981', // Emerald
+                        accent: '#D4AF37', // Gold
+                        softBg: '#F8FAFC',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .islamic-pattern {
+            background-color: #f8fafc;
+            background-image: url("https://www.transparenttextures.com/patterns/arabesque.png");
+        }
+        .gradient-text {
+            background: linear-gradient(45deg, #0B3C5D, #10B981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="islamic-pattern text-slate-800 antialiased" x-data="{ amount: 50 }">
+
+    <nav class="sticky top-0 z-50 glass-effect shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center gap-2">
+                    <span class="font-heading font-bold text-primary tracking-tight leading-tight">
+                        AQIL <br><span class="text-[10px] font-normal uppercase tracking-[0.2em] text-slate-500">Akademi Al-Quran Al-Labeeb</span>
+                    </span>
+                </div>
+                <div class="hidden md:flex space-x-8 font-medium text-sm">
+                    <a href="#" class="hover:text-secondary transition-colors">Utama</a>
+                    <a href="#misi" class="hover:text-secondary transition-colors">Misi Kami</a>
+                    <a href="#sumbangan" class="hover:text-secondary transition-colors">Saluran Sumbangan</a>
+                    <a href="#hubungi" class="hover:text-secondary transition-colors">Hubungi</a>
+                </div>
+                <a href="https://toyyibpay.com/Dana-Bil-Utiliti" class="bg-primary hover:bg-opacity-90 text-white px-6 py-3 rounded-full font-semibold text-sm transition-all transform hover:scale-105 shadow-lg">
+                    INFAQ SEKARANG
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative pt-16 pb-24 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:flex items-center gap-16">
+                <div class="lg:w-1/2 mb-12 lg:mb-0" data-aos="fade-up">
+                    <span class="inline-block px-4 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold uppercase tracking-widest mb-4">Misi Amal 2026</span>
+                    <h1 class="text-5xl lg:text-7xl font-heading font-bold text-primary mb-6 leading-tight">
+                        Jom <span class="gradient-text">Sumbang</span>
+                    </h1>
+                    <h2 class="text-2xl font-semibold text-slate-600 mb-4">Tabung Infaq Dana Pengurusan</h2>
+                    <p class="text-lg text-slate-500 mb-8 leading-relaxed">
+                        Setiap ringgit anda membantu kelangsungan operasi akademi: 
+                        <span class="font-semibold text-primary italic text-sm block mt-2 underline decoration-accent underline-offset-4">
+                            Sewaan bangunan • Bil utiliti • Makanan harian • Program bulanan
+                        </span>
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#sumbangan" class="bg-secondary hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl shadow-emerald-200 transition-all">
+                            Sumbang Sekarang
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lg:w-1/2 relative">
+                    <div class="absolute -top-10 -right-10 w-64 h-64 bg-accent/10 rounded-full blur-3xl"></div>
+                    <div class="relative bg-white p-8 rounded-[2rem] shadow-2xl border border-slate-100 transform rotate-2 hover:rotate-0 transition-transform duration-500">
+                        <div class="bg-slate-50 p-6 rounded-2xl mb-4 border-2 border-dashed border-slate-200">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=AQIL-DONATION" alt="QR Code Infaq" class="w-full h-auto rounded-lg">
+                        </div>
+                        <div class="text-center">
+                            <h3 class="font-bold text-primary text-xl">Akademi Al-Quran Al-Labeeb</h3>
+                            <p class="text-sm text-slate-400">Scan QR untuk Infaq Pantas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="max-w-5xl mx-auto px-4 -mt-10 mb-20">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white p-8 rounded-3xl shadow-xl border border-slate-50">
+            <div class="flex items-center gap-4 border-r border-slate-100 last:border-0">
+                <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center">
+                    <i data-lucide="shield-check"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-primary">100% Telus</h4>
+                    <p class="text-xs text-slate-400">Dana untuk kebajikan</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 border-r border-slate-100 last:border-0">
+                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center">
+                    <i data-lucide="users"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-primary">Sokongan Komuniti</h4>
+                    <p class="text-xs text-slate-400">Bersama membangun ummah</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 border-r border-slate-100 last:border-0">
+                <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center">
+                    <i data-lucide="heart"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-primary">Amanah</h4>
+                    <p class="text-xs text-slate-400">Pengurusan profesional</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="py-20 bg-primary text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <img src="https://www.transparenttextures.com/patterns/islamic-art.png" class="object-cover w-full h-full" alt="pattern">
+        </div>
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <h2 class="text-accent font-heading font-bold text-2xl mb-4 tracking-[0.2em]">BANTU KAMI SEBARKAN</h2>
+            <p class="text-3xl md:text-4xl font-light leading-relaxed mb-8">
+                "Infaq Bil Utiliti, bantu kami walaupun hanya <span class="text-accent font-bold">RM10</span>."
+            </p>
+            <p class="text-slate-300">Sumbangan boleh terus disalurkan menerusi no akaun atau pilihan di bawah.</p>
+        </div>
+    </section>
+
+    <section id="sumbangan" class="py-24 max-w-4xl mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-heading font-bold text-primary mb-2">Pilih Jumlah Infaq</h2>
+            <div class="w-20 h-1.5 bg-accent mx-auto rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+            <template x-for="val in [10, 30, 50, 100, 200, 500]">
+                <button 
+                    @click="amount = val"
+                    :class="amount === val ? 'bg-primary text-white border-primary shadow-lg ring-2 ring-primary/20 scale-105' : 'bg-white text-slate-600 border-slate-200 hover:border-primary hover:text-primary'"
+                    class="py-6 px-4 rounded-2xl border-2 font-bold text-xl transition-all flex flex-col items-center gap-1">
+                    <span class="text-xs font-normal opacity-70">RM</span>
+                    <span x-text="val"></span>
+                </button>
+            </template>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-inner border border-slate-100 mb-10">
+            <label class="block text-sm font-semibold text-slate-500 mb-2 uppercase tracking-wider">Jumlah Kustom (RM)</label>
+            <input type="number" x-model="amount" class="w-full bg-transparent text-3xl font-bold text-primary focus:outline-none" placeholder="Masukkan jumlah...">
+        </div>
+
+        <div class="space-y-4">
+            <a href="https://toyyibpay.com/Dana-Bil-Utiliti" class="block text-center bg-primary hover:bg-slate-800 text-white py-5 rounded-2xl font-bold text-xl shadow-xl transition-all transform hover:-translate-y-1">
+                👉 INFAQ SEKARANG
+            </a>
+            <a href="https://www.facebook.com/share/1DZZZtyhRQ/" target="_blank" class="block text-center bg-white border-2 border-slate-200 text-slate-600 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all">
+                Maklumat Lanjut Tahfiz AQIL
+            </a>
+        </div>
+    </section>
+
+    <section class="py-16 px-4">
+        <div class="max-w-3xl mx-auto bg-emerald-50/50 border border-emerald-100 rounded-[3rem] p-12 text-center relative overflow-hidden">
+            <div class="absolute -top-10 -left-10 opacity-10">
+                <i data-lucide="heart" class="w-40 h-40"></i>
+            </div>
+            <div class="relative z-10">
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm animate-bounce">
+                    <i data-lucide="pray" class="text-emerald-500"></i>
+                </div>
+                <p class="text-2xl font-medium italic text-emerald-800 leading-relaxed">
+                    "Semoga Allah membalas kebaikanmu, sentiasa memberkatimu dan menggantikan dengan kebaikan juga."
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="hubungi" class="py-20 max-w-xl mx-auto px-4">
+        <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border border-slate-50 flex flex-col items-center text-center">
+            <h3 class="text-2xl font-bold text-primary">Ustazah Imah</h3>
+            <p class="text-slate-500 mb-6 font-medium">Pengusaha Akademi Al-Quran Al-Labeeb</p>
+            <a href="tel:0132174839" class="flex items-center gap-3 bg-slate-50 px-6 py-3 rounded-full border border-slate-100 hover:bg-slate-100 transition-colors">
+                <i data-lucide="phone" class="w-5 h-5 text-primary"></i>
+                <span class="font-bold text-primary">013-217 4839</span>
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-slate-900 text-white pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-1 lg:col-span-2">
+                    <div class="flex items-center gap-2 mb-6">
+                        <span class="font-heading font-bold text-xl tracking-tight leading-tight text-white">AQIL</span>
+                    </div>
+                    <p class="text-slate-400 max-w-sm leading-relaxed mb-6">
+                        Melahirkan generasi celik Al-Quran yang berakhlak mulia melalui pendidikan yang berkualiti dan berintegriti.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors">
+                            <i data-lucide="facebook" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors">
+                            <i data-lucide="video" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 pt-8 text-center text-sm text-slate-500">
+                <p>&copy; 2026 Akademi Al-Quran Al-Labeeb. Hak Cipta Terpelihara.</p>
+            </div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/60132174839" target="_blank" class="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center gap-2 group">
+        <i data-lucide="message-circle" class="w-6 h-6"></i>
+        <span class="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 font-bold">Bantuan</span>
+    </a>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Simple scroll reveal effect
+        window.addEventListener('scroll', () => {
+            const elements = document.querySelectorAll('[data-aos="fade-up"]');
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if(rect.top < window.innerHeight - 100) {
+                    el.classList.add('opacity-100', 'translate-y-0');
+                    el.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
