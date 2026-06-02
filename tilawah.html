@@ -871,9 +871,41 @@ body::before {
   display:flex; align-items:center; justify-content:center; gap:6px;
 }
 .q-mark-btn:hover { background:rgba(180,150,80,.1); border-color:rgba(139,106,16,.5); }
+.q-mark-btn {
+  flex:1; background:transparent; border:1px solid rgba(139,106,16,.3);
+  border-radius:var(--r-sm); color:#7a5800; font-family:var(--font);
+  font-size:.8rem; font-weight:600; padding:9px;
+  cursor:pointer; transition:all .3s var(--ease);
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  position:relative; overflow:hidden;
+}
+.q-mark-btn::before {
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(135deg, rgba(180,150,80,.08), transparent);
+  opacity:0; transition:opacity .3s;
+}
+.q-mark-btn:hover::before { opacity:1; }
+.q-mark-btn:hover { border-color:rgba(139,106,16,.5); background:rgba(180,150,80,.08); }
+.q-mark-btn:active { transform:scale(.97); }
 .q-mark-btn.marked {
-  background:linear-gradient(135deg,#5a8a10,#4a7008);
-  color:#f0ffe8; border-color:transparent;
+  background:linear-gradient(135deg,#2d5a08,#3a7010,#2d5a08);
+  color:#d4ffc0; border-color:rgba(0,214,143,.4);
+  box-shadow:0 0 16px rgba(0,214,143,.2), inset 0 1px 0 rgba(255,255,255,.1);
+}
+.q-mark-btn.marked:hover {
+  background:linear-gradient(135deg,#1f4208,#4a8a18);
+  border-color:rgba(0,214,143,.6);
+  box-shadow:0 0 22px rgba(0,214,143,.3);
+  color:#e8ffe0;
+}
+@keyframes mark-pulse {
+  0%   { box-shadow:0 0 0 0 rgba(0,214,143,.45); }
+  70%  { box-shadow:0 0 0 8px rgba(0,214,143,0); }
+  100% { box-shadow:0 0 0 0 rgba(0,214,143,0); }
+}
+.q-mark-btn.just-marked {
+  animation:mark-pulse .6s ease-out;
 }
 
 /* Ayah number ornament */
@@ -3481,16 +3513,39 @@ function closeInfaqModal() {
 /* ── ACTIONS ───────────────────────────────────────────────── */
 function markCurrentPage() {
   const p = state.currentQuranPage;
-  if (p <= state.pagesRead) {
-    toast('Muka ini sudah dicatat sebelum ini.');
+  const isAlreadyMarked = p <= state.pagesRead;
+
+  if (isAlreadyMarked) {
+    // ── BUANG TANDA: unmark — turunkan pagesRead ke p-1 ──
+    const prevRead = state.pagesRead;
+    state.pagesRead = p - 1;
+    // Tolak balik todayPages jika p dibaca hari ini
+    const removedEntry = (state.rekodList || []).find(r => r.muka === p && r.sumber === 'app');
+    if (removedEntry && removedEntry.tarikh === todayStr()) {
+      const toRemove = prevRead - state.pagesRead;
+      state.todayPages = Math.max(0, state.todayPages - toRemove);
+    }
+    // Buang dari rekod (sumber: app)
+    state.rekodList = (state.rekodList || []).filter(r => !(r.muka === p && r.sumber === 'app'));
+    saveState();
+    renderDash();
+    renderHalGrid(halFilterMode);
+    el.markBtn.classList.remove('marked');
+    el.markIcon.textContent = '○';
+    el.markTxt.textContent  = 'Tandakan Muka Ini Sudah Dibaca';
+    toast(`Tanda muka ${p} dibuang`);
+    if (navigator.vibrate) navigator.vibrate([20, 30, 20]);
     return;
   }
+
+  // ── TANDAKAN: mark ──
   const toAdd = p - state.pagesRead;
   state.pagesRead   = p;
   state.todayPages += toAdd;
   state.lastDate    = todayStr();
   state.lastSession = { pages: toAdd, time: timeStr(), date: state.lastDate };
-  // Auto simpan ke rekod
+
+  // Auto simpan ke rekod (sumber: app)
   if (!state.rekodList) state.rekodList = [];
   state.rekodList.unshift({
     id: Date.now(),
@@ -3503,9 +3558,12 @@ function markCurrentPage() {
   saveState();
 
   renderDash();
+  renderHalGrid(halFilterMode);
   el.markBtn.classList.add('marked');
   el.markIcon.textContent = '✓';
   el.markTxt.textContent  = 'Sudah Dibaca ✓';
+  el.markBtn.classList.add('just-marked');
+  setTimeout(() => el.markBtn.classList.remove('just-marked'), 700);
   toast(`Muka ${p} ditandakan ✓`);
   if (navigator.vibrate) navigator.vibrate(40);
 }
@@ -3733,8 +3791,22 @@ function renderHalGrid(filter) {
 
     if (isSaved)  dot.classList.add('hal-dot-saved');
 
-    // Klik → pergi ke Tab Al-Quran pada halaman tersebut
+    // Klik → pergi ke Tab Al-Quran DAN simpan rekod (sumber: app)
     dot.addEventListener('click', () => {
+      // Simpan rekod 'dari app'
+      if (!state.rekodList) state.rekodList = [];
+      const sudahAda = state.rekodList.find(r => r.muka === p && r.sumber === 'app' && r.tarikh === todayStr());
+      if (!sudahAda) {
+        state.rekodList.unshift({
+          id: Date.now(),
+          muka: p,
+          juzuk: getJuzForPage(p),
+          tarikh: todayStr(),
+          masa: timeStr(),
+          sumber: 'app'
+        });
+        saveState();
+      }
       switchTab('quran');
       setTimeout(() => renderQuranPage(p), 120);
       toast('Pergi ke Halaman ' + p);
