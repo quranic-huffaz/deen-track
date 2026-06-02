@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maklum Balas — Quranic Huffaz Tracker</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── CSS Variables ─────────────────────────────────── */
+    :root {
+      --gold:        #bfa37e;
+      --gold-light:  #d4b896;
+      --gold-dark:   #9c8360;
+      --ink:         #0e0e0e;
+      --ink-mid:     #1c1c1c;
+      --ink-soft:    #2a2a2a;
+      --surface:     #f8f7f4;
+      --card:        #ffffff;
+      --border:      #e8e4de;
+      --muted:       #8a8580;
+      --success:     #2d7d5a;
+      --error:       #c0392b;
+      --radius-sm:   10px;
+      --radius-md:   18px;
+      --radius-lg:   28px;
+      --shadow-soft: 0 4px 24px rgba(0,0,0,0.06);
+      --shadow-card: 0 8px 40px rgba(0,0,0,0.09);
+      --transition:  0.28s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* ── Reset ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Background Grain & Lines ──────────────────────── */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 79px,
+          rgba(191,163,126,0.04) 79px,
+          rgba(191,163,126,0.04) 80px
+        );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Layout ────────────────────────────────────────── */
+    .page-wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+
+    /* ── Header ────────────────────────────────────────── */
+    .site-header {
+      text-align: center;
+      margin-bottom: 48px;
+      animation: fadeDown 0.7s both;
+    }
+
+    .logo-ring {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card);
+      box-shadow: 0 0 0 6px rgba(191,163,126,0.10);
+    }
+
+    .logo-ring svg {
+      width: 28px;
+      height: 28px;
+      fill: var(--gold);
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .site-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .site-header p {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 440px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── Info Bar ──────────────────────────────────────── */
+    .info-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 40px;
+      animation: fadeUp 0.7s 0.1s both;
+    }
+
+    .info-cell {
+      background: var(--card);
+      padding: 18px 12px;
+      text-align: center;
+    }
+
+    .info-cell .lbl {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+
+    .info-cell .val {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--ink);
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background: #27ae60;
+      border-radius: 50%;
+      margin-right: 5px;
+      animation: pulse 2s infinite;
+    }
+
+    /* ── Notice Box ────────────────────────────────────── */
+    .notice-box {
+      background: var(--ink);
+      color: #fff;
+      border-radius: var(--radius-md);
+      padding: 22px 26px;
+      margin-bottom: 36px;
+      border-left: 4px solid var(--gold);
+      animation: fadeUp 0.7s 0.15s both;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .notice-icon {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      background: rgba(191,163,126,0.15);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .notice-icon svg { width: 18px; height: 18px; fill: var(--gold); }
+
+    .notice-text h3 {
+      font-size: 15px;
+      color: var(--gold);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .notice-text p {
+      font-size: 13px;
+      opacity: 0.72;
+      line-height: 1.6;
+    }
+
+    /* ── Divider ───────────────────────────────────────── */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      animation: fadeUp 0.7s 0.2s both;
+    }
+
+    .section-divider::before,
+    .section-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    .section-divider span {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      white-space: nowrap;
+    }
+
+    /* ── Form Card ─────────────────────────────────────── */
+    .form-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow-card);
+      animation: fadeUp 0.7s 0.25s both;
+    }
+
+    /* ── Field Groups ──────────────────────────────────── */
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 560px) {
+      .field-row { grid-template-columns: 1fr; }
+      .form-card  { padding: 24px 18px; }
+      .info-bar   { grid-template-columns: 1fr; }
+    }
+
+    .field-group {
+      margin-bottom: 22px;
+      position: relative;
+    }
+
+    .field-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .field-group label .req {
+      color: var(--gold);
+      margin-left: 2px;
+    }
+
+    /* ── Inputs ────────────────────────────────────────── */
+    .inp {
+      width: 100%;
+      padding: 13px 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--ink);
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+      appearance: none;
+    }
+
+    .inp::placeholder { color: #bbb; }
+
+    .inp:focus {
+      border-color: var(--gold);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(191,163,126,0.12);
+    }
+
+    .inp:hover:not(:focus) {
+      border-color: var(--gold-light);
+    }
+
+    textarea.inp {
+      min-height: 130px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    /* ── Select ────────────────────────────────────────── */
+    .select-wrap {
+      position: relative;
+    }
+
+    .select-wrap select {
+      cursor: pointer;
+      padding-right: 40px;
+    }
+
+    .select-wrap::after {
+      content: "";
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 6px solid var(--gold);
+      pointer-events: none;
+    }
+
+    /* ── Chip Group (Keutamaan) ────────────────────────── */
+    .chip-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .chip-group input[type="radio"] { display: none; }
+
+    .chip {
+      padding: 8px 18px;
+      border: 1.5px solid var(--border);
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--muted);
+      background: var(--surface);
+      transition: all var(--transition);
+      user-select: none;
+    }
+
+    .chip-group input:checked + .chip {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--gold);
+    }
+
+    .chip:hover {
+      border-color: var(--gold);
+      color: var(--gold-dark);
+    }
+
+    /* ── Submit Button ─────────────────────────────────── */
+    .btn-submit {
+      width: 100%;
+      padding: 16px 24px;
+      background: var(--ink);
+      color: var(--gold-light);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--transition), box-shadow var(--transition);
+      margin-top: 8px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+    }
+
+    .btn-submit:active { transform: translateY(0); }
+
+    .btn-submit::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(191,163,126,0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .btn-submit .btn-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-submit svg { width: 18px; height: 18px; fill: currentColor; }
+
+    /* Loading spinner inside button */
+    .spinner {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(191,163,126,0.3);
+      border-top-color: var(--gold-light);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    /* ── Toast ─────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--ink);
+      color: #fff;
+      padding: 14px 26px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      border-left: 4px solid var(--gold);
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 999;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.error { border-left-color: var(--error); }
+
+    /* ── Success State ─────────────────────────────────── */
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .success-screen.show { display: block; }
+
+    .success-icon {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+      border: 2px solid #a5d6a7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      animation: scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+
+    .success-icon svg { width: 32px; height: 32px; fill: var(--success); }
+
+    .success-screen h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+
+    .success-screen p { font-size: 15px; color: var(--muted); margin-bottom: 28px; }
+
+    .btn-reset {
+      display: inline-block;
+      padding: 11px 28px;
+      border: 1.5px solid var(--ink);
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--ink);
+      cursor: pointer;
+      background: none;
+      font-family: 'DM Sans', sans-serif;
+      transition: all var(--transition);
+    }
+
+    .btn-reset:hover {
+      background: var(--ink);
+      color: var(--gold-light);
+    }
+
+    /* ── Footer ────────────────────────────────────────── */
+    .site-footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 12px;
+      color: var(--muted);
+      animation: fadeUp 0.7s 0.4s both;
+    }
+
+    .site-footer a { color: var(--gold); text-decoration: none; }
+
+    /* ── Animations ────────────────────────────────────── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scaleIn {
+      from { transform: scale(0.5); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
+    /* ── Char Counter ──────────────────────────────────── */
+    .char-count {
+      text-align: right;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    .char-count.warn { color: var(--error); }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- ── Header ── -->
+  <header class="site-header">
+    <div class="logo-ring">
+      <!-- Quran / book icon -->
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6H6zm7 1.5L18.5 8H13V3.5zM8 13h8v1.5H8V13zm0 3h5v1.5H8V16zm0-6h8v1.5H8V10z"/>
+      </svg>
+    </div>
+    <span class="eyebrow">User Experience &amp; Support</span>
+    <h1>Pusat Maklum Balas<br/>Quran Tracker</h1>
+    <p>Suara anda membantu kami membina pengalaman pembaca Al-Quran yang lebih baik dan lancar.</p>
+  </header>
+
+  <!-- ── Info Bar ── -->
+  <div class="info-bar">
+    <div class="info-cell">
+      <span class="lbl">Sistem</span>
+      <span class="val">Quranic Huffaz</span>
+    </div>
+    <div class="info-cell">
+      <span class="lbl">Status</span>
+      <span class="val"><span class="status-dot"></span>Aktif</span>
+    </div>
+    <div class="info-cell">
+      <span class="lbl">Pembangun</span>
+      <span class="val">Wan Hasbullah</span>
+    </div>
+  </div>
+
+  <!-- ── Notice ── -->
+  <div class="notice-box">
+    <div class="notice-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+    </div>
+    <div class="notice-text">
+      <h3>Hubungi Pembangun</h3>
+      <p>Nyatakan isu teknikal, cadangan fungsi baru, atau sebarang ralat (bugs) yang anda temui. Semua maklum balas direkod secara automatik.</p>
+    </div>
+  </div>
+
+  <!-- ── Divider ── -->
+  <div class="section-divider">
+    <span>Ruang Maklum Balas Anda</span>
+  </div>
+
+  <!-- ── Form Card ── -->
+  <div class="form-card">
+
+    <!-- Success Screen -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+      </div>
+      <h2>Terima Kasih!</h2>
+      <p>Maklum balas anda telah berjaya dihantar dan direkod dalam sistem kami.</p>
+      <button class="btn-reset" onclick="resetForm()">Hantar Maklum Balas Lain</button>
+    </div>
+
+    <!-- The Form -->
+    <form id="feedbackForm" novalidate>
+
+      <div class="field-row">
+        <!-- Nama -->
+        <div class="field-group">
+          <label for="nama">Nama <span style="font-weight:400;text-transform:none;font-size:11px;color:var(--muted);letter-spacing:0">(pilihan — kosong = Anonim)</span></label>
+          <input class="inp" type="text" id="nama" name="nama" placeholder="Tinggalkan kosong untuk Anonim" />
+        </div>
+
+        <!-- E-mel -->
+        <div class="field-group">
+          <label for="emel">E-mel <span style="font-weight:400;text-transform:none;font-size:11px;color:var(--muted);letter-spacing:0">(pilihan)</span></label>
+          <input class="inp" type="email" id="emel" name="emel" placeholder="Tinggalkan kosong jika tidak mahu" />
+        </div>
+      </div>
+
+      <!-- Jenis Maklum Balas — full width -->
+      <div class="field-group">
+        <label for="jenis">Jenis Maklum Balas <span class="req">*</span></label>
+        <div class="select-wrap">
+          <select class="inp" id="jenis" name="jenis" required>
+            <option value="" disabled selected>Pilih jenis…</option>
+            <option value="Laporan Bugs">🐛 Laporan Bugs / Ralat</option>
+            <option value="Cadangan Fungsi">💡 Cadangan Fungsi Baru</option>
+            <option value="Prestasi">⚡ Isu Prestasi / Kelambatan</option>
+            <option value="Antara Muka">🎨 Antara Muka / UI</option>
+            <option value="Kandungan">📖 Kandungan / Data</option>
+            <option value="Lain-lain">📌 Lain-lain</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Keutamaan -->
+      <div class="field-group">
+        <label>Tahap Keutamaan <span class="req">*</span></label>
+        <div class="chip-group" id="keutamaanGroup">
+          <input type="radio" name="keutamaan" id="k1" value="Rendah" required />
+          <label class="chip" for="k1">🟢 Rendah</label>
+
+          <input type="radio" name="keutamaan" id="k2" value="Sederhana" />
+          <label class="chip" for="k2">🟡 Sederhana</label>
+
+          <input type="radio" name="keutamaan" id="k3" value="Tinggi" />
+          <label class="chip" for="k3">🔴 Tinggi</label>
+
+          <input type="radio" name="keutamaan" id="k4" value="Kritikal" />
+          <label class="chip" for="k4">🚨 Kritikal</label>
+        </div>
+      </div>
+
+      <!-- Peranti -->
+      <div class="field-group">
+        <label for="peranti">Peranti Digunakan</label>
+        <div class="select-wrap">
+          <select class="inp" id="peranti" name="peranti">
+            <option value="" selected>Pilih peranti…</option>
+            <option value="Android">📱 Android</option>
+            <option value="iOS">🍎 iOS / iPhone</option>
+            <option value="Desktop">🖥️ Desktop / Komputer</option>
+            <option value="Tablet">📟 Tablet</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Mesej -->
+      <div class="field-group">
+        <label for="mesej">Penerangan Lanjut <span class="req">*</span></label>
+        <textarea class="inp" id="mesej" name="mesej" placeholder="Terangkan isu, langkah-langkah untuk meniru masalah, atau cadangan anda secara terperinci…" required maxlength="1000"></textarea>
+        <div class="char-count"><span id="charCount">0</span> / 1000</div>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <span class="btn-inner" id="btnLabel">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          Hantar Maklum Balas
+        </span>
+        <div class="spinner" id="btnSpinner"></div>
+      </button>
+
+    </form>
+  </div>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <p>© 2025 Quranic Huffaz Tracker &nbsp;·&nbsp; Dibina oleh <strong>Wan Hasbullah</strong></p>
+  </footer>
+
+</div>
+
+<!-- ── Toast ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ═══════════════════════════════════════════════════
+  //  !! PENTING: Ganti URL ini dengan URL Apps Script anda !!
+  // ═══════════════════════════════════════════════════
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2ly-aBTSz_AjaDhCGK9voupeUc74qijJLrN_7Thfqhp1UGbtX3Zc_MPpJyNv_G0wsOg/exec";
+
+  // ── Char Counter ──────────────────────────────────
+  const mesejEl   = document.getElementById("mesej");
+  const charCount = document.getElementById("charCount");
+
+  mesejEl.addEventListener("input", () => {
+    const n = mesejEl.value.length;
+    charCount.textContent = n;
+    charCount.parentElement.classList.toggle("warn", n > 900);
+  });
+
+  // ── Toast Helper ──────────────────────────────────
+  function showToast(msg, isError = false) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.className   = "toast" + (isError ? " error" : "");
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 4000);
+  }
+
+  // ── Loading State ─────────────────────────────────
+  function setLoading(on) {
+    const btn    = document.getElementById("submitBtn");
+    const label  = document.getElementById("btnLabel");
+    const spinner= document.getElementById("btnSpinner");
+    btn.disabled       = on;
+    label.style.display  = on ? "none" : "flex";
+    spinner.style.display= on ? "block" : "none";
+  }
+
+  // ── Validation ────────────────────────────────────
+  function validate(data) {
+    if (!data.jenis)          return "Sila pilih jenis maklum balas.";
+    if (!data.keutamaan)      return "Sila pilih tahap keutamaan.";
+    if (!data.mesej.trim())   return "Sila isi ruangan penerangan.";
+    return null;
+  }
+
+  // ── Form Submit ───────────────────────────────────
+  document.getElementById("feedbackForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+    const data = {
+      nama:      form.nama.value.trim() || "Anonim",
+      emel:      form.emel.value.trim() || "–",
+      jenis:     form.jenis.value,
+      keutamaan: form.keutamaan.value,
+      peranti:   form.peranti.value,
+      mesej:     form.mesej.value
+    };
+
+    const err = validate(data);
+    if (err) { showToast("⚠ " + err, true); return; }
+
+    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("PASTE_")) {
+      showToast("⚠ URL Apps Script belum dikonfigurasi.", true);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        body:   JSON.stringify(data)
+      });
+
+      const json = await res.json();
+
+      if (json.status === "ok") {
+        form.style.display = "none";
+        document.getElementById("successScreen").classList.add("show");
+        showToast("✓ Maklum balas berjaya dihantar!");
+      } else {
+        throw new Error(json.message || "Respons tidak diketahui.");
+      }
+    } catch (fetchErr) {
+      showToast("✗ Gagal menghantar. Sila cuba semula.", true);
+      console.error(fetchErr);
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  // ── Reset ─────────────────────────────────────────
+  function resetForm() {
+    const form = document.getElementById("feedbackForm");
+    form.reset();
+    form.style.display = "";
+    document.getElementById("successScreen").classList.remove("show");
+    charCount.textContent = "0";
+  }
+</script>
+</body>
+</html>
