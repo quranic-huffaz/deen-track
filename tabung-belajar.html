@@ -4,105 +4,327 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sokong Pembangunan Deen Track</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
-        @keyframes bounce-in {
-            0% { transform: scale(0.95); opacity: 0; }
-            70% { transform: scale(1.01); opacity: 1; }
-            100% { transform: scale(1); }
+        :root {
+            --primary-gold: #D4AF37;
+            --light-gold: #F9E29C;
+            --dark-bg: #0F1115;
+            --card-bg: #1C1F26;
+            --text-main: #FFFFFF;
+            --text-dim: #A0AEC0;
+            --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
         }
-        .animate-bounce-in {
-            animation: bounce-in 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .icon-box {
+            width: 80px;
+            height: 80px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 24px;
+            color: var(--primary-gold);
+            font-size: 32px;
+        }
+
+        h1 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+            color: #000000; /* Ditukar kepada warna hitam pekat */
+            background: #FFFFFF;
+            padding: 12px;
+            border-radius: 12px;
+            display: inline-block;
+            width: 100%;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .description {
+            font-size: 15px;
+            color: var(--text-dim);
+            margin-bottom: 24px;
+            text-align: justify;
+        }
+
+        .description p {
+            margin-bottom: 12px;
+        }
+
+        .highlight-text {
+            color: var(--primary-gold);
+            font-weight: 600;
+        }
+
+        .highlight-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid var(--primary-gold);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            text-align: left;
+            font-style: italic;
+            color: #E2E8F0;
+        }
+
+        .thank-you-msg {
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 24px;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 16px;
+            border-radius: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-gold);
+            color: #000;
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(212, 175, 55, 0.3);
+            filter: brightness(1.1);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-dim);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+        }
+
+        /* Ruangan Sumbangan (QR & Akaun) */
+        .qr-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .qr-box {
+            background: #FFFFFF;
+            padding: 12px;
+            border-radius: 16px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .qr-box img {
+            width: 180px;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+        }
+
+        .bank-label {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary-gold);
+            margin-bottom: 4px;
+        }
+
+        .account-number {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .account-name {
+            font-size: 12px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .btn-copy {
+            background: rgba(214, 175, 55, 0.1);
+            color: var(--primary-gold);
+            border: 1px solid rgba(214, 175, 55, 0.2);
+            font-size: 14px;
+            padding: 12px;
+            width: 100%;
+        }
+
+        .btn-copy:hover {
+            background: rgba(214, 175, 55, 0.15);
+        }
+
+        .btn-copy.success {
+            color: #34D399;
+            background: rgba(52, 211, 153, 0.1);
+            border-color: rgba(52, 211, 153, 0.2);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive Mobile */
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 20px;
+            }
+            .account-number {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
-<body class="bg-slate-50 flex items-center justify-center min-h-screen m-0 p-4 font-sans antialiased selection:bg-emerald-500 selection:text-white">
+<body>
 
-    <div class="w-full max-w-md overflow-hidden bg-white shadow-[0_20px_50px_rgba(16,_185,_129,_0.12)] rounded-[2.5rem] animate-bounce-in border border-slate-100/80 backdrop-blur-sm">
+<div class="container">
+    
+    <!-- Pandangan Utama (Initial View) -->
+    <div id="initialView">
+        <div class="icon-box">🌙</div>
+
+        <h1>Bermanfaat Menggunakan <br>Aplikasi Ini? 😊</h1>
+
+        <div class="description">
+            <p>Assalamualaikum! Saya harap web app ini membantu memudahkan anda track amalan anda.</p>
+            <p>Platform ini dibangunkan secara percuma demi membantu ummah mengekalkan momentum ibadah dan amalan seharian.</p>
+            <p>Buat masa ini, saya dalam proses menyambung pengajian ke peringkat lebih tinggi demi meningkatkan lagi ilmu pengetahuan.</p>
+        </div>
+
+        <div class="highlight-card">
+            Oleh itu, ini adalah inisiatif untuk tabung belajar saya. Jika anda rasa aplikasi ini bermanfaat, saya amat menghargai sebarang sumbangan ikhlas daripada pihak anda.
+        </div>
         
-        <div class="p-8 text-center text-white bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 relative overflow-hidden">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent opacity-60"></div>
-            <h2 class="text-2xl font-extrabold tracking-tight leading-tight relative z-10 drop-shadow-sm">
-                Bermanfaat Menggunakan <br>Deen Track? 😊
-            </h2>
-        </div>
+        <p class="thank-you-msg">Terima kasih banyak atas sokongan dan doa ikhlas anda semua 🙏🏻</p>
+            
+        <div class="btn-group">
+            <button onclick="showDonationDetails()" class="btn btn-primary">🚀 Sokong Sekarang (QR/Akaun)</button>
+                    </div>
+    </div>
 
-        <div id="initialView" class="p-8 text-center">
-            <div class="space-y-4 text-slate-600">
-                <p class="font-medium text-slate-700 leading-relaxed">
-                    Assalamualaikum! Saya harap web app ini membantu memudahkan anda track amalan anda—daripada <span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">Quran & Hafazan Tracker</span> sehinggalah ke <span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-md">Selawat Digital</span>.
-                </p>
-                <p class="text-sm text-slate-500 leading-relaxed">
-                    Platform ini dibangunkan secara percuma demi membantu ummah mengekalkan momentum ibadah dan amalan seharian.
-                </p>
-                <p class="text-sm text-slate-500 leading-relaxed">
-                    Buat masa ini, saya dalam proses menyambung pengajian ke peringkat lebih tinggi demi meningkatkan lagi ilmu pengetahuan.
-                </p>
-                <p class="text-sm font-semibold text-slate-800 bg-slate-50 p-3 rounded-2xl border border-slate-100/50">
-                    Oleh itu, ini adalah inisiatif untuk tabung belajar saya. Jika anda rasa aplikasi ini bermanfaat, saya amat menghargai sebarang sumbangan ikhlas daripada pihak anda. 
-                </p>
-                <p class="text-sm font-semibold text-slate-800">
-                    Terima kasih banyak atas sokongan dan doa ikhlas anda semua 🙏🏻
-                </p>
+    <!-- Pandangan Sumbangan (Donation View) -->
+    <div id="donationView" class="hidden">
+        <div class="icon-box">🎓</div>
+
+        <h1>QR atau Transfer</h1>
+
+        <div class="qr-section">
+            <div class="qr-box">
+                <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgrhWmYm-iSuL-kxI9pCr0hB13WwwmHD63zOWYcPK16R121N1A9mhv_mqe3Szk3FL-za15jp9eNN-1219UIWLErClNqSeC57u34gwXRrTSJr1QWHMWe2pgWn5LPo4n5eiUQpvbwpRq8XBZTOSVqZsGY5pgI9Qv1ZHgpi6j-qZVJn6xybM07c5bhJnltFR9o=s16000" alt="Maybank QR">
             </div>
+            
+            <p class="bank-label">Maybank</p>
+            <p class="account-number">162740196672</p>
+            <p class="account-name">Wan Hasbullah Wan Hussin</p>
 
-            <div class="mt-8">
-                <button onclick="showDonationDetails()" class="w-full py-4 font-bold text-white transition-all bg-gradient-to-r from-emerald-600 to-teal-600 shadow-lg shadow-emerald-600/20 rounded-2xl active:scale-[0.98] hover:opacity-95 transform hover:-translate-y-0.5 duration-200">
-                    🚀 Sokong Sekarang (QR/Akaun)
-                </button>
-            </div>
-        </div>
-
-        <div id="donationView" class="hidden p-8 text-center animate-bounce-in">
-            <div class="flex flex-col items-center p-5 mb-6 border border-slate-100 rounded-[2rem] bg-gradient-to-b from-slate-50 to-white shadow-inner">
-                
-                <div class="bg-white p-3 rounded-2xl shadow-[0_10px_25px_rgba(0,0,0,0.04)] mb-4 border border-slate-100">
-                    <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgrhWmYm-iSuL-kxI9pCr0hB13WwwmHD63zOWYcPK16R121N1A9mhv_mqe3Szk3FL-za15jp9eNN-1219UIWLErClNqSeC57u34gwXRrTSJr1QWHMWe2pgWn5LPo4n5eiUQpvbwpRq8XBZTOSVqZsGY5pgI9Qv1ZHgpi6j-qZVJn6xybM07c5bhJnltFR9o=s16000" 
-                         alt="Maybank QR" 
-                         class="w-56 h-auto rounded-xl">
-                </div>
-                
-                <div class="w-full p-4 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.02)] rounded-2xl border border-slate-100/80 text-center">
-                    <p class="text-[10px] font-black tracking-[0.2em] text-amber-500 uppercase mb-1">Maybank</p>
-                    <p id="accNumber" class="text-xl font-bold text-slate-800 tracking-wide tabular-nums">162740196672</p>
-                    <p class="mb-4 text-[11px] font-medium text-slate-400 uppercase tracking-wider">Wan Hasbullah Wan Hussin</p>
-                    
-                    <button onclick="copyAccNumber()" class="flex items-center justify-center w-full gap-2 py-3 text-sm font-bold text-emerald-600 transition-all bg-emerald-50/60 rounded-xl hover:bg-emerald-50 active:scale-[0.97] border border-emerald-100/50">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-                        </svg>
-                        <span id="copyText">Salin No. Akaun</span>
-                    </button>
-                </div>
-            </div>
-
-            <button onclick="location.reload()" class="text-sm font-bold text-slate-400 hover:text-slate-600 transition-colors flex items-center justify-center mx-auto gap-1 py-2 px-4 rounded-xl hover:bg-slate-50">
-                ← Kembali
+            <button onclick="copyAccNumber()" id="copyBtn" class="btn btn-copy">
+                <svg xmlns="http://www.w3.org/2000/svg" style="width:16px; height:16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                </svg>
+                <span id="copyText">Salin No. Akaun</span>
             </button>
+        </div>
+
+        <div class="btn-group">
+            <button onclick="goBack()" class="btn btn-secondary">← Kembali</button>
         </div>
     </div>
 
-    <script>
-        function showDonationDetails() {
-            document.getElementById('initialView').classList.add('hidden');
-            document.getElementById('donationView').classList.remove('hidden');
-        }
+</div>
 
-        function copyAccNumber() {
-            const accNo = "162740196672";
-            navigator.clipboard.writeText(accNo).then(() => {
-                const btnSpan = document.getElementById('copyText');
-                const btnParent = btnSpan.parentElement;
-                
-                btnSpan.innerText = "Berjaya Disalin! ✅";
-                btnParent.classList.add('bg-green-50', 'text-green-600', 'border-green-200');
-                
-                setTimeout(() => {
-                    btnSpan.innerText = "Salin No. Akaun";
-                    btnParent.classList.remove('bg-green-50', 'text-green-600', 'border-green-200');
-                }, 2000);
-            });
-        }
-    </script>
+<script>
+    function showDonationDetails() {
+        document.getElementById('initialView').classList.add('hidden');
+        document.getElementById('donationView').classList.remove('hidden');
+    }
+
+    function goBack() {
+        document.getElementById('donationView').classList.add('hidden');
+        document.getElementById('initialView').classList.remove('hidden');
+    }
+
+    function copyAccNumber() {
+        const accNo = "162740196672";
+        navigator.clipboard.writeText(accNo).then(() => {
+            const btnSpan = document.getElementById('copyText');
+            const btnParent = document.getElementById('copyBtn');
+            
+            btnSpan.innerText = "Berjaya Disalin! ✅";
+            btnParent.classList.add('success');
+            
+            setTimeout(() => {
+                btnSpan.innerText = "Salin No. Akaun";
+                btnParent.classList.remove('success');
+            }, 2000);
+        });
+    }
+</script>
+
 </body>
 </html>
