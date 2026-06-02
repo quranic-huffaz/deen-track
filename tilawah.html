@@ -1950,7 +1950,7 @@ body::before {
     <div class="card hero">
       <div class="hero-top">
         <div>
-          <div class="lbl">Jumlah Kemajuan</div>
+          <div class="lbl">Jumlah Bacaan</div>
           <div class="hero-pct" id="pct">0%</div>
         </div>
         <svg width="96" height="96" viewBox="0 0 120 120">
@@ -1976,11 +1976,67 @@ body::before {
       </div>
     </div>
 
+        <!-- Juz Card -->
+    <div class="card">
+      <div class="lbl">Juzuk Sudah Khatam</div>
+      <div class="juz-hd">
+        <div class="juz-badge" id="juz-badge">Juz 1</div>
+        <div>
+          <div class="juz-info-arabic" id="juz-arabic">الم</div>
+          <div class="juz-info-name" id="juz-name">Al-Fatihah & Al-Baqarah</div>
+          <div class="juz-info-pg" id="juz-pg">Muka 1 – 21</div>
+        </div>
+      </div>
+      <div class="juz-grid" id="juz-grid"></div>
+      <!-- Auto note with masjid infaq icon — KLIK SEKALI TERUS -->
+      <div class="juz-auto-note">
+        <span class="juz-auto-note-txt">Klik juzuk ✓ atau <span style="color:var(--blue)">biru</span> untuk pergi ke muka tersebut</span>
+        <div class="juz-baca-row">
+          <button class="juz-auto-note-btn" id="btn-juz-baca">Jom Baca Al-Quran</button>
+          <!-- Masjid Infaq Icon — klik sekali terus ke link -->
+          <a class="masjid-infaq-wrap" id="masjid-infaq-wrap"
+             href="https://quranic-huffaz.github.io/quran-tracker/infaq-tahfiz-aqil.html"
+             target="_blank" rel="noopener"
+             title="Infaq Tahfiz AQIL">
+            <div class="masjid-infaq-icon">
+              <!-- Minimalist masjid SVG -->
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2 C9 2 7 4.5 7 7 L7 8 L17 8 L17 7 C17 4.5 15 2 12 2Z"/>
+                <path d="M12 1 C11.2 1 10.5 1.6 10.5 2.5 C10.5 3.1 11 4 12 4 C13 4 13.5 3.1 13.5 2.5 C13.5 1.6 12.8 1 12 1Z"/>
+                <rect x="3" y="5" width="2.5" height="11" rx="0.5"/>
+                <path d="M3 5 C3 3.5 4.25 2.5 4.25 2.5 C4.25 2.5 5.5 3.5 5.5 5Z"/>
+                <rect x="18.5" y="5" width="2.5" height="11" rx="0.5"/>
+                <path d="M18.5 5 C18.5 3.5 19.75 2.5 19.75 2.5 C19.75 2.5 21 3.5 21 5Z"/>
+                <rect x="5" y="8" width="14" height="8" rx="0.5"/>
+                <path d="M10 16 L10 12.5 C10 11.1 10.9 10 12 10 C13.1 10 14 11.1 14 12.5 L14 16Z"/>
+                <rect x="2" y="16" width="20" height="1.5" rx="0.5"/>
+              </svg>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Target Card -->
+    <div class="card">
+      <div class="target-hd">
+        <div>
+          <div class="lbl">Sasaran Harian</div>
+          <div class="target-num"><span id="t-done">0</span> / <span id="t-goal">10</span> muka</div>
+        </div>
+        <button class="btn-icon" id="btn-edit-tgt">
+          <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </button>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+      <div class="target-meta" id="t-meta">0% sasaran hari ini</div>
+    </div>
+
     <!-- Dropdown Navigasi Pantas -->
     <div class="nav-dropdown-card">
-      <div class="lbl" style="margin-bottom:10px;">Navigasi Pantas</div>
+      <div class="lbl" style="margin-bottom:10px;">Pilihan Pantas</div>
       <div class="nav-dd-tabs">
-        <button class="nav-dd-tab active" data-nav-tab="quran">Al-Quran &amp; Juzuk</button>
+        <button class="nav-dd-tab active" data-nav-tab="quran">Surah &amp; Juzuk</button>
         <button class="nav-dd-tab" data-nav-tab="halaman">Halaman</button>
       </div>
 
@@ -2034,78 +2090,7 @@ body::before {
       </div>
     </div>
 
-    <!-- Hafazan Tracer Card -->
-    <a class="hafazan-card" href="https://quranic-huffaz.github.io/quran-tracker/hafazan.html" target="_blank" rel="noopener">
-      <div class="hafazan-inner">
-        <div class="hafazan-icon">🧠</div>
-        <div class="hafazan-content">
-          <div class="hafazan-tag">Alat Baharu</div>
-          <div class="hafazan-title">Hafazan Tracer</div>
-          <div class="hafazan-sub">Hafazan Al-Quran Bagi Pemula — jejak hafazan anda dengan mudah</div>
-        </div>
-        <div class="hafazan-arrow">
-          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
-      </div>
-    </a>
-
-    <!-- Target Card -->
-    <div class="card">
-      <div class="target-hd">
-        <div>
-          <div class="lbl">Sasaran Harian</div>
-          <div class="target-num"><span id="t-done">0</span> / <span id="t-goal">10</span> muka</div>
-        </div>
-        <button class="btn-icon" id="btn-edit-tgt">
-          <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        </button>
-      </div>
-      <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
-      <div class="target-meta" id="t-meta">0% sasaran hari ini</div>
-    </div>
-
-    <!-- Juz Card -->
-    <div class="card">
-      <div class="lbl">Kemajuan Juzuk</div>
-      <div class="juz-hd">
-        <div class="juz-badge" id="juz-badge">Juz 1</div>
-        <div>
-          <div class="juz-info-arabic" id="juz-arabic">الم</div>
-          <div class="juz-info-name" id="juz-name">Al-Fatihah & Al-Baqarah</div>
-          <div class="juz-info-pg" id="juz-pg">Muka 1 – 21</div>
-        </div>
-      </div>
-      <div class="juz-grid" id="juz-grid"></div>
-      <!-- Auto note with masjid infaq icon — KLIK SEKALI TERUS -->
-      <div class="juz-auto-note">
-        <span class="juz-auto-note-txt">Klik juzuk ✓ atau <span style="color:var(--blue)">biru</span> untuk pergi ke muka tersebut</span>
-        <div class="juz-baca-row">
-          <button class="juz-auto-note-btn" id="btn-juz-baca">Jom Baca Al-Quran</button>
-          <!-- Masjid Infaq Icon — klik sekali terus ke link -->
-          <a class="masjid-infaq-wrap" id="masjid-infaq-wrap"
-             href="https://quranic-huffaz.github.io/quran-tracker/infaq-tahfiz-aqil.html"
-             target="_blank" rel="noopener"
-             title="Infaq Tahfiz AQIL">
-            <div class="masjid-infaq-icon">
-              <!-- Minimalist masjid SVG -->
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2 C9 2 7 4.5 7 7 L7 8 L17 8 L17 7 C17 4.5 15 2 12 2Z"/>
-                <path d="M12 1 C11.2 1 10.5 1.6 10.5 2.5 C10.5 3.1 11 4 12 4 C13 4 13.5 3.1 13.5 2.5 C13.5 1.6 12.8 1 12 1Z"/>
-                <rect x="3" y="5" width="2.5" height="11" rx="0.5"/>
-                <path d="M3 5 C3 3.5 4.25 2.5 4.25 2.5 C4.25 2.5 5.5 3.5 5.5 5Z"/>
-                <rect x="18.5" y="5" width="2.5" height="11" rx="0.5"/>
-                <path d="M18.5 5 C18.5 3.5 19.75 2.5 19.75 2.5 C19.75 2.5 21 3.5 21 5Z"/>
-                <rect x="5" y="8" width="14" height="8" rx="0.5"/>
-                <path d="M10 16 L10 12.5 C10 11.1 10.9 10 12 10 C13.1 10 14 11.1 14 12.5 L14 16Z"/>
-                <rect x="2" y="16" width="20" height="1.5" rx="0.5"/>
-              </svg>
-            </div>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <div class="page-bot"></div>
+            <div class="page-bot"></div>
   </div>
 
   <!-- TAB 2: AL-QURAN — FULLSCREEN MUSHAF -->
