@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hafazan Tracker - Pemula</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0f172a;
+            --bg-card: #1e293b;
+            --bg-quran: #ffffff;
+            --accent: #fbbf24; 
+            --accent-soft: rgba(251, 191, 36, 0.1);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --text-quran: #1a1a1a;
+            --border: #334155;
+            --success: #10b981;
+            --danger: #ef4444;
+            --radius: 14px;
+            --font-main: 'Inter', sans-serif;
+            --font-quran: 'Amiri', serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-deep); color: var(--text-main); font-family: var(--font-main); line-height: 1.6; padding: 10px; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 500px; padding-bottom: 100px; }
+
+        /* NAVIGATION */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 500px; background: var(--bg-card);
+            border-top: 1px solid var(--border); display: flex;
+            justify-content: space-around; align-items: center; padding: 10px 0; z-index: 1000;
+        }
+        .nav-btn { background: none; border: none; color: var(--text-dim); font-weight: 600; font-size: 0.7rem; cursor: pointer; flex: 1; text-transform: uppercase; padding: 4px 0; }
+        .nav-btn.active { color: var(--accent); }
+
+        /* HOME CENTER BUTTON */
+        .nav-home-btn {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .home-center-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            border: 3px solid var(--bg-card);
+            outline: 2px solid rgba(251,191,36,0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 18px rgba(251,191,36,0.38), 0 2px 6px rgba(0,0,0,0.3);
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+            margin-top: -18px;
+            position: relative;
+        }
+        .home-center-icon:active { transform: scale(0.93); }
+        .home-center-icon svg { width: 22px; height: 22px; }
+
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+
+        /* CARDS */
+        h1 { font-size: 1.6rem; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; }
+        .subtitle { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 20px; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 15px; }
+        
+        .quote-card { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-left: 4px solid var(--accent); }
+        .quote-text { font-style: italic; font-size: 0.8rem; color: var(--text-main); margin-bottom: 10px; }
+        .quote-author { font-size: 0.75rem; color: var(--accent); font-weight: 700; }
+        .btn-link { display: inline-block; padding: 5px 12px; background: var(--accent-soft); color: var(--accent); border-radius: 6px; text-decoration: none; font-size: 0.7rem; font-weight: bold; }
+
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .stat-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; text-align: center; }
+        .stat-val { display: block; font-size: 1.3rem; font-weight: 800; color: var(--accent); }
+        .stat-label { font-size: 0.65rem; text-transform: uppercase; color: var(--text-dim); }
+
+        /* FORMS */
+        .form-group { margin-bottom: 10px; }
+        label { display: block; font-size: 0.7rem; color: var(--text-dim); margin-bottom: 4px; font-weight: 600; }
+        input, select { width: 100%; padding: 10px; background: #0f172a; border: 1px solid var(--border); border-radius: 8px; color: white; font-size: 0.85rem; outline: none; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-primary { background: var(--accent); color: #000; }
+        .btn-small { padding: 4px 10px; font-size: 0.65rem; border-radius: 4px; width: auto; font-weight: bold; }
+        .btn-del { background: var(--danger); color: white; margin-left: 5px; }
+        .btn-mur { background: var(--success); color: white; }
+        .btn-mur-again { background: #0ea5e9; color: white; margin-left: 5px; }
+
+        /* MASJID ICON */
+        .masjid-icon-wrap {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            z-index: 10;
+            text-decoration: none;
+        }
+        .masjid-label {
+            font-size: 0.6rem;
+            color: #c9a84c;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateX(8px);
+            transition: opacity 0.28s ease, transform 0.28s ease;
+            pointer-events: none;
+            background: rgba(201,168,76,0.1);
+            border: 1px solid rgba(201,168,76,0.25);
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+        .masjid-label.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .masjid-icon-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: rgba(201,168,76,0.08);
+            border: 1px solid rgba(201,168,76,0.22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .masjid-icon-wrap:hover .masjid-icon-btn,
+        .masjid-icon-wrap.tapped .masjid-icon-btn {
+            background: rgba(201,168,76,0.18);
+            border-color: rgba(201,168,76,0.55);
+            box-shadow: 0 0 12px rgba(201,168,76,0.28);
+        }
+        .masjid-svg {
+            width: 22px;
+            height: 22px;
+            transition: filter 0.22s ease;
+        }
+        .masjid-icon-wrap.tapped .masjid-svg { filter: drop-shadow(0 0 3px rgba(201,168,76,0.6)); }
+        @keyframes masjid-ping {
+            0%   { transform: scale(1);   opacity: 0.5; }
+            80%  { transform: scale(1.6); opacity: 0; }
+            100% { transform: scale(1.6); opacity: 0; }
+        }
+        .masjid-ping {
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            border: 1px solid rgba(201,168,76,0.5);
+            animation: masjid-ping 1.2s ease-out infinite;
+            pointer-events: none;
+        }
+
+        /* MASJID DOT LIVE */
+        .masjid-live-dot {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #10b981;
+            border: 1.5px solid var(--bg-card);
+            z-index: 2;
+        }
+        @keyframes dot-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.75); }
+        }
+        .masjid-live-dot { animation: dot-pulse 1.6s ease-in-out infinite; }
+
+        /* QURAN DISPLAY */
+        .quran-container { text-align: right; direction: rtl; background: var(--bg-quran); color: var(--text-quran); padding: 0 !important; border: none; }
+        .ayah-box { padding: 30px 20px; border-bottom: 1px solid #f1f5f9; font-size: 1.9rem; line-height: 2.8; font-family: var(--font-quran); position: relative; }
+        .ayah-box.highlight { background: #fdfdfd; border-right: 4px solid var(--accent); }
+        
+        /* PREMIUM FINTECH COUNTER */
+        .counter-section { direction: ltr; margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .counter-card { 
+            background: #ffffff; padding: 8px 12px; border-radius: 12px; 
+            border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        .counter-label { font-size: 0.55rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .counter-row { display: flex; align-items: center; justify-content: space-between; }
+        .c-controls { display: flex; align-items: center; background: #f1f5f9; border-radius: 8px; padding: 2px; }
+        .c-btn { width: 24px; height: 24px; border: none; background: transparent; color: #475569; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 400; }
+        .c-btn:active { background: #e2e8f0; }
+        .c-count { font-size: 0.85rem; font-weight: 800; color: #1e293b; padding: 0 10px; min-width: 50px; text-align: center; }
+        .c-target-pill { font-size: 0.6rem; font-weight: 600; color: #64748b; background: #f8fafc; border: 1px solid #e2e8f0; padding: 2px 6px; border-radius: 20px; cursor: pointer; }
+
+        /* QURAN EMPTY STATE */
+        .quran-empty-state { direction: ltr; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 40px 24px; background: #0f172a; }
+        .quran-empty-icon { width: 72px; height: 72px; border-radius: 20px; background: linear-gradient(135deg, rgba(251,191,36,0.15) 0%, rgba(251,191,36,0.05) 100%); border: 1px solid rgba(251,191,36,0.25); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; font-size: 2rem; }
+        .quran-empty-title { font-size: 1.1rem; font-weight: 800; color: #f8fafc; text-align: center; margin-bottom: 8px; letter-spacing: -0.3px; }
+        .quran-empty-sub { font-size: 0.78rem; color: #64748b; text-align: center; max-width: 260px; line-height: 1.6; margin-bottom: 32px; }
+        .quran-empty-divider { width: 40px; height: 2px; background: linear-gradient(90deg, transparent, rgba(251,191,36,0.4), transparent); margin-bottom: 32px; }
+        .quran-empty-btns { display: flex; gap: 12px; width: 100%; max-width: 280px; }
+        .quran-empty-btn-primary { flex: 1; padding: 14px 0; border: none; border-radius: 12px; background: var(--accent); color: #000; font-weight: 800; font-size: 0.78rem; cursor: pointer; letter-spacing: 0.2px; }
+        .quran-empty-btn-secondary { flex: 1; padding: 14px 0; border: 1px solid #334155; border-radius: 12px; background: transparent; color: #94a3b8; font-weight: 700; font-size: 0.78rem; cursor: pointer; }
+        .quran-empty-badge { margin-top: 24px; padding: 6px 14px; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); border-radius: 20px; font-size: 0.65rem; color: #10b981; font-weight: 600; letter-spacing: 0.3px; text-transform: uppercase; }
+
+        .empty-state { text-align: center; padding: 60px 20px; direction: ltr; }
+        .list-item { padding: 12px 0; border-bottom: 1px solid var(--border); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+
+        /* ── GAME HAFAZAN CARD ── */
+        .game-card {
+            background: linear-gradient(135deg, #0f172a 0%, #1a1f35 60%, #1e293b 100%);
+            border: 1px solid rgba(99,102,241,0.3);
+            border-radius: var(--radius);
+            padding: 18px;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        .game-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, #818cf8, #6366f1, transparent);
+        }
+        .game-card-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.25);
+            border-radius: 20px; padding: 4px 12px;
+            font-size: 0.58rem; font-weight: 700; color: #a5b4fc;
+            text-transform: uppercase; letter-spacing: 0.8px;
+            margin-bottom: 12px;
+        }
+        .game-card-title {
+            font-size: 1rem; font-weight: 800; color: #f1f5f9;
+            margin-bottom: 6px; letter-spacing: -0.3px;
+        }
+        .game-card-sub {
+            font-size: 0.76rem; color: #64748b; line-height: 1.6; margin-bottom: 16px; max-width: 260px;
+        }
+        .game-card-btn {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; padding: 13px 0;
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            color: #fff; border: none; border-radius: 12px;
+            font-size: 0.8rem; font-weight: 800; cursor: pointer;
+            letter-spacing: 0.3px; text-decoration: none;
+            box-shadow: 0 4px 16px rgba(99,102,241,0.3);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .game-card-btn:active { transform: scale(0.97); }
+        .game-deco-circle {
+            position: absolute; bottom: -20px; right: -20px;
+            width: 90px; height: 90px; border-radius: 50%;
+            background: rgba(99,102,241,0.07); border: 1px solid rgba(99,102,241,0.1);
+            pointer-events: none;
+        }
+        .game-deco-circle2 {
+            position: absolute; top: -14px; right: 50px;
+            width: 50px; height: 50px; border-radius: 50%;
+            background: rgba(99,102,241,0.04);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <!-- DASHBOARD TAB -->
+    <div id="tab-dashboard" class="tab-content active">
+        <header><h1>Hafazan Tracker</h1><p class="subtitle">Hafazan Al-Quran Bagi Pemula</p></header>
+
+        <!-- KAD PLATFORM HAFAZAN ANDA -->
+        <div class="card" style="background: linear-gradient(135deg, #0f2027 0%, #1a2a3a 60%, #1e293b 100%); border: 1px solid rgba(251,191,36,0.18); border-radius: var(--radius); position: relative; overflow: hidden;">
+            <div style="position:absolute; top:-18px; right:-18px; width:80px; height:80px; border-radius:50%; background:rgba(251,191,36,0.06); pointer-events:none;"></div>
+            <div style="position:absolute; bottom:-24px; left:-16px; width:60px; height:60px; border-radius:50%; background:rgba(16,185,129,0.05); pointer-events:none;"></div>
+
+            <a href="https://quranic-huffaz.github.io/quran-tracker/info-quran-tracker.html" target="_blank" id="masjid-btn" class="masjid-icon-wrap">
+                <span class="masjid-label" id="masjid-label">🕌 Infaq RM1 ke...</span>
+                <div class="masjid-icon-btn" style="position:relative;">
+                    <div class="masjid-ping" id="masjid-ping" style="display:none;"></div>
+                    <span class="masjid-live-dot"></span>
+                <svg class="masjid-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="7" y="22" width="5" height="16" rx="1.5" fill="none" stroke="#c9a84c" stroke-width="1.4"/>
+                    <ellipse cx="9.5" cy="22" rx="3" ry="2" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
+                    <line x1="9.5" y1="16" x2="9.5" y2="20" stroke="#c9a84c" stroke-width="1.2"/>
+                    <polygon points="9.5,13 11.2,16 7.8,16" fill="#c9a84c" opacity="0.75"/>
+                    <rect x="36" y="22" width="5" height="16" rx="1.5" fill="none" stroke="#c9a84c" stroke-width="1.4"/>
+                    <ellipse cx="38.5" cy="22" rx="3" ry="2" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
+                    <line x1="38.5" y1="16" x2="38.5" y2="20" stroke="#c9a84c" stroke-width="1.2"/>
+                    <polygon points="38.5,13 40.2,16 36.8,16" fill="#c9a84c" opacity="0.75"/>
+                    <path d="M15 22 Q15 12 24 12 Q33 12 33 22" fill="none" stroke="#c9a84c" stroke-width="1.6"/>
+                    <line x1="24" y1="8" x2="24" y2="12" stroke="#c9a84c" stroke-width="1.2"/>
+                    <path d="M22.2 9.5 a2 2 0 0 1 3.6 0" fill="none" stroke="#c9a84c" stroke-width="1.1"/>
+                    <rect x="15" y="22" width="18" height="16" rx="0" fill="none" stroke="#c9a84c" stroke-width="1.4"/>
+                    <line x1="7" y1="38" x2="41" y2="38" stroke="#c9a84c" stroke-width="1.4"/>
+                    <path d="M21 38 V33 Q24 30 27 33 V38" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
+                    <rect x="17" y="25" width="4" height="5" rx="2" fill="none" stroke="#c9a84c" stroke-width="1"/>
+                    <rect x="27" y="25" width="4" height="5" rx="2" fill="none" stroke="#c9a84c" stroke-width="1"/>
+                </svg>
+                </div>
+            </a>
+
+            <div style="text-align:center; padding: 8px 0 4px;">
+                <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:14px;">
+                    <span style="font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.9px; color:var(--accent);">Platform Hafazan Anda</span>
+                </div>
+                <p style="font-size:0.82rem; color:#94a3b8; line-height:1.75; margin-bottom:22px; max-width:240px; margin-left:auto; margin-right:auto;">Sematkan hafazan, jejak kemajuan secara sistematik. Mulakan langkah anda hari ini.</p>
+
+                <button onclick="app.switchTab('saba-nav')" style="
+                    display:block; width:100%; padding:14px 0;
+                    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+                    color:#0f172a; border:none; border-radius:12px;
+                    font-size:0.84rem; font-weight:800; cursor:pointer;
+                    letter-spacing:0.3px;
+                    box-shadow: 0 4px 16px rgba(251,191,36,0.28), 0 1px 3px rgba(0,0,0,0.2);
+                    margin-bottom:10px;
+                " onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(0.98)'" ontouchend="this.style.transform='scale(1)'">
+                    📖 &nbsp;Mula Menghafal
+                </button>
+
+                <!-- UPDATED LINK: Cara Menghafal Bagi Pemula -->
+                <a href="https://nota-wanhasbullah.blogspot.com/2026/05/teknik-20-20-15-kaedah-hafal-al-quran.html" target="_blank" style="
+                    display:flex; align-items:center; justify-content:center; gap:8px;
+                    width:100%; padding:12px 0;
+                    background: rgba(16,185,129,0.07);
+                    border: 1px solid rgba(16,185,129,0.3);
+                    border-radius:12px;
+                    font-size:0.78rem; font-weight:700; color:#10b981;
+                    text-decoration:none; letter-spacing:0.3px;
+                " onmouseover="this.style.background='rgba(16,185,129,0.14)'" onmouseout="this.style.background='rgba(16,185,129,0.07)'">
+                    📚 &nbsp;Cara Menghafal Bagi Pemula
+                </a>
+            </div>
+        </div>
+
+        <!-- KAD PETIKAN -->
+        <div class="card quote-card">
+            <p class="quote-text">"Yang dikejar tak dapat, yang dikendung berciciran. Jangan sekadar kejar hafazan baru sehingga abaikan hafazan lama (murajaah)"</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-top:6px;">
+                <p class="quote-author" style="margin:0;">- Nota Wan Hasbullah</p>
+                <a href="https://nota-wanhasbullah.blogspot.com/2026/05/seni-menjaga-hafazan-utamakan-murajaah.html" target="_blank" class="btn-link">📰 Artikel Penuh</a>
+            </div>
+        </div>
+
+        <!-- GAME HAFAZAN CARD (NEW) -->
+        <div class="game-card">
+            <div class="game-deco-circle"></div>
+            <div class="game-deco-circle2"></div>
+            <div class="game-card-badge">
+                <span>🎮</span> Alat Baharu
+            </div>
+            <p class="game-card-title">Game Hafazan</p>
+            <p class="game-card-sub">Uji kekuatan hafazan anda dengan cara yang menyeronokkan. Latih ingatan ayat Al-Quran melalui permainan interaktif.</p>
+            <a href="https://quranic-huffaz.github.io/quran-tracker/game-hafazan.html" target="_blank" class="game-card-btn">
+                🕹️ &nbsp;Main Sekarang
+            </a>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box"><span class="stat-label">Saba'</span><span id="stat-total" class="stat-val">0</span></div>
+            <div class="stat-box"><span class="stat-label">Murajaah</span><span id="stat-murajaah" class="stat-val">0</span></div>
+        </div>
+        <div class="card" style="border-left: 4px solid var(--success);">
+            <h2 style="font-size: 0.85rem; color: var(--success); text-transform: uppercase;">📊 Hafazan Saba' Terakhir</h2>
+            <div id="kemajuan-saba" style="margin-top: 10px;"><p style="font-size: 0.75rem; color: var(--text-dim);">Tiada rekod.</p></div>
+        </div>
+        <div class="card" style="border-left: 4px solid var(--accent);">
+            <h2 style="font-size: 0.85rem; color: var(--accent); text-transform: uppercase;">📊 Hafazan Murajaah Terakhir</h2>
+            <div id="kemajuan-murajaah" style="margin-top: 10px;"><p style="font-size: 0.75rem; color: var(--text-dim);">Tiada rekod.</p></div>
+        </div>
+    </div>
+
+    <!-- SABA' TAB -->
+    <div id="tab-saba-nav" class="tab-content">
+        <header><h1>Hafazan Saba'</h1><p class="subtitle">Rekod hafazan baru.</p></header>
+        <div class="card">
+            <div class="form-group">
+                <label>Pilih Surah</label>
+                <select id="target-surah-select" onchange="app.handleSurahChange('target-surah-select', 'target-start-ayat', 'input-target-count')"></select>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                <div class="form-group"><label>Mula Ayat</label><select id="target-start-ayat"></select></div>
+                <div class="form-group"><label>Jumlah Ayat</label><select id="input-target-count"></select></div>
+            </div>
+            <button onclick="app.setAndHafal('baru')" class="btn-success">Jom Hafal Saba'</button>
+        </div>
+        <div class="card"><h2>📜 Sejarah Saba'</h2><div id="history-list" style="max-height: 350px; overflow-y: auto;"></div></div>
+    </div>
+
+    <!-- MURAJAAH TAB -->
+    <div id="tab-murajaah-nav" class="tab-content">
+        <header><h1>Murajaah</h1><p class="subtitle">Mantapkan hafazan lama.</p></header>
+        <div class="card">
+            <div class="form-group"><label>Mod Murajaah</label>
+                <select id="murajaah-mode" onchange="app.toggleMurajaahMode()">
+                    <option value="surah">Ikut Surah</option>
+                    <option value="juzuk">Ikut Juzuk</option>
+                </select>
+            </div>
+            <div id="m-mode-surah">
+                <div class="form-group"><label>Pilih Surah</label><select id="m-surah-select" onchange="app.handleSurahChange('m-surah-select', 'm-start-ayat', 'm-count-ayat')"></select></div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group"><label>Mula Ayat</label><select id="m-start-ayat"></select></div>
+                    <div class="form-group"><label>Jumlah Ayat</label><select id="m-count-ayat"></select></div>
+                </div>
+            </div>
+            <div id="m-mode-juzuk" style="display:none;">
+                <div class="form-group"><label>Pilih Juzuk</label><select id="m-juzuk-select"><script>for(let i=1; i<=30; i++) document.write(`<option value="${i}">Juzuk ${i}</option>`);</script></select></div>
+                <div class="form-group"><label>Mula Muka Surat (Juzuk Ini)</label><select id="m-page-start"><script>for(let i=1; i<=20; i++) document.write(`<option value="${i}">Muka Surat ${i}</option>`);</script></select></div>
+            </div>
+            <button onclick="app.setAndHafal('murajaah')" class="btn-primary" style="margin-top: 15px;">Murajaah Sekarang</button>
+        </div>
+        <div class="card"><h2>🏆 Ranking Murajaah</h2><div id="ranking-list"></div></div>
+    </div>
+
+    <!-- AL-QURAN TAB -->
+    <div id="tab-quran" class="tab-content">
+        <div id="quran-display" class="card quran-container">
+            <div class="quran-empty-state">
+                <div class="quran-empty-icon">📖</div>
+                <p class="quran-empty-title">Mushaf Menanti Anda</p>
+                <p class="quran-empty-sub">Pilih sesi hafazan atau murajaah untuk mula membaca ayat Al-Quran di sini.</p>
+                <div class="quran-empty-divider"></div>
+                <div class="quran-empty-btns">
+                    <button onclick="app.switchTab('saba-nav')" class="quran-empty-btn-primary">Saba'</button>
+                    <button onclick="app.switchTab('murajaah-nav')" class="quran-empty-btn-secondary">Murajaah</button>
+                </div>
+                <div class="quran-empty-badge">Mulakan Hafazan Hari Ini</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+        <button id="nav-dashboard" class="nav-btn active" onclick="app.switchTab('dashboard')">Utama</button>
+        <button id="nav-saba" class="nav-btn" onclick="app.switchTab('saba-nav')">Saba'</button>
+        <div class="nav-home-btn">
+            <div class="home-center-icon" onclick="window.location.href='https://quranic-huffaz.github.io/quran-tracker/dashboard.html'" title="Laman Utama">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 9.5L12 3L21 9.5V20C21 20.5523 20.5523 21 20 21H15V15H9V21H4C3.44772 21 3 20.5523 3 20V9.5Z" fill="#0f172a" stroke="#0f172a" stroke-width="0.5"/>
+                    <path d="M3 10L12 3L21 10" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+        </div>
+        <button id="nav-murajaah" class="nav-btn" onclick="app.switchTab('murajaah-nav')">Murajaah</button>
+        <button id="nav-quran" class="nav-btn" onclick="app.switchTab('quran')">Al-Quran</button>
+    </nav>
+</div>
+
+
+
+<script>
+    // ── Masjid icon: bubble "Infaq RM1 ke .." keluar setiap 5 saat ──
+    (function () {
+        const label = document.getElementById('masjid-label');
+
+        function showBubble() {
+            label.classList.add('visible');
+            setTimeout(() => {
+                label.classList.remove('visible');
+            }, 2500); // tunjuk selama 2.5s
+        }
+
+        // Mula selepas 1 saat, kemudian setiap 5 saat
+        setTimeout(() => {
+            showBubble();
+            setInterval(showBubble, 5000);
+        }, 1000);
+    })();
+
+
+    // ── Main app ──
+    const app = {
+        logs: JSON.parse(localStorage.getItem('h_logs')) || [],
+        mLogs: JSON.parse(localStorage.getItem('m_logs')) || [],
+        allSurahs: [],
+        currentTask: null,
+
+        async init() {
+            await this.fetchSurahList();
+            this.renderAll();
+        },
+
+        vibrate() { if (navigator.vibrate) navigator.vibrate(15); },
+
+        async fetchSurahList() {
+            try {
+                const res = await fetch('https://api.alquran.cloud/v1/surah');
+                const json = await res.json();
+                this.allSurahs = json.data;
+                const options = this.allSurahs.map(s => `<option value="${s.number}" data-ayahs="${s.numberOfAyahs}">${s.number}. ${s.englishName}</option>`).join('');
+                document.getElementById('target-surah-select').innerHTML = options;
+                document.getElementById('m-surah-select').innerHTML = options;
+                this.handleSurahChange('target-surah-select', 'target-start-ayat', 'input-target-count');
+                this.handleSurahChange('m-surah-select', 'm-start-ayat', 'm-count-ayat');
+            } catch(e) { console.error("Gagal ambil senarai surah"); }
+        },
+
+        handleSurahChange(sId, startId, countId) {
+            const select = document.getElementById(sId);
+            const ayahs = parseInt(select.options[select.selectedIndex].dataset.ayahs);
+            let opt = "";
+            for(let i=1; i<=ayahs; i++) opt += `<option value="${i}">${i}</option>`;
+            document.getElementById(startId).innerHTML = opt;
+            document.getElementById(countId).innerHTML = opt;
+            if(countId === 'input-target-count') document.getElementById(countId).value = 5;
+        },
+
+        toggleMurajaahMode() {
+            const mode = document.getElementById('murajaah-mode').value;
+            document.getElementById('m-mode-surah').style.display = mode === 'surah' ? 'block' : 'none';
+            document.getElementById('m-mode-juzuk').style.display = mode === 'juzuk' ? 'block' : 'none';
+        },
+
+        switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            const navKey = tabId.split('-')[0];
+            const navEl = document.getElementById('nav-' + navKey);
+            if (navEl) navEl.classList.add('active');
+        },
+
+        setAndHafal(type) {
+            let surahId, surahName, startAyat, count, mode = 'surah';
+            const date = new Date().toLocaleDateString();
+
+            if(type === 'baru') {
+                surahId = document.getElementById('target-surah-select').value;
+                surahName = document.getElementById('target-surah-select').options[document.getElementById('target-surah-select').selectedIndex].text;
+                startAyat = parseInt(document.getElementById('target-start-ayat').value);
+                count = parseInt(document.getElementById('input-target-count').value);
+                this.logs.push({ surahId, surahName, startAyat, count, date });
+            } else {
+                mode = document.getElementById('murajaah-mode').value;
+                if(mode === 'surah') {
+                    surahId = document.getElementById('m-surah-select').value;
+                    surahName = document.getElementById('m-surah-select').options[document.getElementById('m-surah-select').selectedIndex].text;
+                    startAyat = parseInt(document.getElementById('m-start-ayat').value);
+                    count = parseInt(document.getElementById('m-count-ayat').value);
+                } else {
+                    surahId = document.getElementById('m-juzuk-select').value;
+                    startAyat = document.getElementById('m-page-start').value;
+                    surahName = `Juzuk ${surahId} (M/S ${startAyat})`;
+                    count = 20; mode = 'juzuk';
+                }
+                this.mLogs.push({ surahId, surahName, startAyat, count, date });
+            }
+            this.save();
+            this.currentTask = { surahId, startAyat, count, mode };
+            quranApp.loadData(this.currentTask);
+            this.switchTab('quran');
+        },
+
+        save() {
+            localStorage.setItem('h_logs', JSON.stringify(this.logs));
+            localStorage.setItem('m_logs', JSON.stringify(this.mLogs));
+            this.renderAll();
+        },
+
+        // Tambah murajaah dari sejarah saba'
+        addMurajaahFromSaba(l) {
+            const date = new Date().toLocaleDateString();
+            this.mLogs.push({ surahId: l.surahId, surahName: l.surahName, startAyat: l.startAyat, count: l.count, date });
+            this.save();
+            this.vibrate();
+        },
+
+        // Butang "+Murajaah" dalam Tab Murajaah — tambah kiraan + auto scroll ke ayat
+        addMurajaahFromRanking(name) {
+            const found = [...this.mLogs].reverse().find(l => l.surahName === name && l.surahId)
+                       || [...this.logs].reverse().find(l => l.surahName === name && l.surahId);
+            const date = new Date().toLocaleDateString();
+            if (found) {
+                this.mLogs.push({ surahId: found.surahId, surahName: found.surahName, startAyat: found.startAyat, count: found.count, date });
+                this.save();
+                this.vibrate();
+                this.currentTask = { surahId: found.surahId, startAyat: found.startAyat, count: found.count, mode: 'surah' };
+                quranApp.loadData(this.currentTask);
+                this.switchTab('quran');
+            } else {
+                this.mLogs.push({ surahId: null, surahName: name, startAyat: 1, count: 1, date });
+                this.save();
+                this.vibrate();
+            }
+        },
+
+        renderAll() {
+            document.getElementById('stat-total').innerText = this.logs.length;
+            document.getElementById('stat-murajaah').innerText = this.mLogs.length;
+
+            const lastS = this.logs[this.logs.length - 1];
+            document.getElementById('kemajuan-saba').innerHTML = lastS ? `<strong>${lastS.surahName}</strong><br><small>Ayat ${lastS.startAyat} • ${lastS.count} Ayat</small>` : "Tiada rekod.";
+
+            const lastM = this.mLogs[this.mLogs.length - 1];
+            document.getElementById('kemajuan-murajaah').innerHTML = lastM ? `<strong>${lastM.surahName}</strong><br><small>${lastM.date}</small>` : "Tiada rekod.";
+
+            document.getElementById('history-list').innerHTML = this.logs.slice().reverse().map((l, i) => {
+                const origIdx = this.logs.length - 1 - i;
+                const lJson = JSON.stringify(l).replace(/"/g, '&quot;');
+                return `
+                <div class="list-item">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div><strong>${l.surahName}</strong><br><small>${l.date} • ${l.count} Ayat</small></div>
+                        <div style="display:flex; align-items:center; gap:0;">
+                            <button class="btn-small btn-mur" onclick="app.redoTask(${lJson})">Murajaah</button>
+                            <button class="btn-small btn-del" onclick="app.deleteLog('saba', ${origIdx})">Padam</button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            const counts = {};
+            this.mLogs.forEach(l => counts[l.surahName] = (counts[l.surahName] || 0) + 1);
+            const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+            document.getElementById('ranking-list').innerHTML = sorted.map(([name, count]) => `
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; padding:10px 0; border-bottom:1px solid #334155;">
+                    <span>${name} <b style="color:var(--accent); margin-left:5px;">${count}x</b></span>
+                    <div style="display:flex; align-items:center; gap:0;">
+                        <button class="btn-small btn-mur-again" onclick="app.addMurajaahFromRanking('${name}')" title="Tambah Murajaah">+Murajaah</button>
+                        <button class="btn-small btn-del" style="font-size:0.5rem; padding:2px 6px;" onclick="app.deleteRank('${name}')">Padam</button>
+                    </div>
+                </div>
+            `).join('') || '<p style="font-size:0.7rem; color:var(--text-dim);">Tiada data.</p>';
+        },
+
+        redoTask(l) { this.currentTask = { ...l, mode: 'surah' }; quranApp.loadData(this.currentTask); this.switchTab('quran'); },
+        deleteLog(type, idx) { if(type === 'saba') this.logs.splice(idx, 1); this.save(); },
+        deleteRank(name) { this.mLogs = this.mLogs.filter(l => l.surahName !== name); this.save(); }
+    };
+
+    const quranApp = {
+        targets: { tengok: 20, tanpa: 20 },
+        async loadData(task) {
+            const display = document.getElementById('quran-display');
+            display.innerHTML = "<p style='text-align:center; padding:40px; color:#1e293b;'>Memuatkan Mushaf...</p>";
+            try {
+                let url = task.mode === 'juzuk' ? `https://api.alquran.cloud/v1/juz/${task.surahId}/quran-uthmani` : `https://api.alquran.cloud/v1/surah/${task.surahId}`;
+                const res = await fetch(url);
+                const json = await res.json();
+                const ayahs = json.data.ayahs;
+                
+                let startIdx = 0, count = task.count;
+                if(task.mode === 'juzuk') {
+                    const firstAyah = ayahs.find(a => a.page == (parseInt(json.data.ayahs[0].page) + parseInt(task.startAyat) - 1));
+                    startIdx = firstAyah ? ayahs.indexOf(firstAyah) : 0;
+                    count = ayahs.filter(a => a.page == firstAyah?.page).length || 20;
+                } else {
+                    startIdx = task.startAyat - 1;
+                }
+
+                display.innerHTML = ayahs.map((a, i) => {
+                    const active = (i >= startIdx && i < startIdx + count);
+                    return `
+                        <div id="ayah-${i+1}" class="ayah-box ${active ? 'highlight' : ''}">
+                            <div style="margin-bottom:12px;">${a.text} <span style="font-size:0.9rem; color:#d97706; font-family:sans-serif; vertical-align:middle;">(${a.numberInSurah})</span></div>
+                            ${active ? this.renderCounter(i) : ''}
+                        </div>`;
+                }).join('');
+                
+                setTimeout(() => { document.querySelector('.highlight')?.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 600);
+            } catch(e) { display.innerHTML = "<p style='text-align:center; padding:20px;'>Ralat sambungan internet.</p>"; }
+        },
+
+        renderCounter(idx) {
+            return `
+            <div class="counter-section">
+                ${['tengok', 'tanpa'].map(key => `
+                <div class="counter-card">
+                    <span class="counter-label">${key === 'tanpa' ? 'Tanpa Tengok' : 'Tengok'}</span>
+                    <div class="counter-row">
+                        <div class="c-controls">
+                            <button class="c-btn" onclick="quranApp.step(${idx}, '${key}', -1)">-</button>
+                            <span class="c-count" id="v-${idx}-${key}">0</span>
+                            <button class="c-btn" onclick="quranApp.step(${idx}, '${key}', 1)">+</button>
+                        </div>
+                        <span class="c-target-pill" onclick="quranApp.setT('${key}')">🎯 <span id="t-${key}">${this.targets[key]}</span></span>
+                    </div>
+                </div>`).join('')}
+            </div>`;
+        },
+
+        step(idx, key, d) { app.vibrate(); const el = document.getElementById(`v-${idx}-${key}`); el.innerText = Math.max(0, parseInt(el.innerText) + d); },
+        setT(key) { const v = prompt("Set sasaran hafazan:", this.targets[key]); if(v && !isNaN(v)) { this.targets[key] = v; document.querySelectorAll(`#t-${key}`).forEach(e => e.innerText = v); } }
+    };
+
+    app.init();
+</script>
+</body>
+</html>
