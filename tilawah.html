@@ -1470,6 +1470,261 @@ body::before {
   }
 }
 
+/* ═══════════════════════════════════════════════
+   TAB HALAMAN — PAGE GRID
+═══════════════════════════════════════════════ */
+.hal-dot {
+  aspect-ratio:1;
+  border-radius:6px;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:.5rem;
+  font-family:var(--font-mono);
+  color:var(--t3);
+  cursor:pointer;
+  transition:all .2s ease;
+  position:relative;
+}
+.hal-dot.sudah {
+  background:var(--green-dim);
+  border-color:rgba(0,214,143,.35);
+  color:var(--green);
+}
+.hal-dot.semasa {
+  background:var(--blue-dim);
+  border-color:rgba(74,158,255,.5);
+  color:var(--blue);
+  box-shadow:0 0 8px rgba(74,158,255,.25);
+}
+.hal-dot.sudah:hover, .hal-dot.semasa:hover {
+  transform:scale(1.1);
+}
+.hal-dot.belum:hover {
+  background:rgba(255,255,255,.07);
+  transform:scale(1.08);
+}
+.hal-tab-btn.active {
+  background:var(--green-dim) !important;
+  border-color:rgba(0,214,143,.35) !important;
+  color:var(--green) !important;
+}
+/* ═══════════════════════════════════════════════
+   DROPDOWN NAVIGASI — TAB UTAMA
+═══════════════════════════════════════════════ */
+.nav-dropdown-card {
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--r-lg);
+  padding:16px;
+  margin-bottom:10px;
+  animation:fadeUp 0.4s var(--ease) both;
+  animation-delay:.06s;
+  position:relative;
+  overflow:hidden;
+}
+.nav-dropdown-card::after {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);
+}
+.nav-dd-tabs {
+  display:flex;
+  gap:6px;
+  margin-bottom:12px;
+}
+.nav-dd-tab {
+  flex:1;
+  background:var(--bg-card2);
+  border:1px solid var(--border);
+  border-radius:var(--r-sm);
+  color:var(--t2);
+  font-family:var(--font);
+  font-size:.72rem;
+  font-weight:700;
+  padding:8px 6px;
+  cursor:pointer;
+  transition:all .2s;
+  text-align:center;
+}
+.nav-dd-tab.active {
+  background:var(--green-dim);
+  border-color:rgba(0,214,143,.35);
+  color:var(--green);
+}
+.nav-dd-panel {
+  display:none;
+}
+.nav-dd-panel.active {
+  display:block;
+}
+.nav-dd-select {
+  width:100%;
+  background:var(--bg-card2);
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  color:var(--t1);
+  font-family:var(--font);
+  font-size:.88rem;
+  padding:11px 14px;
+  outline:none;
+  cursor:pointer;
+  transition:border-color .2s;
+  margin-bottom:10px;
+  appearance:none;
+  -webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238899bb' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 14px center;
+  padding-right:36px;
+}
+.nav-dd-select:focus {
+  border-color:var(--green);
+}
+.nav-dd-select option {
+  background:var(--bg-card);
+  color:var(--t1);
+}
+.nav-dd-btn {
+  width:100%;
+  background:linear-gradient(135deg,#00d68f,#00a86b);
+  border:none;
+  border-radius:var(--r-md);
+  color:#061210;
+  font-family:var(--font);
+  font-size:.88rem;
+  font-weight:700;
+  padding:12px;
+  cursor:pointer;
+  transition:all .2s var(--ease);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+.nav-dd-btn:hover {
+  box-shadow:var(--green-glow);
+}
+.nav-dd-btn svg {
+  width:14px; height:14px;
+  stroke:currentColor; fill:none;
+  stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round;
+}
+/* Halaman tab dalam dropdown — number input */
+.nav-dd-pg-row {
+  display:flex;
+  gap:8px;
+  margin-bottom:10px;
+}
+.nav-dd-pg-inp {
+  flex:1;
+  background:var(--bg-card2);
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  color:var(--t1);
+  font-family:var(--font-mono);
+  font-size:1rem;
+  text-align:center;
+  padding:10px;
+  outline:none;
+  -moz-appearance:textfield;
+  transition:border-color .2s;
+}
+.nav-dd-pg-inp::-webkit-inner-spin-button,
+.nav-dd-pg-inp::-webkit-outer-spin-button { -webkit-appearance:none; }
+.nav-dd-pg-inp:focus { border-color:var(--green); }
+
+/* ═══════════════════════════════════════════════
+   TAB REKOD — PREMIUM FINTECH STYLE
+═══════════════════════════════════════════════ */
+.rekod-item {
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  padding:13px 14px;
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  position:relative;
+  overflow:hidden;
+  animation:fadeUp .35s var(--ease) both;
+  transition:border-color .2s;
+}
+.rekod-item::after {
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent);
+}
+.rekod-item:hover { border-color:var(--border-hi); }
+.rekod-item-icon {
+  width:38px;height:38px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;
+}
+.rekod-item-icon.app-icon {
+  background:var(--blue-dim);border:1px solid rgba(74,158,255,.25);
+}
+.rekod-item-icon.manual-icon {
+  background:var(--gold-dim);border:1px solid rgba(244,201,93,.25);
+}
+.rekod-item-body { flex:1;min-width:0; }
+.rekod-item-muka {
+  font-family:var(--font-mono);font-size:.95rem;font-weight:600;
+  color:var(--t1);line-height:1.2;
+}
+.rekod-item-meta {
+  font-size:.62rem;color:var(--t3);margin-top:2px;
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+}
+.rekod-item-tag {
+  font-size:.56rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;padding:2px 7px;border-radius:99px;
+}
+.rekod-item-tag.app-tag {
+  background:var(--blue-dim);color:var(--blue);
+  border:1px solid rgba(74,158,255,.2);
+}
+.rekod-item-tag.manual-tag {
+  background:var(--gold-dim);color:var(--gold);
+  border:1px solid rgba(244,201,93,.2);
+}
+.rekod-item-actions { display:flex;align-items:center;gap:6px;flex-shrink:0; }
+.rekod-btn-baca {
+  background:var(--green-dim);border:1px solid rgba(0,214,143,.3);
+  border-radius:99px;color:var(--green);font-family:var(--font);
+  font-size:.62rem;font-weight:700;padding:5px 10px;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.rekod-btn-baca:hover { background:rgba(0,214,143,.22);box-shadow:var(--green-glow); }
+.rekod-btn-del {
+  width:28px;height:28px;border-radius:8px;
+  background:var(--red-dim);border:1px solid rgba(248,113,113,.2);
+  color:var(--red);font-size:.75rem;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+.rekod-btn-del:hover { background:rgba(248,113,113,.22); }
+.rekod-filter-btn.active {
+  background:var(--green-dim) !important;
+  border-color:rgba(0,214,143,.35) !important;
+  color:var(--green) !important;
+}
+/* input spinner remove */
+#rekod-manual-pg::-webkit-inner-spin-button,
+#rekod-manual-pg::-webkit-outer-spin-button { -webkit-appearance:none; }
+
+/* Simpan badge pada dot */
+.hal-dot-saved::after {
+  content:'🔖';
+  position:absolute;
+  top:-4px; right:-4px;
+  font-size:.5rem;
+  line-height:1;
+}
+
 @media (min-width:900px) {
   body { background:#04070f; }
   body::before {
@@ -1689,6 +1944,43 @@ body::before {
       </div>
     </div>
 
+    <!-- Dropdown Navigasi Pantas -->
+    <div class="nav-dropdown-card">
+      <div class="lbl" style="margin-bottom:10px;">Navigasi Pantas</div>
+      <div class="nav-dd-tabs">
+        <button class="nav-dd-tab active" data-nav-tab="quran">Al-Quran &amp; Juzuk</button>
+        <button class="nav-dd-tab" data-nav-tab="halaman">Halaman</button>
+      </div>
+
+      <!-- Panel: Al-Quran & Juzuk -->
+      <div class="nav-dd-panel active" id="nav-panel-quran">
+        <select class="nav-dd-select" id="nav-sel-type">
+          <option value="juzuk">Pilih mengikut Juzuk</option>
+          <option value="surah">Pilih mengikut Surah</option>
+        </select>
+        <select class="nav-dd-select" id="nav-sel-juzuk">
+        </select>
+        <select class="nav-dd-select" id="nav-sel-surah" style="display:none;">
+        </select>
+        <button class="nav-dd-btn" id="nav-btn-quran">
+          <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Pergi ke Al-Quran
+        </button>
+      </div>
+
+      <!-- Panel: Halaman -->
+      <div class="nav-dd-panel" id="nav-panel-halaman">
+        <div class="nav-dd-pg-row">
+          <input type="number" class="nav-dd-pg-inp" id="nav-pg-inp"
+            placeholder="No. halaman..." min="1" max="604"/>
+        </div>
+        <button class="nav-dd-btn" id="nav-btn-halaman" style="background:linear-gradient(135deg,#4a9eff,#2c7fe0);color:#fff;">
+          <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="16" y2="11"/></svg>
+          Pergi ke Tab Halaman
+        </button>
+      </div>
+    </div>
+
     <!-- Petikan Card -->
     <div class="petikan-card">
       <div class="petikan-deco">"</div>
@@ -1858,19 +2150,99 @@ body::before {
 
   </div>
 
-  <!-- TAB 3: HAFAZAN -->
+  <!-- TAB 3: HALAMAN -->
   <div class="page" id="pg-hafazan">
     <div class="page-top"></div>
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:18px;text-align:center;padding:0 20px;">
-      <div style="font-size:3rem;">🧠</div>
-      <div style="font-family:var(--font-serif);font-size:1.4rem;color:var(--t1);">Hafazan Tracer</div>
-      <div style="font-size:.82rem;color:var(--t2);line-height:1.6;">Jejak hafazan Al-Quran anda dengan mudah. Klik butang di bawah untuk membuka aplikasi Hafazan Tracer.</div>
-      <a href="https://quranic-huffaz.github.io/quran-tracker/hafazan.html" target="_blank" rel="noopener"
-         style="background:linear-gradient(135deg,#00d68f,#00a86b);border:none;border-radius:var(--r-md);color:#061210;font-family:var(--font);font-size:.92rem;font-weight:700;padding:14px 28px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,214,143,.3);">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-        Buka Hafazan Tracer
-      </a>
+
+    <!-- Search & Tab bar atas -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+      <input type="number" id="hal-search-inp"
+        placeholder="Cari halaman (1–604)..."
+        min="1" max="604"
+        style="flex:1;background:var(--bg-card2);border:1px solid var(--border);border-radius:var(--r-md);color:var(--t1);font-family:var(--font);font-size:.9rem;padding:11px 14px;outline:none;transition:border-color .2s;-moz-appearance:textfield;">
+      <button id="hal-search-btn"
+        style="background:var(--green-dim);border:1px solid rgba(0,214,143,.3);border-radius:var(--r-md);color:var(--green);font-family:var(--font);font-size:.82rem;font-weight:700;padding:11px 16px;cursor:pointer;white-space:nowrap;transition:all .2s;">
+        Pergi
+      </button>
     </div>
+
+    <!-- Grid Tab Halaman -->
+    <div style="display:flex;gap:6px;margin-bottom:12px;" id="hal-tab-row">
+      <button class="hal-tab-btn active" data-hal-tab="semua"
+        style="flex:1;background:var(--green-dim);border:1px solid rgba(0,214,143,.3);border-radius:var(--r-sm);color:var(--green);font-family:var(--font);font-size:.72rem;font-weight:700;padding:8px 4px;cursor:pointer;transition:all .2s;">
+        Semua
+      </button>
+      <button class="hal-tab-btn" data-hal-tab="belum"
+        style="flex:1;background:var(--bg-card2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--t2);font-family:var(--font);font-size:.72rem;font-weight:700;padding:8px 4px;cursor:pointer;transition:all .2s;">
+        Belum Baca
+      </button>
+      <button class="hal-tab-btn" data-hal-tab="sudah"
+        style="flex:1;background:var(--bg-card2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--t2);font-family:var(--font);font-size:.72rem;font-weight:700;padding:8px 4px;cursor:pointer;transition:all .2s;">
+        Sudah Baca
+      </button>
+    </div>
+
+    <!-- Info bar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:8px 12px;background:var(--bg-card2);border:1px solid var(--border);border-radius:var(--r-sm);">
+      <span style="font-size:.65rem;color:var(--t3);">Jumlah: <span id="hal-count-lbl" style="color:var(--t2);font-weight:600;">604 halaman</span></span>
+      <span style="font-size:.65rem;color:var(--green);font-family:var(--font-mono);" id="hal-read-lbl">0 / 604 dibaca</span>
+    </div>
+
+    <!-- Grid halaman -->
+    <div id="hal-grid"
+      style="display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin-bottom:14px;">
+    </div>
+
+    <div class="page-bot"></div>
+  </div>
+
+  <!-- TAB 5: REKOD -->
+  <div class="page" id="pg-rekod">
+    <div class="page-top"></div>
+
+    <!-- Header + Butang Tambah Manual -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <div>
+        <div style="font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);margin-bottom:2px;">Rekod Tilawah</div>
+        <div style="font-size:1.05rem;font-weight:700;color:var(--t1);" id="rekod-count-lbl">0 rekod</div>
+      </div>
+      <button id="btn-tambah-rekod" style="
+        display:flex;align-items:center;gap:6px;
+        background:var(--green-dim);border:1px solid rgba(0,214,143,.35);
+        border-radius:99px;padding:8px 14px;
+        color:var(--green);font-family:var(--font);font-size:.72rem;font-weight:700;
+        cursor:pointer;transition:all .2s;letter-spacing:.03em;white-space:nowrap;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        + Tambah Manual
+      </button>
+    </div>
+
+    <!-- Filter tab -->
+    <div style="display:flex;gap:6px;margin-bottom:12px;">
+      <button class="rekod-filter-btn active" data-filter="semua"
+        style="flex:1;background:var(--green-dim);border:1px solid rgba(0,214,143,.3);border-radius:var(--r-sm);color:var(--green);font-family:var(--font);font-size:.7rem;font-weight:700;padding:8px 4px;cursor:pointer;transition:all .2s;">
+        Semua
+      </button>
+      <button class="rekod-filter-btn" data-filter="app"
+        style="flex:1;background:var(--bg-card2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--t2);font-family:var(--font);font-size:.7rem;font-weight:700;padding:8px 4px;cursor:pointer;transition:all .2s;">
+        Dari App
+      </button>
+      <button class="rekod-filter-btn" data-filter="manual"
+        style="flex:1;background:var(--bg-card2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--t2);font-family:var(--font);font-size:.7rem;font-weight:700;padding:8px 4px;cursor:pointer;transition:all .2s;">
+        Manual
+      </button>
+    </div>
+
+    <!-- Senarai rekod -->
+    <div id="rekod-list"></div>
+
+    <!-- Kosong state -->
+    <div id="rekod-empty" style="display:none;text-align:center;padding:40px 20px;">
+      <div style="font-size:2rem;margin-bottom:10px;">📋</div>
+      <div style="font-size:.85rem;color:var(--t2);font-weight:600;">Tiada rekod lagi</div>
+      <div style="font-size:.72rem;color:var(--t3);margin-top:4px;">Tandakan muka di Tab Al-Quran atau tambah manual</div>
+    </div>
+
     <div class="page-bot"></div>
   </div>
 
@@ -1995,13 +2367,13 @@ body::before {
     </button>
     <!-- Tab 4: Hafazan -->
     <button class="tab-btn" data-tab="hafazan">
-      <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-      Hafazan
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="12" y2="15"/></svg>
+      Halaman
     </button>
-    <!-- Tab 5: Al-Kahfi -->
-    <button class="tab-btn" data-tab="kahfi">
-      <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-      Al-Kahfi
+    <!-- Tab 5: Rekod -->
+    <button class="tab-btn" data-tab="rekod">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+      Rekod
     </button>
   </nav>
 
@@ -2028,6 +2400,24 @@ body::before {
     <div class="modal-actions">
       <button class="btn-ghost" id="reset-cancel">Batal</button>
       <button class="btn-danger" id="reset-confirm">Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Tambah Rekod Manual -->
+<div class="modal-bg" id="modal-rekod-manual">
+  <div class="modal" style="max-width:340px;">
+    <div class="modal-title">Tambah Rekod Manual</div>
+    <div class="modal-sub">Masukkan muka surat yang telah dibaca</div>
+    <div style="margin:14px 0 6px;">
+      <div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:6px;">Muka Surat</div>
+      <input type="number" id="rekod-manual-pg" class="modal-inp"
+        placeholder="Contoh: 45" min="1" max="604"
+        style="-moz-appearance:textfield;"/>
+    </div>
+    <div class="modal-actions" style="margin-top:16px;">
+      <button class="btn-ghost" id="rekod-manual-cancel">Batal</button>
+      <button class="btn-primary" id="rekod-manual-save" style="flex:1;">Simpan Rekod</button>
     </div>
   </div>
 </div>
@@ -3100,6 +3490,16 @@ function markCurrentPage() {
   state.todayPages += toAdd;
   state.lastDate    = todayStr();
   state.lastSession = { pages: toAdd, time: timeStr(), date: state.lastDate };
+  // Auto simpan ke rekod
+  if (!state.rekodList) state.rekodList = [];
+  state.rekodList.unshift({
+    id: Date.now(),
+    muka: p,
+    juzuk: getJuzForPage(p),
+    tarikh: todayStr(),
+    masa: timeStr(),
+    sumber: 'app'
+  });
   saveState();
 
   renderDash();
@@ -3142,6 +3542,7 @@ const TABS = {
   dash:    { btn: null, page: $('pg-dash')    },
   quran:   { btn: null, page: $('pg-quran')   },
   hafazan: { btn: null, page: $('pg-hafazan') },
+  rekod:   { btn: null, page: $('pg-rekod')   },
   kahfi:   { btn: null, page: $('pg-lazim')   }
 };
 
@@ -3296,6 +3697,368 @@ if (el.infaqModalSumbang) {
   });
 }
 
+/* ═══════════════════════════════════════════════════════════
+   TAB HALAMAN — GRID + SIMPAN
+═══════════════════════════════════════════════════════════ */
+let halFilterMode = 'semua';
+
+function renderHalGrid(filter) {
+  const grid = $('hal-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  filter = filter || halFilterMode;
+  halFilterMode = filter;
+
+  const pagesRead   = state.pagesRead;
+  const savedPages  = (state.savedHalPages || []);
+  let count = 0;
+
+  for (let p = 1; p <= TOTAL; p++) {
+    const isSudah  = p <= pagesRead;
+    const isSemasa = p === pagesRead + 1;
+    const isSaved  = savedPages.includes(p);
+
+    if (filter === 'sudah'  && !isSudah)              continue;
+    if (filter === 'belum'  && (isSudah || isSemasa)) continue;
+
+    const dot = document.createElement('div');
+    dot.className = 'hal-dot';
+    dot.textContent = p;
+    dot.dataset.page = p;
+
+    if (isSudah)  dot.classList.add('sudah');
+    else if (isSemasa) dot.classList.add('semasa');
+    else          dot.classList.add('belum');
+
+    if (isSaved)  dot.classList.add('hal-dot-saved');
+
+    // Klik → pergi ke Tab Al-Quran pada halaman tersebut
+    dot.addEventListener('click', () => {
+      switchTab('quran');
+      setTimeout(() => renderQuranPage(p), 120);
+      toast('Pergi ke Halaman ' + p);
+    });
+
+    // Long press → simpan halaman ke Tab Utama
+    let pressTimer;
+    dot.addEventListener('touchstart', () => {
+      pressTimer = setTimeout(() => {
+        saveHalPage(p);
+      }, 600);
+    }, { passive:true });
+    dot.addEventListener('touchend',   () => clearTimeout(pressTimer), { passive:true });
+    dot.addEventListener('touchmove',  () => clearTimeout(pressTimer), { passive:true });
+
+    grid.appendChild(dot);
+    count++;
+  }
+
+  const countLbl = $('hal-count-lbl');
+  const readLbl  = $('hal-read-lbl');
+  if (countLbl) countLbl.textContent = count + ' halaman';
+  if (readLbl)  readLbl.textContent  = pagesRead + ' / ' + TOTAL + ' dibaca';
+}
+
+function saveHalPage(page) {
+  if (!state.savedHalPages) state.savedHalPages = [];
+  if (state.savedHalPages.includes(page)) {
+    state.savedHalPages = state.savedHalPages.filter(p => p !== page);
+    saveState();
+    renderHalGrid();
+    toast('Halaman ' + page + ' dibuang dari simpanan.');
+  } else {
+    state.savedHalPages.unshift(page);
+    saveState();
+    renderHalGrid();
+    toast('🔖 Halaman ' + page + ' disimpan ke Tab Utama.');
+    renderDash();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DROPDOWN NAVIGASI — TAB UTAMA
+═══════════════════════════════════════════════════════════ */
+function initNavDropdown() {
+  // Isi pilihan Juzuk
+  const selJuzuk = $('nav-sel-juzuk');
+  if (selJuzuk) {
+    JUZ_NAMES.forEach((name, i) => {
+      const opt = document.createElement('option');
+      opt.value = JUZ_START[i];
+      opt.textContent = 'Juz ' + (i+1) + ' — ' + name;
+      selJuzuk.appendChild(opt);
+    });
+  }
+
+  // Isi pilihan Surah
+  const selSurah = $('nav-sel-surah');
+  if (selSurah) {
+    SURAHS.forEach((s, i) => {
+      const opt = document.createElement('option');
+      opt.value = s.p;
+      opt.textContent = (i+1) + '. ' + s.n + ' (Muka ' + s.p + ')';
+      selSurah.appendChild(opt);
+    });
+  }
+
+  // Toggle Juzuk / Surah
+  const selType = $('nav-sel-type');
+  if (selType) {
+    selType.addEventListener('change', () => {
+      const v = selType.value;
+      if (selJuzuk) selJuzuk.style.display = v === 'juzuk' ? 'block' : 'none';
+      if (selSurah) selSurah.style.display = v === 'surah' ? 'block' : 'none';
+    });
+  }
+
+  // Butang pergi Al-Quran
+  const btnQuran = $('nav-btn-quran');
+  if (btnQuran) {
+    btnQuran.addEventListener('click', () => {
+      const type = selType ? selType.value : 'juzuk';
+      const sel  = type === 'juzuk' ? selJuzuk : selSurah;
+      const pg   = sel ? parseInt(sel.value, 10) : 1;
+      if (!isNaN(pg) && pg >= 1 && pg <= TOTAL) {
+        switchTab('quran');
+        setTimeout(() => renderQuranPage(pg), 150);
+        toast('Pergi ke Muka ' + pg);
+      }
+    });
+  }
+
+  // Tab Al-Quran/Juzuk & Halaman
+  document.querySelectorAll('.nav-dd-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-dd-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const target = btn.dataset.navTab;
+      $('nav-panel-quran').classList.toggle('active',   target === 'quran');
+      $('nav-panel-halaman').classList.toggle('active', target === 'halaman');
+    });
+  });
+
+  // Butang pergi Tab Halaman
+  const btnHalaman = $('nav-btn-halaman');
+  const pgInp      = $('nav-pg-inp');
+  if (btnHalaman) {
+    btnHalaman.addEventListener('click', () => {
+      const v = pgInp ? parseInt(pgInp.value, 10) : NaN;
+      if (!isNaN(v) && v >= 1 && v <= TOTAL) {
+        switchTab('hafazan');
+        setTimeout(() => {
+          // Scroll grid ke halaman tersebut
+          renderHalGrid('semua');
+          const dot = document.querySelector(`.hal-dot[data-page="${v}"]`);
+          if (dot) dot.scrollIntoView({ behavior:'smooth', block:'center' });
+          toast('Halaman ' + v + ' dalam Tab Halaman');
+        }, 200);
+      } else {
+        switchTab('hafazan');
+        toast('Membuka Tab Halaman...');
+      }
+    });
+    if (pgInp) {
+      pgInp.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); btnHalaman.click(); }
+      });
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TAB REKOD — INIT & RENDER
+═══════════════════════════════════════════════════════════ */
+function initRekodTab() {
+  // Filter buttons
+  document.querySelectorAll('.rekod-filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.rekod-filter-btn').forEach(b => {
+        b.classList.remove('active');
+        b.style.background = 'var(--bg-card2)';
+        b.style.borderColor = 'var(--border)';
+        b.style.color = 'var(--t2)';
+      });
+      btn.classList.add('active');
+      btn.style.background = 'var(--green-dim)';
+      btn.style.borderColor = 'rgba(0,214,143,.3)';
+      btn.style.color = 'var(--green)';
+      renderRekodList(btn.dataset.filter);
+    });
+  });
+
+  // Butang + Tambah Manual
+  const btnTambah = $('btn-tambah-rekod');
+  if (btnTambah) {
+    btnTambah.addEventListener('click', () => {
+      const inp = $('rekod-manual-pg');
+      if (inp) inp.value = '';
+      openModal($('modal-rekod-manual'));
+    });
+  }
+
+  // Modal: Simpan
+  const btnSave = $('rekod-manual-save');
+  if (btnSave) {
+    btnSave.addEventListener('click', () => {
+      const inp = $('rekod-manual-pg');
+      const v = inp ? parseInt(inp.value, 10) : NaN;
+      if (isNaN(v) || v < 1 || v > TOTAL) {
+        toast('Masukkan nombor 1 hingga 604.');
+        return;
+      }
+      if (!state.rekodList) state.rekodList = [];
+      state.rekodList.unshift({
+        id: Date.now(),
+        muka: v,
+        juzuk: getJuzForPage(v),
+        tarikh: todayStr(),
+        masa: timeStr(),
+        sumber: 'manual'
+      });
+      saveState();
+      closeModal($('modal-rekod-manual'));
+      renderRekodList('semua');
+      // Reset filter ke semua
+      document.querySelectorAll('.rekod-filter-btn').forEach(b => {
+        b.classList.remove('active');
+        b.style.background = 'var(--bg-card2)';
+        b.style.borderColor = 'var(--border)';
+        b.style.color = 'var(--t2)';
+      });
+      const btnSemua = document.querySelector('.rekod-filter-btn[data-filter="semua"]');
+      if (btnSemua) {
+        btnSemua.classList.add('active');
+        btnSemua.style.background = 'var(--green-dim)';
+        btnSemua.style.borderColor = 'rgba(0,214,143,.3)';
+        btnSemua.style.color = 'var(--green)';
+      }
+      toast('✓ Rekod muka ' + v + ' disimpan!');
+    });
+  }
+
+  // Modal: Batal
+  const btnCancel = $('rekod-manual-cancel');
+  if (btnCancel) {
+    btnCancel.addEventListener('click', () => closeModal($('modal-rekod-manual')));
+  }
+
+  // Enter key pada input
+  const pgInp = $('rekod-manual-pg');
+  if (pgInp) {
+    pgInp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); $('rekod-manual-save') && $('rekod-manual-save').click(); }
+    });
+  }
+
+  // Render awal
+  renderRekodList('semua');
+}
+
+function renderRekodList(filter) {
+  const list = $('rekod-list');
+  const empty = $('rekod-empty');
+  const countLbl = $('rekod-count-lbl');
+  if (!list) return;
+
+  const rekodList = state.rekodList || [];
+  const filtered = filter === 'semua' ? rekodList
+    : rekodList.filter(r => r.sumber === filter);
+
+  if (countLbl) countLbl.textContent = rekodList.length + ' rekod';
+
+  if (filtered.length === 0) {
+    list.innerHTML = '';
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+
+  list.innerHTML = '';
+  filtered.forEach((r, idx) => {
+    const isApp = r.sumber === 'app';
+    const surahInfo = getSurahForPage(r.muka);
+    const div = document.createElement('div');
+    div.className = 'rekod-item';
+    div.style.animationDelay = (idx * 0.04) + 's';
+    div.innerHTML = `
+      <div class="rekod-item-icon ${isApp ? 'app-icon' : 'manual-icon'}">
+        ${isApp ? '📱' : '✏️'}
+      </div>
+      <div class="rekod-item-body">
+        <div class="rekod-item-muka">Muka ${r.muka}</div>
+        <div class="rekod-item-meta">
+          <span class="rekod-item-tag ${isApp ? 'app-tag' : 'manual-tag'}">${isApp ? 'App' : 'Manual'}</span>
+          <span>${r.tarikh || ''}</span>
+          <span style="color:var(--t3);">${r.masa || ''}</span>
+          <span style="color:rgba(74,158,255,.7);">Juz ${r.juzuk || getJuzForPage(r.muka)}</span>
+          <span style="color:var(--t3);">${surahInfo.n}</span>
+        </div>
+      </div>
+      <div class="rekod-item-actions">
+        <button class="rekod-btn-baca" data-pg="${r.muka}">Baca</button>
+        <div class="rekod-btn-del" data-del-id="${r.id}">✕</div>
+      </div>`;
+    list.appendChild(div);
+  });
+
+  // Butang Baca → pergi ke halaman
+  list.querySelectorAll('.rekod-btn-baca').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const pg = parseInt(btn.dataset.pg, 10);
+      switchTab('quran');
+      setTimeout(() => renderQuranPage(pg), 150);
+      toast('Pergi ke Muka ' + pg);
+    });
+  });
+
+  // Butang Padam
+  list.querySelectorAll('.rekod-btn-del').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = parseInt(btn.dataset.delId, 10);
+      state.rekodList = (state.rekodList || []).filter(r => r.id !== id);
+      saveState();
+      renderRekodList(filter);
+      if (countLbl) countLbl.textContent = (state.rekodList || []).length + ' rekod';
+      toast('Rekod dipadam.');
+    });
+  });
+}
+
+function initHalTab() {
+  // Tab filter buttons
+  document.querySelectorAll('.hal-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.hal-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderHalGrid(btn.dataset.halTab);
+    });
+  });
+
+  // Search / Pergi button
+  const searchBtn = $('hal-search-btn');
+  const searchInp = $('hal-search-inp');
+  if (searchBtn && searchInp) {
+    searchBtn.addEventListener('click', () => {
+      const v = parseInt(searchInp.value, 10);
+      if (!isNaN(v) && v >= 1 && v <= TOTAL) {
+        switchTab('quran');
+        setTimeout(() => renderQuranPage(v), 150);
+        toast('Pergi ke Halaman ' + v);
+      } else {
+        toast('Masukkan nombor 1 hingga 604.');
+      }
+    });
+    searchInp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); searchBtn.click(); }
+    });
+    // Remove spinner from number input
+    searchInp.style.cssText += ';-webkit-appearance:none;';
+  }
+
+  renderHalGrid('semua');
+}
+
 /* ── BOOT ──────────────────────────────────────────────────── */
 function init() {
   checkDailyReset();
@@ -3307,6 +4070,9 @@ function init() {
   initKahfiSwipe();
   startReminderCheck();
   showInfaqFab();
+  initHalTab();
+  initNavDropdown();
+  initRekodTab();
   console.log('%c☽ Quran Tracker v3', 'color:#00d68f;font-size:13px;font-weight:bold');
 }
 
