@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Hafazan | Fintech Memorization</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: #f8fafc; padding-bottom: 120px; overflow-x: hidden; }
+        .arabic { font-family: 'Amiri', serif; direction: rtl; }
+        .card-glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        
+        .nav-bar { 
+            position: fixed; 
+            bottom: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 90%; 
+            max-width: 400px; 
+            background: rgba(30, 41, 59, 0.9); 
+            backdrop-filter: blur(20px); 
+            border-radius: 25px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            display: flex; 
+            justify-content: space-around; 
+            align-items: center; 
+            padding: 12px 10px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+            z-index: 1000;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+        .nav-hidden { transform: translate(-50%, 150%); opacity: 0; pointer-events: none; }
+        /* PERUBAHAN 4: Tab Jom Hafal Quran warna putih sama seperti tab Dah Baca Al-Quran */
+        .nav-item { text-align: center; color: #94a3b8; transition: all 0.3s; }
+        .nav-item.active { color: #f8fafc; }
+        .nav-home { background: linear-gradient(135deg, #fbbf24, #d97706); width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -35px; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4); color: #0f172a !important; border: 4px solid #0f172a; }
+
+        .streak-dot { width: 12px; height: 6px; border-radius: 3px; background: #334155; transition: all 0.3s; }
+        .streak-dot.active { background: #10b981; box-shadow: 0 0 8px #10b981; }
+
+        .drop-zone { min-height: 80px; border: 2px dashed #334155; border-radius: 16px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; padding: 12px; transition: all 0.3s; }
+        .word-chip { background: #1e293b; border: 1px solid #334155; padding: 8px 16px; border-radius: 12px; cursor: pointer; transition: all 0.2s; font-size: 1.25rem; }
+        .word-chip:active { transform: scale(0.95); }
+        
+        .action-container { margin-top: 40px; margin-bottom: 20px; width: 100%; display: flex; justify-content: center; }
+        .order-badge { background: #fbbf24; color: #0f172a; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 6px; position: absolute; top: -10px; right: 10px; box-shadow: 0 4px 10px rgba(251, 191, 36, 0.3); }
+
+        /* Animation Ucapan */
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .congrats-popup { animation: fadeInScale 0.4s ease-out forwards; }
+
+        .nav-label { font-size: 9px; margin-top: 3px; font-weight: 600; letter-spacing: 0.02em; }
+
+        /* PERUBAHAN 1: Butang reset skor */
+        .reset-btn { font-size: 9px; color: #475569; cursor: pointer; border: 1px solid #334155; border-radius: 6px; padding: 2px 8px; margin-top: 4px; transition: all 0.2s; background: transparent; }
+        .reset-btn:hover { color: #f87171; border-color: #f87171; }
+
+        /* PERUBAHAN 2: Butang tahap seterusnya dalam popup */
+        .next-level-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 700; border-radius: 16px; box-shadow: 0 4px 15px rgba(16,185,129,0.3); margin-top: 10px; border: none; cursor: pointer; font-size: 1rem; transition: all 0.2s; }
+        .next-level-btn:hover { opacity: 0.9; transform: scale(1.02); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 md:p-8">
+
+    <header class="w-full max-w-4xl flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-yellow-500">
+                GAME <span class="font-light text-slate-400">HAFAZAN</span>
+            </h1>
+            <p class="text-xs text-slate-500 uppercase tracking-widest">Elite Quranic Memorization</p>
+        </div>
+        <!-- PERUBAHAN 1: Tambah butang reset kecil di bawah skor -->
+        <div class="text-right">
+            <div class="text-sm text-slate-400">Skor</div>
+            <div id="totalScore" class="text-xl font-semibold text-amber-400">0</div>
+            <button class="reset-btn" onclick="resetScore()">↺ reset</button>
+        </div>
+    </header>
+
+    <main class="w-full max-w-4xl">
+        <div id="levelSelection" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div onclick="startLevel(1)" class="card-glass p-6 rounded-2xl cursor-pointer border-t-4 border-amber-500 hover:scale-105 transition-all">
+                <h3 class="text-lg font-bold mb-1">Tahap 1: Asas</h3>
+                <p class="text-sm text-slate-400">Susun potongan ayat.</p>
+            </div>
+            <div onclick="startLevel(2)" class="card-glass p-6 rounded-2xl cursor-pointer border-t-4 border-emerald-500 hover:scale-105 transition-all">
+                <h3 class="text-lg font-bold mb-1">Tahap 2: Pro</h3>
+                <p class="text-sm text-slate-400">Kalimah Hilang.</p>
+            </div>
+            <div onclick="startLevel(3)" class="card-glass p-6 rounded-2xl cursor-pointer border-t-4 border-rose-500 hover:scale-105 transition-all">
+                <h3 class="text-lg font-bold mb-1">Tahap 3: Elit</h3>
+                <p class="text-sm text-slate-400">Hafazan Penuh.</p>
+            </div>
+        </div>
+
+        <div id="gameArea" class="hidden w-full max-w-lg mx-auto pb-20">
+            <div class="flex justify-between items-center mb-6">
+                <button onclick="backToMenu()" class="text-slate-400 hover:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                </button>
+                <div id="surahBadge" class="px-4 py-1 rounded-full border border-amber-500/50 text-amber-500 text-sm font-bold bg-amber-500/10">Surah</div>
+                <div id="timer" class="bg-slate-800 px-3 py-1 rounded-lg text-amber-400 font-mono text-sm border border-slate-700">00:00</div>
+            </div>
+
+            <div class="mb-4">
+                <h2 id="gameTitle" class="text-2xl font-bold">Permainan</h2>
+                <p id="gameDesc" class="text-slate-400 text-sm">Sila selesaikan tugasan di bawah.</p>
+            </div>
+
+            <div class="flex gap-1 mb-8" id="streakContainer"></div>
+            <div id="questionWrapper" class="space-y-6"></div>
+
+            <div class="action-container">
+                <button id="actionBtn" class="w-full py-4 rounded-2xl font-bold text-lg transition-all shadow-lg">
+                    Semak Jawapan
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <nav id="bottomNav" class="nav-bar">
+        <a href="https://quranic-huffaz.github.io/quran-tracker/tilawah.html" class="nav-item">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+            <div class="nav-label">Dah Baca Al-Quran?</div>
+        </a>
+        <a href="https://quranic-huffaz.github.io/quran-tracker/dashboard.html" class="nav-item nav-home">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+        </a>
+        <!-- PERUBAHAN 4: Buang class "active" supaya warna sama seperti tab lain (putih/slate) -->
+        <a href="https://quranic-huffaz.github.io/quran-tracker/hafazan.html" class="nav-item">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.5 3C7.567 3 6 4.567 6 6.5c0 .34.045.669.13.982A3.5 3.5 0 004 10.5c0 1.077.487 2.04 1.253 2.683A3.5 3.5 0 006.5 20H9v-2H6.5a1.5 1.5 0 01-.364-2.952A3.5 3.5 0 009.5 17h.5v-2h-.5a1.5 1.5 0 010-3H10V3H9.5z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14.5 3C16.433 3 18 4.567 18 6.5c0 .34-.045.669-.13.982A3.5 3.5 0 0120 10.5c0 1.077-.487 2.04-1.253 2.683A3.5 3.5 0 0117.5 20H15v-2h2.5a1.5 1.5 0 00.364-2.952A3.5 3.5 0 0014.5 17H14v-2h.5a1.5 1.5 0 000-3H14V3h.5z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 3h4v14h-4z"/>
+            </svg>
+            <div class="nav-label">Jom Hafal Quran</div>
+        </a>
+    </nav>
+
+    <div id="congratsOverlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[2000] hidden flex items-center justify-center p-6 text-center">
+        <div class="congrats-popup card-glass p-10 rounded-3xl border-2 border-amber-500/50 max-w-sm w-full">
+            <div id="congratsEmoji" class="text-6xl mb-4">🏆</div>
+            <h2 id="congratsTitle" class="text-3xl font-bold text-amber-400 mb-2">Tahniah!</h2>
+            <p id="congratsMsg" class="text-slate-300 mb-8">Ayat disusun dengan sempurna.</p>
+            <button onclick="closeCongrats()" class="w-full py-4 bg-gradient-to-r from-amber-500 to-yellow-600 text-slate-950 font-bold rounded-2xl shadow-xl">Teruskan</button>
+            <!-- PERUBAHAN 2: Butang tahap seterusnya (tersembunyi secara lalai) -->
+            <button id="nextLevelBtn" class="next-level-btn hidden" onclick="goNextLevel()">Naik ke Tahap Seterusnya →</button>
+        </div>
+    </div>
+
+    <script>
+        const surahDB = [
+            { name: "Ad-Duha", verses: ["وَالضُّحَىٰ", "وَاللَّيْلِ إِذَا سَجَىٰ", "مَا وَدَّعَكَ رَبُّكَ وَمَا قَلَىٰ", "وَلَلْآخِرَةُ خَيْرٌ لَّكَ مِنَ الْأُولَىٰ", "وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰ"] },
+            { name: "Al-Inshirah", verses: ["أَلَمْ نَشْرَحْ لَكَ صَدْرَكَ", "وَوَضَعْنَا عَنكَ وِزْرَكَ", "الَّذِي أَنقَضَ ظَهْرَكَ", "وَرَفَعْنَا لَكَ ذِكْرَكَ", "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا", "إِنَّ مَعَ الْعُسْرِ يُسْرًا"] },
+            { name: "At-Tin", verses: ["وَالتِّينِ وَالZَّيْتُونِ", "وَطُورِ سِينِينَ", "وَهَٰذَا الْبَلَدِ الْأَمِينِ", "لَقَدْ خَلَقْنَا الْإِنسَانَ فِي أَحْسَنِ تَقْوِيمٍ"] },
+            { name: "Al-Alaq", verses: ["اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ", "خَلَقَ الْإِنسَانَ مِنْ عَلَقٍ", "اقْرَأْ وَرَبُّكَ الْأَكْرَمُ", "الَّذِي عَلَّمَ بِالْقَلَمِ"] },
+            { name: "Al-Qadr", verses: ["إِنَّا أَنزَلْنَاهُ فِي لَيْلَةِ الْقَدْرِ", "وَمَا أَدْرَاكَ مَا لَيْلَةُ الْقَدْرِ", "لَيْلَةُ الْقَدْرِ خَيْرٌ مِّنْ أَلْفِ شَهْرٍ"] },
+            { name: "Al-Bayyinah", verses: ["لَمْ يَكُنِ الَّذِينَ كَفَرُوا مِنْ أَهْلِ الْكِتَابِ", "رَسُولٌ مِّنَ اللَّهِ يَتْلُو صُحُفًا مُّطَهَّرَةً", "فِيهَا كُتُبٌ قَيِّمَةٌ"] },
+            { name: "Az-Zalzalah", verses: ["إِذَا زُلْزِلَتِ الْأَرْضُ زِلْزَالَهَا", "وَأَخْرَجَتِ الْأَرْضُ أَثْقَالَهَا", "وَقَالَ الْإِنسَانُ مَا لَهَا"] },
+            { name: "Al-Adiyat", verses: ["وَالْعَادِيَاتِ ضَبْحًا", "فَالْمُورِيَاتِ قَدْحًا", "فَالْمُغِيرَاتِ صُبْحًا", "فَأَثَرْنَ بِهِ نَقْعًا"] },
+            { name: "Al-Qari'ah", verses: ["الْقَارِعَةُ", "مَا الْقَارِعَةُ", "وَمَا أَدْرَاكَ مَا الْقَارِعَةُ", "يَوْمَ يَكُونُ النَّاسُ كَالْفَرَاشِ الْمَبْثُوثِ"] },
+            { name: "At-Takathur", verses: ["أَلْهَاكُمُ التَّكَاثُرُ", "حَتَّىٰ زُرْتُمُ الْمَقَابِرَ", "كَلَّا سَوْفَ تَعْلَمُونَ", "ثُمَّ كَلَّا سَوْفَ تَعْلَمُونَ"] },
+            { name: "Al-Asr", verses: ["وَالْعَصْرِ", "إِنَّ الْإِنسَانَ لَفِي خُسْرٍ", "إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ", "وَتَوَاصَوْا بِالْحَقِّ وَتَوَاصَوْا بِالصَّبْرِ"] },
+            { name: "Al-Humazah", verses: ["وَيْلٌ لِّكُلِّ هُمَزَةٍ لُّمَزَةٍ", "الَّذِي جَمَعَ مَالًا وَعَدَّدَهُ", "يَحْسَبُ أَنَّ مَالَهُ أَخْلَدَهُ"] },
+            { name: "Al-Fil", verses: ["أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ", "أَلَمْ يَجْعَلْ كَيْدَهُمْ فِي تَضْلِيلٍ", "وَأَرْسَلَ عَلَيْهِمْ طَيْرًا أَبَابِيلَ"] },
+            { name: "Quraish", verses: ["لِإِيلَافِ قُرَيْشٍ", "إِيلَافِهِمْ رِحْلَةَ الشِّتَاءِ وَالصَّيْفِ", "فَلْيَعْبُدُوا رَبَّ هَٰذَا الْبَيْتِ"] },
+            { name: "Al-Ma'un", verses: ["أَرَأَيْتَ الَّذِي يُكَذِّبُ بِالدِّينِ", "فَذَٰلِكَ الَّذِي يَدُعُّ الْيَتِيمَ", "وَلَا يَحُضُّ عَلَىٰ طَعَامِ الْمِسْكِينِ"] },
+            { name: "Al-Kauthar", verses: ["إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ", "فَصَلِّ لِرَبِّكَ وَانْحَرْ", "إِنَّ شَانِئَكَ هُوَ الْأَبْتَرُ"] },
+            { name: "Al-Kafirun", verses: ["قُلْ يَا أَيُّهَا الْكَافِرُونَ", "لَا أَعْبُدُ مَا تَعْبُدُونَ", "وَلَا أَنتُمْ عَابِدُونَ مَا أَعْبُدُ"] },
+            { name: "An-Nasr", verses: ["إِذَا جَاءَ نَصْرُ اللَّهِ وَالْفَتْحُ", "وَرَأَيْتَ النَّاسَ يَدْخُلُونَ فِي دِينِ اللَّهِ أَفْوَاجًا", "فَسَبِّحْ بِحَمْدِ رَبِّكَ وَاسْتَغْفِرْهُ"] },
+            { name: "Al-Masad", verses: ["تَبَّتْ يَدَا أَبِي لَهَبٍ وَتَبَّ", "مَا أَغْنَىٰ عَنْهُ مَالُهُ وَمَا كَسَبَ", "سَيَصْلَىٰ نَارًا ذَاتَ لَهَبٍ"] },
+            { name: "Al-Ikhlas", verses: ["قُلْ هُوَ اللَّهُ أَحَدٌ", "اللَّهُ الصَّمَدُ", "لَمْ يَلِدْ وَلَمْ يُولَدْ", "وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ"] },
+            { name: "Al-Falaq", verses: ["قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ", "مِن شَرِّ مَا خَلَقَ", "وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ", "وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ", "وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ"] },
+            { name: "An-Nas", verses: ["قُلْ أَعُوذُ بِرَبِّ النَّاسِ", "مَلِكِ النَّاسِ", "إِلَٰهِ النَّاسِ", "مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ", "الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ", "مِنَ الْجِنَّةِ وَالنَّاسِ"] }
+        ];
+
+        let currentLevel = 1;
+        let score = 0;
+        let streak = 0;
+        let timerInterval;
+        let seconds = 0;
+        let selectedAnswers = [];
+        let currentTargetVerse = "";
+        let levelJustCompleted = false; // PERUBAHAN 2: Track sama ada tahap baru sahaja selesai
+
+        // PERUBAHAN 1: Fungsi reset skor
+        function resetScore() {
+            if (confirm("Reset skor ke 0?")) {
+                score = 0;
+                document.getElementById('totalScore').innerText = score;
+            }
+        }
+
+        function startLevel(level) {
+            currentLevel = level;
+            streak = 0;
+            levelJustCompleted = false;
+            document.getElementById('bottomNav').classList.add('nav-hidden');
+            document.getElementById('levelSelection').classList.add('hidden');
+            document.getElementById('gameArea').classList.remove('hidden');
+            resetTimer();
+            setupStreakDots();
+            renderQuestion();
+        }
+
+        function setupStreakDots() {
+            const container = document.getElementById('streakContainer');
+            container.innerHTML = '';
+            for(let i=0; i<10; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'streak-dot';
+                container.appendChild(dot);
+            }
+        }
+
+        function triggerGoldenRain() {
+            var duration = 5 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 3000 };
+
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) { return clearInterval(interval); }
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, colors: ['#fbbf24', '#f59e0b', '#fef3c7'] }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }, colors: ['#fbbf24', '#f59e0b', '#fef3c7'] }));
+            }, 250);
+        }
+
+        function updateStreakUI() {
+            const dots = document.querySelectorAll('.streak-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index < streak);
+            });
+            
+            if (streak >= 10) {
+                triggerGoldenRain();
+                levelJustCompleted = true;
+                streak = 0;
+                // PERUBAHAN 2: Tunjuk popup dengan butang tahap seterusnya
+                if (currentLevel < 3) {
+                    showCongrats("🌟 Luar Biasa!", "Anda berjaya selesaikan Tahap " + currentLevel + "! Sedia ke Tahap " + (currentLevel + 1) + "?", true);
+                } else {
+                    showCongrats("🏆 Tahniah!", "Anda telah menguasai semua tahap! Pejuang Hafazan Sejati!", false);
+                }
+            }
+        }
+
+        // PERUBAHAN 2: Tambah parameter showNextLevel
+        function showCongrats(title, msg, showNextLevel) {
+            document.getElementById('congratsTitle').innerText = title;
+            document.getElementById('congratsMsg').innerText = msg;
+            const nextBtn = document.getElementById('nextLevelBtn');
+            if (showNextLevel) {
+                nextBtn.classList.remove('hidden');
+                nextBtn.innerText = 'Naik ke Tahap ' + (currentLevel + 1) + ' →';
+            } else {
+                nextBtn.classList.add('hidden');
+            }
+            document.getElementById('congratsOverlay').classList.remove('hidden');
+        }
+
+        // PERUBAHAN 2: Fungsi naik tahap dari butang
+        function goNextLevel() {
+            document.getElementById('congratsOverlay').classList.add('hidden');
+            startLevel(currentLevel + 1);
+        }
+
+        function closeCongrats() {
+            document.getElementById('congratsOverlay').classList.add('hidden');
+            document.getElementById('congratsTitle').className = "text-3xl font-bold text-amber-400 mb-2";
+            if (levelJustCompleted) {
+                levelJustCompleted = false;
+                if (currentLevel >= 3) {
+                    backToMenu();
+                } else {
+                    renderQuestion();
+                }
+            } else {
+                renderQuestion();
+            }
+        }
+
+        function renderQuestion() {
+            const wrapper = document.getElementById('questionWrapper');
+            const btn = document.getElementById('actionBtn');
+            const surah = surahDB[Math.floor(Math.random() * surahDB.length)];
+            document.getElementById('surahBadge').innerText = `Surah ${surah.name}`;
+            wrapper.innerHTML = "";
+            selectedAnswers = [];
+
+            if (currentLevel === 1) {
+                document.getElementById('gameTitle').innerText = "Susun Ayat";
+                document.getElementById('gameDesc').innerText = "Ketik pada ayat mengikut turutan yang betul.";
+                btn.className = "w-full py-4 rounded-2xl font-bold text-lg transition-all shadow-lg bg-amber-600 text-white hover:bg-amber-700";
+                
+                let shuffled = [...surah.verses].sort(() => Math.random() - 0.5);
+                shuffled.forEach(v => {
+                    const div = document.createElement('div');
+                    div.className = "card-glass p-5 rounded-2xl text-center arabic text-xl cursor-pointer border border-transparent transition-all relative";
+                    div.innerText = v;
+                    div.onclick = () => {
+                        if(selectedAnswers.includes(v)) {
+                            selectedAnswers = selectedAnswers.filter(a => a !== v);
+                            div.classList.remove('bg-amber-500/20', 'border-amber-500');
+                            const badge = div.querySelector('.order-badge');
+                            if(badge) badge.remove();
+                            updateBadges();
+                        } else {
+                            selectedAnswers.push(v);
+                            div.classList.add('bg-amber-500/20', 'border-amber-500');
+                            const badge = document.createElement('span');
+                            badge.className = 'order-badge';
+                            badge.innerText = `Ayat ${selectedAnswers.length}`;
+                            div.appendChild(badge);
+                        }
+                    };
+                    wrapper.appendChild(div);
+                });
+
+                function updateBadges() {
+                    const allItems = wrapper.querySelectorAll('.card-glass');
+                    allItems.forEach(item => {
+                        const txt = item.innerText.replace(/Ayat \d+/, '').trim();
+                        const idx = selectedAnswers.indexOf(txt);
+                        const badge = item.querySelector('.order-badge');
+                        if (idx !== -1) {
+                            if (!badge) {
+                                const newBadge = document.createElement('span');
+                                newBadge.className = 'order-badge';
+                                newBadge.innerText = `Ayat ${idx + 1}`;
+                                item.appendChild(newBadge);
+                            } else { badge.innerText = `Ayat ${idx + 1}`; }
+                        }
+                    });
+                }
+                currentTargetVerse = surah.verses;
+            } 
+            else if (currentLevel === 2) {
+                document.getElementById('gameTitle').innerText = "Kalimah Hilang";
+                document.getElementById('gameDesc').innerText = "Pilih kalimah yang tepat untuk melengkapkan ayat.";
+                btn.className = "w-full py-4 rounded-2xl font-bold text-lg transition-all shadow-lg bg-emerald-600 text-white hover:bg-emerald-700";
+                const vIndex = Math.floor(Math.random() * surah.verses.length);
+                const words = surah.verses[vIndex].split(" ");
+                const missingIdx = Math.floor(Math.random() * words.length);
+                const correctWord = words[missingIdx];
+                const qBox = document.createElement('div');
+                qBox.className = "card-glass p-8 rounded-3xl text-center flex flex-col items-center gap-6";
+                const vDisplay = document.createElement('div');
+                vDisplay.className = "arabic text-3xl leading-loose";
+                vDisplay.innerHTML = words.map((w, i) => i === missingIdx ? '<span class="border-b-2 border-slate-500 px-8">____</span>' : w).join(" ");
+                qBox.appendChild(vDisplay);
+                const grid = document.createElement('div');
+                grid.className = "grid grid-cols-2 gap-3 w-full";
+                const choices = [correctWord, "قُلْ", "فِي", "الَّذِي", "مِنْ"].sort(() => Math.random() - 0.5).slice(0, 4);
+                if(!choices.includes(correctWord)) choices[0] = correctWord;
+                choices.forEach(c => {
+                    const cBtn = document.createElement('button');
+                    cBtn.className = "bg-slate-800/50 border border-slate-700 p-4 rounded-xl arabic text-xl hover:bg-emerald-500/20 hover:border-emerald-500 transition-all";
+                    cBtn.innerText = c;
+                    cBtn.onclick = () => {
+                        selectedAnswers = [c];
+                        document.querySelectorAll('#questionWrapper button').forEach(b => b.classList.remove('border-emerald-500', 'bg-emerald-500/20'));
+                        cBtn.classList.add('border-emerald-500', 'bg-emerald-500/20');
+                    };
+                    grid.appendChild(cBtn);
+                });
+                qBox.appendChild(grid);
+                wrapper.appendChild(qBox);
+                currentTargetVerse = correctWord;
+            } 
+            else if (currentLevel === 3) {
+                document.getElementById('gameTitle').innerText = "Hafazan Penuh";
+                document.getElementById('gameDesc').innerText = "Ketik perkataan di bawah untuk menyusun ayat.";
+                btn.className = "w-full py-4 rounded-2xl font-bold text-lg transition-all shadow-lg bg-rose-700 text-white hover:bg-rose-800";
+                const vIndex = Math.floor(Math.random() * surah.verses.length);
+                const fullVerse = surah.verses[vIndex];
+                const words = fullVerse.split(" ");
+                const shuffledWords = [...words].sort(() => Math.random() - 0.5);
+                const dropZone = document.createElement('div');
+                dropZone.className = "drop-zone arabic text-2xl bg-slate-900/40";
+                dropZone.innerText = "Ketik perkataan di bawah";
+                wrapper.appendChild(dropZone);
+                const pool = document.createElement('div');
+                pool.className = "flex flex-wrap justify-center gap-3 mt-8";
+                shuffledWords.forEach(w => {
+                    const chip = document.createElement('div');
+                    chip.className = "word-chip arabic";
+                    chip.innerText = w;
+                    chip.onclick = () => {
+                        if(dropZone.innerText.includes("Ketik")) dropZone.innerText = "";
+                        const newChip = chip.cloneNode(true);
+                        newChip.onclick = () => { newChip.remove(); selectedAnswers = selectedAnswers.filter(a => a !== w); };
+                        dropZone.appendChild(newChip);
+                        selectedAnswers.push(w);
+                    };
+                    pool.appendChild(chip);
+                });
+                wrapper.appendChild(pool);
+                currentTargetVerse = fullVerse;
+            }
+        }
+
+        document.getElementById('actionBtn').onclick = () => {
+            let isCorrect = false;
+            if(currentLevel === 1) isCorrect = JSON.stringify(selectedAnswers) === JSON.stringify(currentTargetVerse);
+            else if (currentLevel === 2) isCorrect = selectedAnswers[0] === currentTargetVerse;
+            else isCorrect = selectedAnswers.join(" ") === currentTargetVerse;
+
+            if(isCorrect) {
+                streak++;
+                score += (100 * currentLevel);
+                document.getElementById('totalScore').innerText = score;
+                
+                if (streak < 10) {
+                    const phrases = ["MashaAllah! 🌙", "Hebat! ⭐", "Tahniah! 🎉", "Alhamdulillah! 🤲", "Tepat sekali! ✨"];
+                    showCongrats(phrases[Math.floor(Math.random()*phrases.length)], "Jawapan anda betul. Teruskan usaha!", false);
+                }
+                updateStreakUI();
+            } else {
+                streak = 0;
+                updateStreakUI();
+                const motivasiTajuk = ["Cuba Lagi! 💪", "Jangan Putus Asa! 🌱", "Hampir Berjaya! 🚀", "Teruskan! 🤲", "Fokus! ⭐"];
+                const motivasiMsg = [
+                    "Hafazan perlu masa dan sabar. Ulang dan cuba lagi!",
+                    "Setiap kesilapan itu sebahagian daripada pembelajaran.",
+                    "Semakin banyak cuba, semakin kuat ingatan kita.",
+                    "Sabar dan tekun — itulah kunci hafazan yang sejati.",
+                    "Hampir! Tarik nafas, fokus, dan cuba sekali lagi."
+                ];
+                const idx = Math.floor(Math.random() * motivasiTajuk.length);
+                showMotivasi(motivasiTajuk[idx], motivasiMsg[idx]);
+            }
+        };
+
+        function showMotivasi(tajuk, msg) {
+            document.getElementById('congratsEmoji').innerText = "🔁";
+            document.getElementById('congratsTitle').innerText = tajuk;
+            document.getElementById('congratsTitle').className = "text-3xl font-bold text-rose-400 mb-2";
+            document.getElementById('congratsMsg').innerText = msg;
+            document.getElementById('nextLevelBtn').classList.add('hidden');
+            document.getElementById('congratsOverlay').classList.remove('hidden');
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            seconds = 0;
+            timerInterval = setInterval(() => {
+                seconds++;
+                const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const s = (seconds % 60).toString().padStart(2, '0');
+                document.getElementById('timer').innerText = `${m}:${s}`;
+            }, 1000);
+        }
+
+        function backToMenu() {
+            clearInterval(timerInterval);
+            document.getElementById('bottomNav').classList.remove('nav-hidden');
+            document.getElementById('levelSelection').classList.remove('hidden');
+            document.getElementById('gameArea').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
