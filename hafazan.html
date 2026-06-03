@@ -25,7 +25,7 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-deep); color: var(--text-main); font-family: var(--font-main); line-height: 1.6; padding: 10px; display: flex; justify-content: center; }
-        .app-container { width: 100%; max-width: 500px; padding-bottom: 100px; }
+        .app-container { width: 100%; max-width: 500px; padding-bottom: 100px; padding-top: 64px; }
 
         /* NAVIGATION */
         .bottom-nav {
@@ -218,18 +218,21 @@
         
         /* ── STICKY HEADER ── */
         .app-header {
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 500px;
             z-index: 999;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 12px 16px;
-            background: rgba(15, 23, 42, 0.92);
+            background: rgba(15, 23, 42, 0.96);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid rgba(251, 191, 36, 0.12);
-            margin: -10px -10px 16px -10px;
         }
         .header-brand .brand-title {
             font-size: 1rem;
@@ -378,26 +381,28 @@
 <body>
 
 <div class="app-container">
-    
+
+    <!-- GLOBAL HEADER -->
+    <header class="app-header">
+        <div class="header-brand">
+            <div class="brand-title">Hafazan Track</div>
+            <div class="brand-sub" id="global-header-sub">Hafazan Al-Quran Bagi Pemula</div>
+        </div>
+        <div class="support-btn-wrapper">
+            <div id="studyBubble" class="study-bubble">Sokong Tabung Belajar 🎓</div>
+            <a href="tabung-belajar.html" target="_blank" class="study-btn" title="Tabung Belajar">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path class="steam steam-1" d="M9 4C9 4 7.5 5.5 9 7C10.5 8.5 9 10 9 10"/>
+                    <path class="steam steam-2" d="M13 3C13 3 11.5 4.5 13 6C14.5 7.5 13 9 13 9"/>
+                    <path d="M18 10H4C2.89543 10 2 10.8954 2 12V15C2 18.3137 4.68629 21 8 21H14C17.3137 21 20 18.3137 20 15V12C20 10.8954 19.1046 10 18 10Z" fill="#FFFFFF"/>
+                    <path d="M20 12C20 12 22 12 22 14.5C22 17 20 17 20 17" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+            </a>
+        </div>
+    </header>
+
     <!-- DASHBOARD TAB -->
     <div id="tab-dashboard" class="tab-content active">
-        <header class="app-header">
-            <div class="header-brand">
-                <div class="brand-title">Hafazan Track</div>
-                <div class="brand-sub">Hafazan Al-Quran Bagi Pemula</div>
-            </div>
-            <div class="support-btn-wrapper">
-                <div id="studyBubble" class="study-bubble">Sokong Tabung Belajar 🎓</div>
-                <a href="tabung-belajar.html" target="_blank" class="study-btn" title="Tabung Belajar">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path class="steam steam-1" d="M9 4C9 4 7.5 5.5 9 7C10.5 8.5 9 10 9 10"/>
-                        <path class="steam steam-2" d="M13 3C13 3 11.5 4.5 13 6C14.5 7.5 13 9 13 9"/>
-                        <path d="M18 10H4C2.89543 10 2 10.8954 2 12V15C2 18.3137 4.68629 21 8 21H14C17.3137 21 20 18.3137 20 15V12C20 10.8954 19.1046 10 18 10Z" fill="#FFFFFF"/>
-                        <path d="M20 12C20 12 22 12 22 14.5C22 17 20 17 20 17" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
-                    </svg>
-                </a>
-            </div>
-        </header>
 
         <!-- KAD PLATFORM HAFAZAN ANDA -->
         <div class="card" style="background: linear-gradient(135deg, #0f2027 0%, #1a2a3a 60%, #1e293b 100%); border: 1px solid rgba(251,191,36,0.18); border-radius: var(--radius); position: relative; overflow: hidden;">
@@ -502,7 +507,6 @@
 
     <!-- SABA' TAB -->
     <div id="tab-saba-nav" class="tab-content">
-        <header><h1>Hafazan Saba'</h1><p class="subtitle">Rekod hafazan baru.</p></header>
         <div class="card">
             <div class="form-group">
                 <label>Pilih Surah</label>
@@ -519,7 +523,6 @@
 
     <!-- MURAJAAH TAB -->
     <div id="tab-murajaah-nav" class="tab-content">
-        <header><h1>Murajaah</h1><p class="subtitle">Mantapkan hafazan lama.</p></header>
         <div class="card">
             <div class="form-group"><label>Mod Murajaah</label>
                 <select id="murajaah-mode" onchange="app.toggleMurajaahMode()">
@@ -644,6 +647,14 @@
 
         switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            const subtitleMap = {
+                'dashboard': 'Hafazan Al-Quran Bagi Pemula',
+                'saba-nav': 'Rekod hafazan baru',
+                'murajaah-nav': 'Mantapkan hafazan lama',
+                'quran': 'Mushaf Digital'
+            };
+            const subEl = document.getElementById('global-header-sub');
+            if (subEl && subtitleMap[tabId]) subEl.innerText = subtitleMap[tabId];
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.add('active');
             const navKey = tabId.split('-')[0];
