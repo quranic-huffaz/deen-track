@@ -174,7 +174,7 @@
         </div>
     </header>
 
-    <main class="flex-grow flex flex-col items-center justify-center p-6 pb-28">
+    <main class="flex-grow flex flex-col items-center justify-center p-6 pb-28 overflow-y-auto">
         
         <div id="section-selawat" class="w-full max-w-md space-y-6 text-center animate-fade-in">
             <div class="space-y-1">
@@ -207,7 +207,7 @@
             </div>
         </div>
 
-        <div id="section-history" class="hidden w-full max-w-md h-full overflow-y-auto pt-4 px-2">
+        <div id="section-history" class="hidden w-full max-w-md overflow-y-auto pt-4 px-2" style="max-height: calc(100vh - 160px); scrollbar-width: thin; scrollbar-color: rgba(56,189,248,0.3) transparent;">
             
             <div class="grid grid-cols-2 gap-2 mb-4">
                 <button onclick="copyAppLink()" class="glass-card py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 text-blue-400 hover:bg-blue-500/10 transition border border-blue-500/20">
