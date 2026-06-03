@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hafazan Tracker - Pemula</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
-    <style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+   <style>
         :root {
             --bg-deep: #0f172a;
             --bg-card: #1e293b;
@@ -370,6 +371,151 @@
             background: rgba(99,102,241,0.07); border: 1px solid rgba(99,102,241,0.1);
             pointer-events: none;
         }
+        /* ── INFAQ POPUP SHEET ── */
+        .infaq-fab {
+            position: fixed;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1100;
+        }
+        .infaq-fab-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 56px;
+            background: linear-gradient(180deg, #1e3a5f 0%, #1e293b 100%);
+            border: 1px solid rgba(59,130,246,0.35);
+            border-left: none;
+            border-radius: 0 10px 10px 0;
+            cursor: pointer;
+            box-shadow: 3px 0 16px rgba(59,130,246,0.18);
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+            writing-mode: vertical-rl;
+            font-size: 0.5rem;
+            font-weight: 700;
+            color: #93c5fd;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            gap: 0;
+            padding: 8px 0;
+            user-select: none;
+        }
+        .infaq-fab-btn:hover {
+            background: linear-gradient(180deg, #1e40af 0%, #1e3a5f 100%);
+            box-shadow: 3px 0 22px rgba(59,130,246,0.3);
+        }
+        .infaq-fab-btn i {
+            writing-mode: horizontal-tb;
+            font-size: 0.75rem;
+            margin-bottom: 5px;
+        }
+        .infaq-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 1090;
+            backdrop-filter: blur(2px);
+        }
+        .infaq-overlay.open { display: block; }
+        .infaq-sheet {
+            position: fixed;
+            left: -320px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 290px;
+            background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(59,130,246,0.2);
+            border-left: none;
+            border-radius: 0 16px 16px 0;
+            z-index: 1100;
+            box-shadow: 6px 0 32px rgba(0,0,0,0.45);
+            transition: left 0.32s cubic-bezier(0.4,0,0.2,1);
+            overflow: hidden;
+        }
+        .infaq-sheet.open { left: 0; }
+        .infaq-sheet-header {
+            padding: 18px 18px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .infaq-sheet-title {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #f8fafc;
+            letter-spacing: 0.3px;
+        }
+        .infaq-sheet-badge {
+            font-size: 0.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+            background: rgba(59,130,246,0.1);
+            border: 1px solid rgba(59,130,246,0.25);
+            padding: 2px 8px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .infaq-sheet-close {
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0;
+            width: auto;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+        .infaq-sheet-close:hover { color: #f8fafc; }
+        .infaq-sheet-body { padding: 10px 10px 16px; }
+        .sheet-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 10px;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: background 0.18s ease;
+            cursor: pointer;
+        }
+        .sheet-item:hover { background: rgba(255,255,255,0.05); }
+        .sheet-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        .sheet-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            line-height: 1.3;
+        }
+        .sheet-sublabel {
+            font-size: 0.62rem;
+            color: #64748b;
+            margin-top: 2px;
+        }
+        .sheet-arrow {
+            margin-left: auto;
+            font-size: 0.65rem;
+            color: #475569;
+            flex-shrink: 0;
+        }
+        .infaq-sheet-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.05);
+            margin: 4px 10px;
+        }
         .game-deco-circle2 {
             position: absolute; top: -14px; right: 50px;
             width: 50px; height: 50px; border-radius: 50%;
@@ -409,37 +555,14 @@
             <div style="position:absolute; top:-18px; right:-18px; width:80px; height:80px; border-radius:50%; background:rgba(251,191,36,0.06); pointer-events:none;"></div>
             <div style="position:absolute; bottom:-24px; left:-16px; width:60px; height:60px; border-radius:50%; background:rgba(16,185,129,0.05); pointer-events:none;"></div>
 
-            <a href="https://quranic-huffaz.github.io/quran-tracker/info-quran-tracker.html" target="_blank" id="masjid-btn" class="masjid-icon-wrap">
-                <span class="masjid-label" id="masjid-label">🕌 Infaq Tahfiz</span>
-                <div class="masjid-icon-btn" style="position:relative;">
-                    <div class="masjid-ping" id="masjid-ping" style="display:none;"></div>
-                    <span class="masjid-live-dot"></span>
-                <svg class="masjid-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="7" y="22" width="5" height="16" rx="1.5" fill="none" stroke="#c9a84c" stroke-width="1.4"/>
-                    <ellipse cx="9.5" cy="22" rx="3" ry="2" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
-                    <line x1="9.5" y1="16" x2="9.5" y2="20" stroke="#c9a84c" stroke-width="1.2"/>
-                    <polygon points="9.5,13 11.2,16 7.8,16" fill="#c9a84c" opacity="0.75"/>
-                    <rect x="36" y="22" width="5" height="16" rx="1.5" fill="none" stroke="#c9a84c" stroke-width="1.4"/>
-                    <ellipse cx="38.5" cy="22" rx="3" ry="2" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
-                    <line x1="38.5" y1="16" x2="38.5" y2="20" stroke="#c9a84c" stroke-width="1.2"/>
-                    <polygon points="38.5,13 40.2,16 36.8,16" fill="#c9a84c" opacity="0.75"/>
-                    <path d="M15 22 Q15 12 24 12 Q33 12 33 22" fill="none" stroke="#c9a84c" stroke-width="1.6"/>
-                    <line x1="24" y1="8" x2="24" y2="12" stroke="#c9a84c" stroke-width="1.2"/>
-                    <path d="M22.2 9.5 a2 2 0 0 1 3.6 0" fill="none" stroke="#c9a84c" stroke-width="1.1"/>
-                    <rect x="15" y="22" width="18" height="16" rx="0" fill="none" stroke="#c9a84c" stroke-width="1.4"/>
-                    <line x1="7" y1="38" x2="41" y2="38" stroke="#c9a84c" stroke-width="1.4"/>
-                    <path d="M21 38 V33 Q24 30 27 33 V38" fill="none" stroke="#c9a84c" stroke-width="1.2"/>
-                    <rect x="17" y="25" width="4" height="5" rx="2" fill="none" stroke="#c9a84c" stroke-width="1"/>
-                    <rect x="27" y="25" width="4" height="5" rx="2" fill="none" stroke="#c9a84c" stroke-width="1"/>
-                </svg>
-                </div>
-            </a>
-
+            
             <div style="text-align:center; padding: 8px 0 4px;">
                 <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom:14px;">
                     <span style="font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.9px; color:var(--accent);">Platform Hafazan Anda</span>
                 </div>
-                <p style="font-size:0.82rem; color:#94a3b8; line-height:1.75; margin-bottom:22px; max-width:240px; margin-left:auto; margin-right:auto;">Sematkan hafazan, jejak kemajuan secara sistematik. Mulakan langkah anda hari ini.</p>
+                <p style="font-size:0.82rem; color:#94a3b8; line-height:1.75; margin-bottom:22px; max-width:240px; margin-left:auto; margin-right:auto;">Sematkan hafazan, jejak kemajuan secara sistematik. 
+                  <br>Mulakan langkah anda hari ini. 
+                  <br>Mula Hafal 1 Hari 1 Ayat</p>
 
                 <button onclick="app.switchTab('saba-nav')" style="
                     display:block; width:100%; padding:14px 0;
@@ -578,6 +701,39 @@
         <button id="nav-murajaah" class="nav-btn" onclick="app.switchTab('murajaah-nav')">Murajaah</button>
         <button id="nav-quran" class="nav-btn" onclick="app.switchTab('quran')">Al-Quran</button>
     </nav>
+    <!-- INFAQ POPUP DARI KIRI -->
+    <div class="infaq-overlay" id="infaqOverlay" onclick="closeInfaqSheet()"></div>
+
+    <div class="infaq-fab">
+        <div class="infaq-fab-btn" onclick="openInfaqSheet()" title="Infaq Tahfiz">
+            <i class="fa-solid fa-hand-holding-heart"></i>
+            Infaq
+        </div>
+    </div>
+
+    <div class="infaq-sheet" id="infaqSheet">
+        <div class="infaq-sheet-header">
+            <div>
+                <div class="infaq-sheet-title">Sokongan Anda</div>
+            </div>
+            <span class="infaq-sheet-badge">Amal Jariah</span>
+            <button class="infaq-sheet-close" onclick="closeInfaqSheet()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="infaq-sheet-body">
+            <a href="infaq-tahfiz-aqil.html" class="sheet-item">
+                <div class="sheet-icon" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);color:#3b82f6;">
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                </div>
+                <div>
+                    <div class="sheet-label">Infaq Tahfiz AQIL</div>
+                    <div class="sheet-sublabel">Amal jariah berterusan</div>
+                </div>
+                <i class="fa-solid fa-chevron-right sheet-arrow"></i>
+            </a>
+        </div>
+    </div>
 </div>
 
 
@@ -840,6 +996,16 @@
             setInterval(() => showBubble(4000), 15000);
         }, 500);
     })();
+
+// ── Infaq Sheet ──
+    function openInfaqSheet() {
+        document.getElementById('infaqSheet').classList.add('open');
+        document.getElementById('infaqOverlay').classList.add('open');
+    }
+    function closeInfaqSheet() {
+        document.getElementById('infaqSheet').classList.remove('open');
+        document.getElementById('infaqOverlay').classList.remove('open');
+    }
 
     app.init();
 </script>
