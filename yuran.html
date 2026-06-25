@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistem Kemaskini Pembayaran</title>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --accent-color: #84cc16; /* Hijau Fintech Sukses */
+      --primary-gold: #d97706; /* Eksklusif Gold */
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Bahagian Atas & QR */
+    .header-section {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .brand-title {
+      font-size: 18pt;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #ffffff;
+      margin-bottom: 5px;
+    }
+
+    .brand-subtitle {
+      font-size: 10pt;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .qr-container {
+      background: #ffffff;
+      padding: 15px;
+      border-radius: 18px;
+      display: inline-block;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      margin-bottom: 10px;
+    }
+
+    /* Gantikan URL imej di bawah dengan imej QR sebenar anda jika di-host di GitHub */
+    .qr-image {
+      width: 180px;
+      height: auto;
+      display: block;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 9pt;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-control {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 11pt;
+      color: #ffffff;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary-gold);
+      box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
+    }
+
+    .currency-wrapper {
+      position: relative;
+    }
+
+    .currency-symbol {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-weight: 600;
+      color: var(--primary-gold);
+    }
+
+    .currency-input {
+      padding-left: 45px;
+    }
+
+    /* Button Styles */
+    .btn-submit {
+      width: 100%;
+      background: linear-gradient(90deg, #d97706 0%, #b45309 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 11pt;
+      font-weight: 600;
+      color: #ffffff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+    }
+
+    .btn-submit:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:active {
+      transform: translateY(1px);
+    }
+
+    /* Status Alert */
+    .status-msg {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 10pt;
+      text-align: center;
+      display: none;
+    }
+
+    .status-success {
+      background: rgba(132, 204, 22, 0.15);
+      color: #bef264;
+      border: 1px solid rgba(132, 204, 22, 0.3);
+    }
+
+    .status-error {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Footer */
+    .footer-note {
+      text-align: center;
+      font-size: 8pt;
+      color: var(--text-muted);
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header-section">
+      <div class="brand-title">PREMIUM PAY</div>
+      <div class="brand-subtitle">Sistem Kemaskini & Pengesahan Pembayaran</div>
+      
+      <div class="qr-container">
+        <img src="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/image_80ff5e.jpg" alt="DuitNow QR" class="qr-image" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=Muhammad%20Arshad%20Bin%20Tajuddin';">
+      </div>
+      <p style="font-size: 9pt; color: var(--text-muted);">Imbas kod QR di atas untuk membuat bayaran</p>
+    </div>
+
+    <form id="paymentForm" onsubmit="handleFormSubmit(event)">
+      <div class="form-group">
+        <label for="nama">Nama Penuh</label>
+        <input type="text" id="nama" name="nama" class="form-control" placeholder="Contoh: Muhammad Arshad" required>
+      </div>
+
+      <div class="form-group">
+        <label for="hari">Hari</label>
+        <select id="hari" name="hari" class="form-control" required>
+          <option value="" disabled selected>Pilih Hari</option>
+          <option value="Isnin">Isnin</option>
+          <option value="Selasa">Selasa</option>
+          <option value="Rabu">Rabu</option>
+          <option value="Khamis">Khamis</option>
+          <option value="Jumaat">Jumaat</option>
+          <option value="Sabtu">Sabtu</option>
+          <option value="Ahad">Ahad</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="tarikh">Tarikh Bayaran</label>
+        <input type="date" id="tarikh" name="tarikh" class="form-control" required>
+      </div>
+
+      <div class="form-group">
+        <label for="jumlah">Jumlah Bayaran</label>
+        <div class="currency-wrapper">
+          <span class="currency-symbol">RM</span>
+          <input type="number" id="jumlah" name="jumlah" step="0.01" class="form-control currency-input" placeholder="0.00" required>
+        </div>
+      </div>
+
+      <button type="submit" id="submitBtn" class="btn-submit">Sahkan Pembayaran</button>
+    </form>
+
+    <div id="statusAlert" class="status-msg"></div>
+
+    <div class="footer-note">
+      Secure Fintech Encryption Enforced &bull; Powered by Google Workspaces
+    </div>
+  </div>
+
+  <script>
+    // Automatik set tarikh hari ini pada input tarikh & pilih hari yang betul
+    window.addEventListener('DOMContentLoaded', () => {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      document.getElementById('tarikh').value = `${yyyy}-${mm}-${dd}`;
+      
+      const days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
+      document.getElementById('hari').value = days[today.getDay()];
+    });
+
+    function handleFormSubmit(event) {
+      event.preventDefault();
+      
+      const submitBtn = document.getElementById('submitBtn');
+      const statusAlert = document.getElementById('statusAlert');
+      
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Memproses Transaksi...";
+      statusAlert.style.display = "none";
+
+      const formData = {
+        nama: document.getElementById('nama').value,
+        hari: document.getElementById('hari').value,
+        tarikh: document.getElementById('tarikh').value,
+        jumlah: document.getElementById('jumlah').value
+      };
+
+      // Hantar data ke Google Apps Script Backend
+      google.script.run
+        .withSuccessHandler(function(response) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = "Sahkan Pembayaran";
+          
+          if(response.status === "SUCCESS") {
+            statusAlert.className = "status-msg status-success";
+            statusAlert.innerText = response.message;
+            statusAlert.style.display = "block";
+            
+            // Format skrip teks mengikut kehendak anda untuk dihantar ke WhatsApp
+            const textWhatsApp = `*PENGESAHAN PEMBAYARAN*\n\nNama : ${formData.nama}\nHari : ${formData.hari}\nTarikh : ${formData.tarikh}\nJumlah : RM ${parseFloat(formData.jumlah).toFixed(2)}\n\n_Data telah dikemaskini secara automatik._`;
+            
+            // URL WhatsApp Group Link anda
+            const groupBaseUrl = "https://chat.whatsapp.com/JQnNtCt4DhU8fbkmL07w5l";
+            
+            // Menggunakan API WhatsApp universal text link untuk hantar skrip terus
+            const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(textWhatsApp)}`;
+            
+            // Buka tab baharu ke WhatsApp untuk hantar skrip data ke grup anda
+            setTimeout(() => {
+              window.open(waUrl, '_blank');
+              document.getElementById('paymentForm').reset();
+            }, 1500);
+
+          } else {
+            statusAlert.className = "status-msg status-error";
+            statusAlert.innerText = "Ralat: " + response.message;
+            statusAlert.style.display = "block";
+          }
+        })
+        .withFailureHandler(function(error) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = "Sahkan Pembayaran";
+          statusAlert.className = "status-msg status-error";
+          statusAlert.innerText = "Sistem ralat: " + error;
+          statusAlert.style.display = "block";
+        })
+        .simpanData(formData);
+    }
+  </script>
+</body>
+</html>
