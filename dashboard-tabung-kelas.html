@@ -119,155 +119,6 @@
             min-width: 0;
         }
 
-        /* ── COUNTDOWN CARD ──────────────────────────── */
-        .countdown-card {
-            background: rgba(255,255,255,0.04);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255,255,255,0.09);
-            border-radius: 18px;
-            padding: 14px 12px 12px;
-            margin-top: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .countdown-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(34,211,238,0.35), rgba(59,130,246,0.35), transparent);
-        }
-
-        .cd-label {
-            font-size: 9px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: rgba(255,255,255,0.35);
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .cd-row {
-            display: flex;
-            gap: 6px;
-            align-items: stretch;
-            justify-content: center;
-        }
-
-        .cd-col {
-            flex: 1;
-            min-width: 0;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 14px;
-            padding: 10px 4px 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3px;
-        }
-
-        .cd-col-title {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            margin-bottom: 4px;
-        }
-
-        .cd-col-icon {
-            width: 20px; height: 20px;
-            border-radius: 6px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 9px;
-            flex-shrink: 0;
-        }
-
-        .cd-col-name {
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.45);
-        }
-
-        .cd-blocks {
-            display: flex;
-            gap: 3px;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .cd-block {
-            background: rgba(255,255,255,0.07);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            padding: 5px 4px 4px;
-            flex: 1;
-            min-width: 0;
-            text-align: center;
-        }
-
-        .cd-num {
-            font-size: clamp(13px, 4vw, 18px);
-            font-weight: 800;
-            line-height: 1;
-            display: block;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .cd-unit {
-            font-size: 7px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            color: rgba(255,255,255,0.35);
-            display: block;
-            margin-top: 2px;
-        }
-
-        .cd-masihi .cd-col-icon { background: rgba(59,130,246,0.2); color: #60a5fa; }
-        .cd-masihi .cd-num { color: #60a5fa; }
-
-        .cd-hijri .cd-col-icon { background: rgba(34,211,238,0.2); color: #22d3ee; }
-        .cd-hijri .cd-num { color: #22d3ee; }
-
-        .cd-divider-v {
-            width: 1px;
-            align-self: stretch;
-            background: rgba(255,255,255,0.08);
-            margin: 0 1px;
-            flex-shrink: 0;
-        }
-
-        /* ── COUNTDOWN QUOTE ─────────────────────────── */
-        .cd-quote {
-            margin-top: 12px;
-            padding: 10px 12px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .cd-quote p {
-            font-size: 10px;
-            font-weight: 400;
-            color: rgba(255,255,255,0.4);
-            line-height: 1.7;
-            letter-spacing: 0.01em;
-            font-style: italic;
-        }
-
-        .cd-quote p strong {
-            color: rgba(255,255,255,0.6);
-            font-style: normal;
-            font-weight: 600;
-        }
-
         /* ── CARDS ───────────────────────────────────── */
         .menu-card {
             background: var(--surface);
@@ -326,12 +177,14 @@
 </head>
 <body class="pb-12">
 
+    <!-- ═══════════════ HEADER ═══════════════ -->
     <header class="fintech-header text-white pt-10 pb-20 px-6 rounded-b-[40px]">
         <div class="header-orb"></div>
         <div class="max-w-md mx-auto relative">
             <p class="welcome-sub">Sistem Pengurusan Dana</p>
             <h1 class="welcome-title">Tabung Kelas <span id="welcome-icon">🌙</span></h1>
 
+            <!-- Kad Tarikh -->
             <div class="date-card">
                 <div class="date-day-row">
                     <div class="day-badge text-white" id="day-name"></div>
@@ -358,74 +211,13 @@
                     </div>
                 </div>
             </div>
-
-            <div class="countdown-card">
-                <p class="cd-label">⏳ Countdown Tarikh</p>
-                <div class="cd-row">
-                    <div class="cd-col cd-masihi">
-                        <div class="cd-col-title">
-                            <div class="cd-col-icon"><i class="fa-regular fa-calendar"></i></div>
-                            <span class="cd-col-name">Masihi</span>
-                        </div>
-                        <div class="cd-blocks">
-                            <div class="cd-block">
-                                <span class="cd-num" id="cd-m-d">—</span>
-                                <span class="cd-unit">hari</span>
-                            </div>
-                            <div class="cd-block">
-                                <span class="cd-num" id="cd-m-h">—</span>
-                                <span class="cd-unit">jam</span>
-                            </div>
-                            <div class="cd-block">
-                                <span class="cd-num" id="cd-m-min">—</span>
-                                <span class="cd-unit">min</span>
-                            </div>
-                            <div class="cd-block">
-                                <span class="cd-num" id="cd-m-s">—</span>
-                                <span class="cd-unit">saat</span>
-                            </div>
-                        </div>
-                        <span style="font-size:8px;color:rgba(255,255,255,0.25);margin-top:5px;" id="cd-m-target">—</span>
-                    </div>
-
-                    <div class="cd-divider-v"></div>
-
-                    <div class="cd-col cd-hijri">
-                        <div class="cd-col-title">
-                            <div class="cd-col-icon"><i class="fa-solid fa-moon"></i></div>
-                            <span class="cd-col-name">Hijriah</span>
-                        </div>
-                        <div class="cd-blocks">
-                            <div class="cd-block">
-                                <span class="cd-num" id="cd-h-d">—</span>
-                                <span class="cd-unit">hari</span>
-                            </div>
-                            <div class="cd-block">
-                                <span class="cd-num" id="cd-h-h">—</span>
-                                <span class="cd-unit">jam</span>
-                            </div>
-                            <div class="cd-block">
-                                <span class="cd-num" id="cd-h-min">—</span>
-                                <span class="cd-unit">min</span>
-                            </div>
-                            <div class="cd-block">
-                                <span class="cd-num" id="cd-h-s">—</span>
-                                <span class="cd-unit">saat</span>
-                            </div>
-                        </div>
-                        <span style="font-size:8px;color:rgba(255,255,255,0.25);margin-top:5px;" id="cd-h-target">—</span>
-                    </div>
-                </div>
-
-                <div class="cd-quote">
-                    <p><strong>Lihat pada "SAAT" bergerak</strong>. <br>Sedarkah, <strong>masa sudah berlalu</strong>, saat sedang berjalan.<br>Sejauh manakah <strong>amalan kita</strong> hari ini?</p>
-                </div>
-            </div>
         </div>
     </header>
 
+    <!-- ═══════════════ MAIN MENU (Gaya Folder Premium) ═══════════════ -->
     <main class="max-w-md mx-auto px-5 -mt-12 space-y-6">
         
+        <!-- * Folder : Tabung Kelas -->
         <div>
             <div class="flex items-center gap-2 mb-2.5 px-1">
                 <i class="fa-solid fa-folder shadow-sm text-blue-500 text-sm"></i>
@@ -450,6 +242,7 @@
             </div>
         </div>
 
+        <!-- * Folder : Duit Keluar -->
         <div>
             <div class="flex items-center gap-2 mb-2.5 px-1">
                 <i class="fa-solid fa-folder shadow-sm text-emerald-500 text-sm"></i>
@@ -476,8 +269,9 @@
 
     </main>
 
+    <!-- ═══════════════ SCRIPT ═══════════════ -->
     <script>
-        /* ── TARIKH ──────────────────────────────────────── */
+        /* ── TARIKH AUTOMATIK ────────────────────────────── */
         function updateDate() {
             const now = new Date();
             const masihiOpts = { day: 'numeric', month: 'long', year: 'numeric' };
@@ -520,104 +314,8 @@
             }
         }
 
-        /* ── COUNTDOWN ───────────────────────────────────── */
-        const bulanHijriahNames = [
-            'Muharram','Safar','Rabiulawal','Rabiulakhir',
-            'Jamadilawal','Jamadilakhir','Rejab','Syaaban',
-            'Ramadan','Syawal','Zulkaedah','Zulhijah'
-        ];
-
-        function getHijriParts(date) {
-            try {
-                const fmt = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', {
-                    day: 'numeric', month: 'numeric', year: 'numeric'
-                });
-                const parts = fmt.formatToParts(date);
-                const get = (type) => parseInt(parts.find(p => p.type === type)?.value || '0', 10);
-                return { d: get('day'), m: get('month'), y: get('year') };
-            } catch(e) { return null; }
-        }
-
-        function pad(n) { return String(n).padStart(2, '0'); }
-
-        function getMasihiNextEvent() {
-            const now = new Date();
-            const y = now.getFullYear();
-            const nextMonth = new Date(y, now.getMonth() + 1, 1, 0, 0, 0, 0);
-            const mNames = ['Jan','Feb','Mac','Apr','Mei','Jun','Julai','Ogos','Sep','Okt','Nov','Dis'];
-            return { target: nextMonth, label: `1 ${mNames[target.getMonth()]} ${target.getFullYear()}` };
-        }
-
-        function getHijriNextEvent() {
-            const now = new Date();
-            const cur = getHijriParts(now);
-            if (!cur) return null;
-            let nextHijriM = cur.m + 1;
-            let nextHijriY = cur.y;
-            if (nextHijriM > 12) { nextHijriM = 1; nextHijriY++; }
-            let probe = new Date(now);
-            for (let i = 1; i <= 32; i++) {
-                probe = new Date(now.getTime() + i * 86400000);
-                const h = getHijriParts(probe);
-                if (h && h.d === 1 && (h.m === nextHijriM || (nextHijriM === 13 && h.m === 1)) && h.y >= nextHijriY) {
-                    probe.setHours(0,0,0,0);
-                    const nama = bulanHijriahNames[h.m - 1] || '';
-                    return { target: probe, label: `1 ${nama} ${h.y}H` };
-                }
-            }
-            const fb = new Date(now.getTime() + 30 * 86400000);
-            fb.setHours(0,0,0,0);
-            const hfb = getHijriParts(fb);
-            const nama = hfb ? (bulanHijriahNames[hfb.m - 1] || '') : '';
-            return { target: fb, label: hfb ? `1 ${nama} ${hfb.y}H` : '—' };
-        }
-
-        function updateCountdown() {
-            const now = Date.now();
-
-            // Masihi
-            const mEvent = getMasihiNextEvent();
-            if (mEvent) {
-                const diff = mEvent.target.getTime() - now;
-                if (diff > 0) {
-                    const d = Math.floor(diff / 86400000);
-                    const h = Math.floor((diff % 86400000) / 3600000);
-                    const m = Math.floor((diff % 3600000) / 60000);
-                    const s = Math.floor((diff % 60000) / 1000);
-                    document.getElementById('cd-m-d').innerText   = pad(d);
-                    document.getElementById('cd-m-h').innerText   = pad(h);
-                    document.getElementById('cd-m-min').innerText = pad(m);
-                    document.getElementById('cd-m-s').innerText   = pad(s);
-                    document.getElementById('cd-m-target').innerText = mEvent.label;
-                } else {
-                    ['cd-m-d','cd-m-h','cd-m-min','cd-m-s'].forEach(id => document.getElementById(id).innerText = '00');
-                }
-            }
-
-            // Hijriah
-            const hEvent = getHijriNextEvent();
-            if (hEvent) {
-                const diff = hEvent.target.getTime() - now;
-                if (diff > 0) {
-                    const d = Math.floor(diff / 86400000);
-                    const h = Math.floor((diff % 86400000) / 3600000);
-                    const m = Math.floor((diff % 3600000) / 60000);
-                    const s = Math.floor((diff % 60000) / 1000);
-                    document.getElementById('cd-h-d').innerText   = pad(d);
-                    document.getElementById('cd-h-h').innerText   = pad(h);
-                    document.getElementById('cd-h-min').innerText = pad(m);
-                    document.getElementById('cd-h-s').innerText   = pad(s);
-                    document.getElementById('cd-h-target').innerText = hEvent.label;
-                } else {
-                    ['cd-h-d','cd-h-h','cd-h-min','cd-h-s'].forEach(id => document.getElementById(id).innerText = '00');
-                }
-            }
-        }
-
         /* ── INIT ────────────────────────────────────────── */
         updateDate();
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
     </script>
 </body>
 </html>
