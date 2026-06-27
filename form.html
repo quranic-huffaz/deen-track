@@ -250,6 +250,11 @@
     </div>
 
     <div class="field">
+      <label for="penulis">Nama Penulis <span class="req">*</span></label>
+      <input type="text" id="penulis" placeholder="Nama anda atau nama pena…" maxlength="80"/>
+    </div>
+
+    <div class="field">
       <label for="kategori">Kategori <span class="req">*</span></label>
       <input type="text" id="kategori" list="kategoriSaranan" placeholder="Taip kategori anda… contoh: Aqidah, Fiqh, Motivasi" maxlength="60" autocomplete="off"/>
       <datalist id="kategoriSaranan">
@@ -292,7 +297,7 @@
 
 <script>
 // ── CONFIG — Ganti dengan URL Web App anda ──────────────────
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw03LJEtNqYRNmX6evX2jmfZH5QHr7IqUCdDKYmQVL8ladFmVkYSRGVuzBmRjuphff-Ow/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzrH0fu4X_XXfYX9QDNfRpkmghefBV3sOGYaioCnLucuipgvUgVU-aseC_GJT4pCjCJqA/exec";
 const SUBMIT_PASSWORD = "wanh4897";
 
 // ── Nasihat Agama ───────────────────────────────────────────
@@ -324,13 +329,14 @@ document.getElementById('penulisan').addEventListener('input', function(){
 async function submitForm(){
   const tajuk     = document.getElementById('tajuk').value.trim();
   const siri      = document.getElementById('siri').value.trim();
+  const penulis   = document.getElementById('penulis').value.trim();
   const kategori  = document.getElementById('kategori').value.trim();
   const penulisan = document.getElementById('penulisan').value.trim();
   const password  = document.getElementById('passwordKarya').value;
 
   // Validation
   let ok = true;
-  ['tajuk','siri','kategori','penulisan','passwordKarya'].forEach(id=>{
+  ['tajuk','siri','penulis','kategori','penulisan','passwordKarya'].forEach(id=>{
     const el = document.getElementById(id);
     if(!el.value.trim()){el.classList.add('error');ok=false;}
     else el.classList.remove('error');
@@ -355,13 +361,14 @@ async function submitForm(){
   try {
     const res = await fetch(SCRIPT_URL, {
       method:'POST',
-      body: JSON.stringify({ action:'add', tajuk, siri, penulisan, kategori }),
+      body: JSON.stringify({ action:'add', tajuk, siri, penulisan, kategori, penulis }),
     });
     const data = await res.json();
     if(data.success){
       showToast('✓ Penulisan berjaya dihantar!','success');
       document.getElementById('tajuk').value='';
       document.getElementById('siri').value='';
+      document.getElementById('penulis').value='';
       document.getElementById('kategori').value='';
       document.getElementById('penulisan').value='';
       document.getElementById('passwordKarya').value='';
