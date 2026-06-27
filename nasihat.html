@@ -37,24 +37,27 @@
     padding:0 clamp(14px,4vw,44px);height:64px;gap:12px;
   }
 
-  /* Left: nasihat */
-  .h-left{flex:1;min-width:0;overflow:hidden}
-  .nasihah-ticker{
-    font-size:clamp(9.5px,1.6vw,12.5px);color:var(--gold2);font-style:italic;line-height:1.4;
-    border-left:2px solid var(--gold);padding-left:12px;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    transition:opacity .4s;
+  /* Left: nasihat — tajuk premium */
+  .h-left{flex:1;min-width:0;display:flex;align-items:center}
+  .nasihah-badge{
+    display:inline-flex;align-items:center;gap:9px;
+    font-family:'Playfair Display',serif;font-style:italic;
+    font-size:clamp(12.5px,2vw,15px);font-weight:600;
+    color:var(--gold2);letter-spacing:.03em;
+    white-space:nowrap;overflow:hidden;
   }
-
-  /* Center: brand */
-  .h-brand{
-    font-family:'Playfair Display',serif;font-size:clamp(14px,2.2vw,18px);
-    color:#fff;letter-spacing:.05em;text-decoration:none;white-space:nowrap;flex-shrink:0;
+  .nasihah-ico{
+    color:var(--gold);font-size:15px;flex-shrink:0;font-style:normal;
+    line-height:1;
   }
-  .h-brand span{color:var(--gold)}
+  .nasihah-text{
+    background:linear-gradient(90deg,var(--gold2),#fff,var(--gold2));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    overflow:hidden;text-overflow:ellipsis;
+  }
 
   /* Right */
-  .h-right{display:flex;align-items:center;gap:14px;flex-shrink:0}
+  .h-right{display:flex;align-items:center;gap:14px;flex-shrink:0;margin-left:auto}
 
   /* Coffee */
   .coffee-wrap{
@@ -91,19 +94,25 @@
   }
   .btn-nav:hover{background:rgba(201,168,76,.14);border-color:var(--gold)}
 
-  /* Menu button — iPhone style, pulse */
-  .menu-wrap{position:relative;flex-shrink:0}
+  /* Menu button — Floating Action Button, tengah-kanan skrin, gaya iPhone, pulse */
+  .menu-wrap{
+    position:fixed;top:50%;right:18px;transform:translateY(-50%);
+    z-index:1050;flex-shrink:0;
+  }
   .menu-btn{
-    position:relative;width:38px;height:38px;border-radius:50%;
-    border:1.5px solid rgba(201,168,76,.55);background:rgba(201,168,76,.08);
+    position:relative;width:42px;height:42px;border-radius:50%;
+    border:1.5px solid rgba(201,168,76,.6);
+    background:linear-gradient(160deg,rgba(15,23,42,.92),rgba(15,23,42,.98));
+    backdrop-filter:blur(10px);
     color:var(--gold2);flex-shrink:0;cursor:pointer;
     display:flex;align-items:center;justify-content:center;
-    font-size:6.5px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;
+    font-size:7px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
     transition:var(--transition);font-family:'Inter',sans-serif;
+    box-shadow:0 8px 24px rgba(15,23,42,.3);
   }
   .menu-btn:hover{background:rgba(201,168,76,.18);border-color:var(--gold)}
   .menu-btn::before{
-    content:'';position:absolute;inset:-5px;border-radius:50%;
+    content:'';position:absolute;inset:-6px;border-radius:50%;
     border:1.5px solid var(--gold);opacity:0;
     animation:homePulse 2.4s ease-out infinite;
   }
@@ -114,14 +123,15 @@
   }
 
   .menu-panel{
-    position:absolute;top:calc(100% + 12px);right:0;min-width:190px;
+    position:absolute;top:50%;right:calc(100% + 14px);transform:translateY(-50%) translateX(8px);
+    min-width:190px;
     background:var(--ink);border:1px solid rgba(201,168,76,.3);border-radius:var(--radius-sm);
     box-shadow:0 16px 40px rgba(15,23,42,.35);
     padding:8px;display:flex;flex-direction:column;gap:4px;
-    opacity:0;pointer-events:none;transform:translateY(-6px) scale(.97);
+    opacity:0;pointer-events:none;
     transition:opacity .2s,transform .2s;z-index:1100;
   }
-  .menu-panel.open{opacity:1;pointer-events:all;transform:translateY(0) scale(1)}
+  .menu-panel.open{opacity:1;pointer-events:all;transform:translateY(-50%) translateX(0)}
   .menu-item{
     display:flex;align-items:center;gap:10px;width:100%;
     font-family:'Inter',sans-serif;font-size:13.5px;font-weight:600;color:#fff;
@@ -343,7 +353,8 @@
   .siri-item-excerpt{font-size:13.5px;color:var(--ink3);line-height:1.6;
     display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:6px;
   }
-  .siri-item-date{font-size:11px;color:var(--ink4)}
+  .siri-item-author{font-size:11.5px;color:var(--ink4);letter-spacing:.02em}
+  .siri-item-author b{color:var(--gold);font-weight:700}
 
   /* ── MODAL ── */
   .modal-overlay{
@@ -387,8 +398,9 @@
   .modal-footer{
     display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
     padding:16px 32px;border-top:1px solid var(--border);
-    font-size:12px;color:var(--ink4);
+    font-size:12.5px;color:var(--ink4);
   }
+  .modal-footer b{color:var(--gold);font-weight:700}
 
   /* ── EMPTY / LOADING ── */
   .empty{text-align:center;padding:72px 24px}
@@ -434,9 +446,11 @@
     .modal-divider{margin-left:20px;margin-right:20px}
   }
   @media(max-width:480px){
-    .h-left{display:none}
     .stats{gap:28px}
-    .menu-btn{width:32px;height:32px;font-size:5.5px}
+    .menu-btn{width:38px;height:38px;font-size:6px}
+    .menu-wrap{right:12px}
+    .nasihah-badge{font-size:11.5px}
+    .nasihah-ico{font-size:13px}
   }
 </style>
 </head>
@@ -445,10 +459,11 @@
 <!-- HEADER -->
 <header>
   <div class="h-left">
-    <div class="nasihah-ticker" id="nasihah">Nasihat Agama</div>
+    <div class="nasihah-badge" id="nasihah">
+      <span class="nasihah-ico">۞</span>
+      <span class="nasihah-text">Nasihat Agama</span>
+    </div>
   </div>
-
-  <a class="h-brand" href="index.html">Ruang<span>Penulisan</span></a>
 
   <div class="h-right">
     <div class="coffee-wrap" title="Tabung Belajar — Klik untuk menyumbang!">
@@ -469,20 +484,21 @@
         </svg>
       </a>
     </div>
-
-    <div class="menu-wrap">
-      <button class="menu-btn" title="Menu" onclick="toggleMenu(event)">Menu</button>
-      <div class="menu-panel" id="menuPanel">
-        <a href="https://deen-track.pages.dev" target="_blank" rel="noopener" class="menu-item">
-          <span class="menu-item-ico">⌂</span> Home
-        </a>
-        <button class="menu-item" onclick="requestTambahKarya()">
-          <span class="menu-item-ico">✦</span> Tambah Karya
-        </button>
-      </div>
-    </div>
   </div>
 </header>
+
+<!-- MENU — Floating Action Button (tengah-kanan skrin) -->
+<div class="menu-wrap">
+  <button class="menu-btn" title="Menu" onclick="toggleMenu(event)">Menu</button>
+  <div class="menu-panel" id="menuPanel">
+    <a href="https://deen-track.pages.dev" target="_blank" rel="noopener" class="menu-item">
+      <span class="menu-item-ico">⌂</span> Home
+    </a>
+    <button class="menu-item" onclick="requestTambahKarya()">
+      <span class="menu-item-ico">✦</span> Tambah Karya
+    </button>
+  </div>
+</div>
 
 <!-- PASSWORD GATE — Tambah Karya -->
 <div class="pw-overlay" id="pwOverlay" onclick="closePwGate(event)">
@@ -497,6 +513,7 @@
     </div>
   </div>
 </div>
+
 
 
 <!-- SKRIN 1 — SENARAI TAJUK -->
@@ -564,8 +581,7 @@
     <div class="modal-divider"></div>
     <div class="modal-body" id="modalBody"></div>
     <div class="modal-footer">
-      <span id="modalDate"></span>
-      <span id="modalId" style="opacity:.5"></span>
+      <span id="modalAuthor"></span>
     </div>
   </div>
 </div>
@@ -576,7 +592,7 @@
 
 <script>
 // ── CONFIG ─────────────────────────────────────────────────
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw03LJEtNqYRNmX6evX2jmfZH5QHr7IqUCdDKYmQVL8ladFmVkYSRGVuzBmRjuphff-Ow/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzrH0fu4X_XXfYX9QDNfRpkmghefBV3sOGYaioCnLucuipgvUgVU-aseC_GJT4pCjCJqA/exec";
 
 // ── STATE ──────────────────────────────────────────────────
 let allData = [];
@@ -760,22 +776,45 @@ function siriItemHTML(d){
     <div class="siri-item-main">
       ${d.siri ? `<span class="siri-item-badge">${esc(d.siri)}</span>` : ''}
       <div class="siri-item-excerpt">${excerpt}</div>
-      <div class="siri-item-date">${esc(d.tarikh||'')}</div>
+      <div class="siri-item-author">Oleh <b>${esc(d.penulis||'Hamba Allah')}</b></div>
     </div>
     <button class="copy-btn" title="Salin penulisan penuh" onclick="event.stopPropagation();copyPenulisan(this,${safe})">⧉</button>
   </div>`;
 }
 
-// Salin kandungan penulisan penuh bagi satu bab/siri
+// Salin kandungan penulisan penuh bagi satu bab/siri (dengan fallback)
 function copyPenulisan(btn, d){
   const text = d.penulisan || '';
-  navigator.clipboard.writeText(text).then(()=>{
+  copyToClipboard(text).then(()=>{
     btn.classList.add('copied');
     btn.textContent = '✓';
     toast('Penulisan disalin!','ok');
     setTimeout(()=>{ btn.classList.remove('copied'); btn.textContent = '⧉'; }, 1800);
   }).catch(()=>{
     toast('Gagal menyalin. Cuba lagi.','err');
+  });
+}
+
+// Utiliti salin teks — guna Clipboard API, fallback ke execCommand jika gagal/tidak disokong
+function copyToClipboard(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    return navigator.clipboard.writeText(text).catch(()=> legacyCopy(text));
+  }
+  return legacyCopy(text);
+}
+function legacyCopy(text){
+  return new Promise((resolve, reject)=>{
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      ok ? resolve() : reject();
+    }catch(e){ reject(e); }
   });
 }
 
@@ -808,8 +847,7 @@ function applyFilters(){
 function openModal(d){
   document.getElementById('modalTitle').textContent  = d.tajuk  || '';
   document.getElementById('modalBody').textContent   = d.penulisan || '';
-  document.getElementById('modalDate').textContent   = d.tarikh || '';
-  document.getElementById('modalId').textContent     = d.id    || '';
+  document.getElementById('modalAuthor').innerHTML   = `Oleh <b>${esc(d.penulis||'Hamba Allah')}</b>`;
   document.getElementById('modalMeta').innerHTML =
     `<span class="badge-kat">${esc(d.kategori||'Umum')}</span>${d.siri?`<span class="badge-siri">${esc(d.siri)}</span>`:''}`;
   document.getElementById('modalOverlay').classList.add('open');
@@ -838,11 +876,11 @@ function toast(msg,type='ok'){
 // ── DEMO DATA (used before SCRIPT_URL is set) ──────────────
 function demoData(){
   return [
-    {id:'DEMO-1',tajuk:'Keutamaan Menuntut Ilmu dalam Islam',siri:'Siri 1',kategori:'Ilmu & Pendidikan',tarikh:'01/01/2025 08:00',penulisan:'Sesungguhnya menuntut ilmu adalah satu kewajipan ke atas setiap Muslim. Rasulullah SAW bersabda: "Tuntutlah ilmu dari buaian hingga ke liang lahad."\n\nIlmu bukan sekadar bacaan di atas kertas, tetapi satu bentuk ibadat yang mendekatkan diri kita kepada Allah SWT. Dengan ilmu, hati menjadi terang dan langkah menjadi jelas.\n\nMaka janganlah kita berasa puas dengan apa yang kita ada. Teruslah mencari, teruslah belajar, kerana setiap ilmu yang bermanfaat adalah sedekah jariah buat diri dan umat.'},
-    {id:'DEMO-1b',tajuk:'Keutamaan Menuntut Ilmu dalam Islam',siri:'Siri 2',kategori:'Ilmu & Pendidikan',tarikh:'03/01/2025 08:00',penulisan:'Sambungan daripada siri sebelumnya — ilmu yang tidak diamalkan umpama pohon tanpa buah. Para ulama sentiasa menekankan kepentingan mengikat ilmu dengan amal.\n\nSetiap pelajaran yang kita perolehi sewajarnya dipraktikkan dalam kehidupan seharian, agar ia menjadi cahaya bukan sekadar maklumat di dalam minda.'},
-    {id:'DEMO-2',tajuk:'Zikir Sebagai Penenang Jiwa',siri:'Bab 1',kategori:'Tasawwuf',tarikh:'05/01/2025 10:30',penulisan:'Allah SWT berfirman: "Ketahuilah, hanya dengan mengingati Allah hati akan menjadi tenang." — Ar-Ra\'d: 28\n\nZikir bukan hanya pergerakan lidah, tetapi kehadiran hati bersama-sama lafaz yang dilantunkan. Apabila kita menyebut nama Allah dengan penuh kesedaran, jiwa kita dipenuhi ketenangan yang tiada tandingannya.\n\nMulailah hari anda dengan membaca Subhanallah, Alhamdulillah, dan Allahu Akbar. Rasakan getaran ketenangan yang mengalir ke dalam setiap sudut jiwa.'},
-    {id:'DEMO-2b',tajuk:'Zikir Sebagai Penenang Jiwa',siri:'Bab 2',kategori:'Tasawwuf',tarikh:'07/01/2025 10:30',penulisan:'Selain zikir lisan, zikir hati memainkan peranan yang lebih mendalam. Ia adalah kesedaran berterusan akan kehadiran Allah dalam setiap keadaan, susah maupun senang.\n\nUlama tasawwuf menggariskan bahawa zikir yang paling tinggi adalah ketika hati sentiasa terpaut kepada Allah walau di tengah kesibukan dunia.'},
-    {id:'DEMO-3',tajuk:'Kisah Hijrah: Pengajaran untuk Kita',siri:'Sirah Nabi',kategori:'Sirah',tarikh:'10/01/2025 09:00',penulisan:'Peristiwa hijrah Rasulullah SAW dari Makkah ke Madinah bukan sekadar perpindahan fizikal. Ia adalah simbol pengorbanan, keberanian, dan tawakal kepada Allah SWT.\n\nBaginda meninggalkan tanah kelahiran, keluarga, dan segala yang dicintai semata-mata untuk menegakkan kalimah Allah di muka bumi ini.\n\nPengajaran buat kita: Apabila kita berhijrah dari kejahatan kepada kebaikan, dari kelalaian kepada ketaatan, itulah hijrah yang paling bermakna dalam kehidupan kita hari ini.'},
+    {id:'DEMO-1',tajuk:'Keutamaan Menuntut Ilmu dalam Islam',siri:'Siri 1',kategori:'Ilmu & Pendidikan',penulis:'Ustaz Ahmad Fadzli',tarikh:'01/01/2025 08:00',penulisan:'Sesungguhnya menuntut ilmu adalah satu kewajipan ke atas setiap Muslim. Rasulullah SAW bersabda: "Tuntutlah ilmu dari buaian hingga ke liang lahad."\n\nIlmu bukan sekadar bacaan di atas kertas, tetapi satu bentuk ibadat yang mendekatkan diri kita kepada Allah SWT. Dengan ilmu, hati menjadi terang dan langkah menjadi jelas.\n\nMaka janganlah kita berasa puas dengan apa yang kita ada. Teruslah mencari, teruslah belajar, kerana setiap ilmu yang bermanfaat adalah sedekah jariah buat diri dan umat.'},
+    {id:'DEMO-1b',tajuk:'Keutamaan Menuntut Ilmu dalam Islam',siri:'Siri 2',kategori:'Ilmu & Pendidikan',penulis:'Ustaz Ahmad Fadzli',tarikh:'03/01/2025 08:00',penulisan:'Sambungan daripada siri sebelumnya — ilmu yang tidak diamalkan umpama pohon tanpa buah. Para ulama sentiasa menekankan kepentingan mengikat ilmu dengan amal.\n\nSetiap pelajaran yang kita perolehi sewajarnya dipraktikkan dalam kehidupan seharian, agar ia menjadi cahaya bukan sekadar maklumat di dalam minda.'},
+    {id:'DEMO-2',tajuk:'Zikir Sebagai Penenang Jiwa',siri:'Bab 1',kategori:'Tasawwuf',penulis:'Ustazah Nur Aisyah',tarikh:'05/01/2025 10:30',penulisan:'Allah SWT berfirman: "Ketahuilah, hanya dengan mengingati Allah hati akan menjadi tenang." — Ar-Ra\'d: 28\n\nZikir bukan hanya pergerakan lidah, tetapi kehadiran hati bersama-sama lafaz yang dilantunkan. Apabila kita menyebut nama Allah dengan penuh kesedaran, jiwa kita dipenuhi ketenangan yang tiada tandingannya.\n\nMulailah hari anda dengan membaca Subhanallah, Alhamdulillah, dan Allahu Akbar. Rasakan getaran ketenangan yang mengalir ke dalam setiap sudut jiwa.'},
+    {id:'DEMO-2b',tajuk:'Zikir Sebagai Penenang Jiwa',siri:'Bab 2',kategori:'Tasawwuf',penulis:'Ustazah Nur Aisyah',tarikh:'07/01/2025 10:30',penulisan:'Selain zikir lisan, zikir hati memainkan peranan yang lebih mendalam. Ia adalah kesedaran berterusan akan kehadiran Allah dalam setiap keadaan, susah maupun senang.\n\nUlama tasawwuf menggariskan bahawa zikir yang paling tinggi adalah ketika hati sentiasa terpaut kepada Allah walau di tengah kesibukan dunia.'},
+    {id:'DEMO-3',tajuk:'Kisah Hijrah: Pengajaran untuk Kita',siri:'Sirah Nabi',kategori:'Sirah',penulis:'Ustaz Hafiz Rahman',tarikh:'10/01/2025 09:00',penulisan:'Peristiwa hijrah Rasulullah SAW dari Makkah ke Madinah bukan sekadar perpindahan fizikal. Ia adalah simbol pengorbanan, keberanian, dan tawakal kepada Allah SWT.\n\nBaginda meninggalkan tanah kelahiran, keluarga, dan segala yang dicintai semata-mata untuk menegakkan kalimah Allah di muka bumi ini.\n\nPengajaran buat kita: Apabila kita berhijrah dari kejahatan kepada kebaikan, dari kelalaian kepada ketaatan, itulah hijrah yang paling bermakna dalam kehidupan kita hari ini.'},
   ];
 }
 
