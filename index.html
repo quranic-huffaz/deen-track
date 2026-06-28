@@ -717,6 +717,35 @@
         /* ── WELCOME ─────────────────────────────────── */
         .welcome-sub { font-size: 12px; font-weight: 400; opacity: 0.55; letter-spacing: 0.01em; }
         .welcome-title { font-family: 'DM Serif Display', serif; font-size: 26px; color: #fff; margin-top: 2px; line-height: 1.15; }
+
+        /* ── PELITA AGAMA mp-item — gold shimmer accent ── */
+        .mp-item-pelita {
+            border-color: rgba(201,168,76,0.22);
+            background: linear-gradient(135deg, #fffdf5 0%, #fdf6e3 100%);
+        }
+        .mp-item-pelita:hover, .mp-item-pelita:active {
+            background: linear-gradient(135deg, #fef9e7 0%, #fdefc4 100%);
+        }
+        .mp-icon-pelita {
+            background: linear-gradient(135deg, #fdf6e3, #fef3c7);
+            color: #b8860b;
+            position: relative;
+            overflow: hidden;
+        }
+        .mp-icon-pelita::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 11px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .mp-label-pelita {
+            font-size: 12px;
+            font-weight: 700;
+            color: #78530a;
+            line-height: 1.3;
+        }
     </style>
 </head>
 <body class="pb-24">
@@ -941,21 +970,63 @@
                     </div>
                 </a>
 
-                                <a href="al-kahfi.html" class="mp-item" onclick="closeMenuPopup()">
-    <div class="mp-icon" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);color:#16a34a;">
-        <i class="fa-solid fa-book-open"></i>
-    </div>
-    <div class="mp-text">
-        <div class="mp-label">Al-Kahfi</div>
-    </div>
-</a>
+                <a href="al-kahfi.html" class="mp-item" onclick="closeMenuPopup()">
+                    <div class="mp-icon" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);color:#16a34a;">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <div class="mp-text">
+                        <div class="mp-label">Al-Kahfi</div>
+                    </div>
+                </a>
 
-<a href="tabung-belajar.html" class="mp-item" onclick="closeMenuPopup()">
+                <a href="tabung-belajar.html" class="mp-item" onclick="closeMenuPopup()">
                     <div class="mp-icon" style="background:linear-gradient(135deg,#fff1f2,#ffe4e6);color:#f43f5e;">
                         <i class="fa-solid fa-hand-holding-dollar"></i>
                     </div>
                     <div class="mp-text">
                         <div class="mp-label">Sokong Tabung</div>
+                    </div>
+                </a>
+
+                <!-- ── Pelita Agama — kad baharu ── -->
+                <a href="https://deen-track.pages.dev/pelita-agama" class="mp-item mp-item-pelita" onclick="closeMenuPopup()">
+                    <div class="mp-icon mp-icon-pelita">
+                        <!-- Inline candle SVG -->
+                        <svg width="18" height="18" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" overflow="visible" style="flex-shrink:0;">
+                            <!-- Flame outer -->
+                            <g style="transform-origin:11px 7px;animation:mpFlame 2s ease-in-out infinite">
+                                <ellipse cx="11" cy="5.5" rx="2.6" ry="4" fill="url(#mpFlameOut)" opacity=".95"/>
+                            </g>
+                            <!-- Flame core -->
+                            <g style="transform-origin:11px 7.5px;animation:mpFlame 1.6s ease-in-out infinite .2s">
+                                <ellipse cx="11" cy="6.5" rx="1.1" ry="2" fill="#fffde0" opacity=".9"/>
+                            </g>
+                            <!-- Wick -->
+                            <line x1="11" y1="8.8" x2="11" y2="10.5" stroke="#7a5c1e" stroke-width="1.2" stroke-linecap="round"/>
+                            <!-- Candle body -->
+                            <rect x="8" y="10.5" width="6" height="8" rx="1" fill="#c9a84c" opacity=".85"/>
+                            <!-- Candle sheen -->
+                            <line x1="9.5" y1="11" x2="9.5" y2="18" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-linecap="round"/>
+                            <!-- Base dish -->
+                            <ellipse cx="11" cy="18.5" rx="5" ry="1.5" fill="#b8943e" opacity=".7"/>
+                            <defs>
+                                <radialGradient id="mpFlameOut" cx="50%" cy="82%" r="62%">
+                                    <stop offset="0%" stop-color="#fff8c0"/>
+                                    <stop offset="35%" stop-color="#f5a623"/>
+                                    <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+                                </radialGradient>
+                            </defs>
+                        </svg>
+                        <style>
+                            @keyframes mpFlame {
+                                0%,100%{transform:scaleX(1) scaleY(1) rotate(-.5deg)}
+                                30%{transform:scaleX(.85) scaleY(1.1) rotate(1.5deg)}
+                                65%{transform:scaleX(1.1) scaleY(.92) rotate(-1.5deg)}
+                            }
+                        </style>
+                    </div>
+                    <div class="mp-text">
+                        <div class="mp-label mp-label-pelita">Pelita Agama</div>
                     </div>
                 </a>
 
@@ -1144,24 +1215,18 @@
         function getMasihiNextEvent() {
             const now = new Date();
             const y = now.getFullYear();
-            // Upcoming: hujung bulan ini → 1 haribulan depan
             const nextMonth = new Date(y, now.getMonth() + 1, 1, 0, 0, 0, 0);
-            const endMonth  = new Date(y, now.getMonth() + 1, 0, 23, 59, 59, 0); // akhir bulan semasa
-            const target = nextMonth;
             const mNames = ['Jan','Feb','Mac','Apr','Mei','Jun','Julai','Ogos','Sep','Okt','Nov','Dis'];
-            return { target, label: `1 ${mNames[target.getMonth()]} ${target.getFullYear()}` };
+            return { target: nextMonth, label: `1 ${mNames[nextMonth.getMonth()]} ${nextMonth.getFullYear()}` };
         }
 
         function getHijriNextEvent() {
             const now = new Date();
             const cur = getHijriParts(now);
             if (!cur) return null;
-            // Cari 1 bulan hijri seterusnya
             let nextHijriM = cur.m + 1;
             let nextHijriY = cur.y;
             if (nextHijriM > 12) { nextHijriM = 1; nextHijriY++; }
-            // Anggaran: 1 bulan hijri ≈ 29.53 hari; cari tarikh masihi yang bersamaan
-            // Kaedah: iterate dari sekarang sehingga jumpa hari-1 bulan hijri seterusnya
             let probe = new Date(now);
             for (let i = 1; i <= 32; i++) {
                 probe = new Date(now.getTime() + i * 86400000);
@@ -1172,7 +1237,6 @@
                     return { target: probe, label: `1 ${nama} ${h.y}H` };
                 }
             }
-            // fallback: 30 hari
             const fb = new Date(now.getTime() + 30 * 86400000);
             fb.setHours(0,0,0,0);
             const hfb = getHijriParts(fb);
@@ -1183,7 +1247,6 @@
         function updateCountdown() {
             const now = Date.now();
 
-            // Masihi
             const mEvent = getMasihiNextEvent();
             if (mEvent) {
                 const diff = mEvent.target.getTime() - now;
@@ -1202,7 +1265,6 @@
                 }
             }
 
-            // Hijriah
             const hEvent = getHijriNextEvent();
             if (hEvent) {
                 const diff = hEvent.target.getTime() - now;
