@@ -11,7 +11,6 @@
   :root{
     --ink:#0f172a;--ink2:#334155;--ink3:#64748b;--ink4:#94a3b8;
     --gold:#c9a84c;--gold2:#e8c97a;--gold3:#fdf6e3;--gold-glow:rgba(201,168,76,.18);
-    --bub:#5eead4;
     --surface:#ffffff;--surface2:#f8fafc;--surface3:#f1f5f9;
     --border:#e2e8f0;--border2:#cbd5e1;
     --radius:16px;--radius-sm:10px;--radius-xs:6px;
@@ -73,18 +72,28 @@
     35%{opacity:.85}
     100%{opacity:0;transform:translateY(-11px) scaleX(1.25)}
   }
-  .bub{
-    fill:var(--bub);
-    opacity:0;animation:bPop 3.4s ease-in-out infinite;pointer-events:none;
-    transform-box:fill-box;transform-origin:center;
+  /* Speech-bubble popup pointing at the coffee cup */
+  .coffee-tooltip{
+    position:absolute;top:50%;right:calc(100% + 14px);
+    transform:translateY(-50%) translateX(8px) scale(.82);
+    background:linear-gradient(135deg,var(--gold),var(--gold2));
+    color:var(--ink);font-family:'Inter',sans-serif;
+    font-size:12.5px;font-weight:700;letter-spacing:.01em;
+    white-space:nowrap;padding:8px 16px;border-radius:16px;
+    box-shadow:0 6px 22px rgba(201,168,76,.5);
+    opacity:0;pointer-events:none;z-index:5;
+    animation:tooltipPop 8s ease-in-out infinite;
   }
-  .bub-1{animation-delay:0s}
-  .bub-2{animation-delay:.7s}
-  .bub-3{animation-delay:1.4s}
-  @keyframes bPop{
-    0%,55%,100%{opacity:0;transform:scale(0)}
-    65%{opacity:1;transform:scale(1)}
-    85%{opacity:0;transform:scale(.45) translateY(-10px)}
+  .coffee-tooltip::after{
+    content:'';position:absolute;top:50%;right:-7px;transform:translateY(-50%);
+    width:0;height:0;border-style:solid;border-width:7px 0 7px 8px;
+    border-color:transparent transparent transparent var(--gold2);
+  }
+  @keyframes tooltipPop{
+    0%,60%{opacity:0;transform:translateY(-50%) translateX(8px) scale(.82)}
+    68%{opacity:1;transform:translateY(-50%) translateX(0) scale(1.06)}
+    74%,90%{opacity:1;transform:translateY(-50%) translateX(0) scale(1)}
+    100%{opacity:0;transform:translateY(-50%) translateX(8px) scale(.85)}
   }
 
   .btn-nav{
@@ -580,6 +589,7 @@
     .nasihah-badge{font-size:11.5px}
     .nasihah-ico{font-size:13px}
     .pg-num{min-width:26px;height:26px;font-size:11px}
+    .coffee-tooltip{font-size:11px;padding:6px 12px;right:calc(100% + 10px)}
   }
 
   /* blink highlight for copy-scroll */
@@ -603,6 +613,7 @@
 
   <div class="h-right">
     <div class="coffee-wrap" title="Tabung Belajar — Klik untuk menyumbang!">
+      <div class="coffee-tooltip" aria-hidden="true">Tabung Belajar</div>
       <a href="https://deen-track.pages.dev/tabung-belajar" target="_blank" rel="noopener">
         <svg class="coffee-svg" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g class="steam">
@@ -614,9 +625,6 @@
           <path d="M26 17.5 Q31 17.5 31 21 Q31 24.5 26 24.5" stroke="#c9a84c" stroke-width="1.3" fill="none" stroke-linecap="round"/>
           <rect x="6" y="27" width="21" height="3" rx="1.5" fill="#c9a84c" opacity=".65"/>
           <ellipse cx="16.5" cy="20" rx="7.5" ry="4" fill="#c9a84c" opacity=".12"/>
-          <circle class="bub bub-1" cx="12.5" cy="20.5" r="2.4"/>
-          <circle class="bub bub-2" cx="18" cy="18.5" r="2"/>
-          <circle class="bub bub-3" cx="21" cy="21" r="2.2"/>
         </svg>
       </a>
     </div>
