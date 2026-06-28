@@ -134,7 +134,7 @@
     box-shadow:0 0 0 3px rgba(201,168,76,.15);
   }
   input.error,select.error,textarea.error{border-color:var(--error)}
-  textarea{resize:vertical;min-height:260px;line-height:1.7}
+  textarea{resize:vertical;min-height:180px;line-height:1.7}
   .char-count{font-size:11px;color:var(--ink3);text-align:right;margin-top:4px}
 
   /* Row 2-col */
@@ -148,6 +148,54 @@
     color:var(--gold);pointer-events:none;font-size:14px;
   }
   select{padding-right:36px;cursor:pointer}
+
+  /* ── PAGES BLOCK ── */
+  .pages-block{margin-bottom:24px}
+  .pages-label{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    margin-bottom:14px;
+  }
+  .pages-label label{margin-bottom:0}
+  .pages-hint{
+    font-size:11px;color:var(--ink3);background:var(--surface3);
+    padding:4px 10px;border-radius:20px;letter-spacing:.02em;
+    white-space:nowrap;text-transform:none;font-weight:500;
+  }
+
+  /* Tab nav for pages */
+  .page-tabs{
+    display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;
+  }
+  .page-tab{
+    font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;
+    border:1.5px solid var(--border2);background:var(--surface2);color:var(--ink3);
+    cursor:pointer;transition:all .2s;white-space:nowrap;
+    font-family:'Inter',sans-serif;
+  }
+  .page-tab:hover{border-color:var(--gold2);color:var(--gold)}
+  .page-tab.active{
+    background:linear-gradient(135deg,var(--gold),var(--gold2));
+    border-color:transparent;color:var(--ink);
+    box-shadow:0 2px 10px rgba(201,168,76,.3);
+  }
+  .page-tab.has-content::after{
+    content:'•';margin-left:4px;color:var(--gold);font-size:16px;line-height:0;vertical-align:middle;
+  }
+  .page-tab.active.has-content::after{color:var(--ink)}
+
+  .page-panel{display:none}
+  .page-panel.active{display:block}
+
+  .page-panel-header{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    margin-bottom:8px;
+  }
+  .page-num-badge{
+    font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--gold);background:rgba(201,168,76,.1);padding:3px 10px;border-radius:20px;
+    border:1px solid rgba(201,168,76,.25);
+  }
+  .page-char-count{font-size:11px;color:var(--ink4)}
 
   /* ── SUBMIT ── */
   .btn-submit{
@@ -269,10 +317,76 @@
       </datalist>
     </div>
 
+    <!-- ── PENULISAN PER PAGE ── -->
+    <div class="pages-block">
+      <div class="pages-label">
+        <label>Penulisan / Artikel — Per Muka Surat <span class="req">*</span></label>
+        <span class="pages-hint">5 muka surat</span>
+      </div>
+
+      <!-- Tab nav -->
+      <div class="page-tabs" id="pageTabs">
+        <button class="page-tab active" onclick="switchPage(1,this)" id="tab-1">Muka 1</button>
+        <button class="page-tab" onclick="switchPage(2,this)" id="tab-2">Muka 2</button>
+        <button class="page-tab" onclick="switchPage(3,this)" id="tab-3">Muka 3</button>
+        <button class="page-tab" onclick="switchPage(4,this)" id="tab-4">Muka 4</button>
+        <button class="page-tab" onclick="switchPage(5,this)" id="tab-5">Muka 5</button>
+      </div>
+
+      <!-- Page 1 -->
+      <div class="page-panel active" id="panel-1">
+        <div class="page-panel-header">
+          <span class="page-num-badge">Muka Surat 1</span>
+          <span class="page-char-count"><span id="cc1">0</span> aksara</span>
+        </div>
+        <textarea id="page1" placeholder="Tulis atau tampal kandungan muka surat pertama di sini…" maxlength="3000" oninput="onPageInput(1)"></textarea>
+      </div>
+
+      <!-- Page 2 -->
+      <div class="page-panel" id="panel-2">
+        <div class="page-panel-header">
+          <span class="page-num-badge">Muka Surat 2</span>
+          <span class="page-char-count"><span id="cc2">0</span> aksara</span>
+        </div>
+        <textarea id="page2" placeholder="Sambungan — muka surat kedua…" maxlength="3000" oninput="onPageInput(2)"></textarea>
+      </div>
+
+      <!-- Page 3 -->
+      <div class="page-panel" id="panel-3">
+        <div class="page-panel-header">
+          <span class="page-num-badge">Muka Surat 3</span>
+          <span class="page-char-count"><span id="cc3">0</span> aksara</span>
+        </div>
+        <textarea id="page3" placeholder="Sambungan — muka surat ketiga…" maxlength="3000" oninput="onPageInput(3)"></textarea>
+      </div>
+
+      <!-- Page 4 -->
+      <div class="page-panel" id="panel-4">
+        <div class="page-panel-header">
+          <span class="page-num-badge">Muka Surat 4</span>
+          <span class="page-char-count"><span id="cc4">0</span> aksara</span>
+        </div>
+        <textarea id="page4" placeholder="Sambungan — muka surat keempat…" maxlength="3000" oninput="onPageInput(4)"></textarea>
+      </div>
+
+      <!-- Page 5 -->
+      <div class="page-panel" id="panel-5">
+        <div class="page-panel-header">
+          <span class="page-num-badge">Muka Surat 5</span>
+          <span class="page-char-count"><span id="cc5">0</span> aksara</span>
+        </div>
+        <textarea id="page5" placeholder="Sambungan — muka surat kelima…" maxlength="3000" oninput="onPageInput(5)"></textarea>
+      </div>
+
+      <div class="char-count" style="margin-top:10px">
+        Jumlah: <span id="charTotal">0</span> / 15,000 aksara
+      </div>
+    </div>
+
+    <!-- Link Lanjut -->
     <div class="field">
-      <label for="penulisan">Penulisan / Artikel <span class="req">*</span></label>
-      <textarea id="penulisan" placeholder="Tulis atau tampal artikel anda di sini…" maxlength="15000"></textarea>
-      <div class="char-count"><span id="charCount">0</span> / 15,000 aksara</div>
+      <label for="linkLanjut">Pautan Lanjut <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink4)">(pilihan — butang "Lanjut" pada paparan)</span></label>
+      <input type="text" id="linkLanjut" placeholder="https://… (kosongkan jika tiada)" maxlength="500"/>
     </div>
 
     <div class="form-section-title" style="margin-top:8px">Pengesahan</div>
@@ -296,11 +410,11 @@
 <div id="toast"></div>
 
 <script>
-// ── CONFIG — Ganti dengan URL Web App anda ──────────────────
+// ── CONFIG ──────────────────────────────────────────────────
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzrH0fu4X_XXfYX9QDNfRpkmghefBV3sOGYaioCnLucuipgvUgVU-aseC_GJT4pCjCJqA/exec";
 const SUBMIT_PASSWORD = "wanh4897";
 
-// ── Nasihat Agama ───────────────────────────────────────────
+// ── Nasihat Agama ────────────────────────────────────────────
 const nasihat = [
   '"Sesungguhnya sesudah kesulitan itu ada kemudahan." — Al-Insyirah: 6',
   '"Bacalah dengan nama Tuhanmu yang menciptakan." — Al-Alaq: 1',
@@ -320,28 +434,74 @@ function rotateNasihat(){
 document.getElementById('nasihah').style.transition='opacity .4s';
 setInterval(rotateNasihat, 7000);
 
-// ── Char count ──────────────────────────────────────────────
-document.getElementById('penulisan').addEventListener('input', function(){
-  document.getElementById('charCount').textContent = this.value.length.toLocaleString();
-});
+// ── PAGE TABS ────────────────────────────────────────────────
+function switchPage(num, btn){
+  // Hide all panels
+  document.querySelectorAll('.page-panel').forEach(p=> p.classList.remove('active'));
+  document.querySelectorAll('.page-tab').forEach(t=> t.classList.remove('active'));
+  document.getElementById('panel-' + num).classList.add('active');
+  btn.classList.add('active');
+}
 
-// ── Submit ───────────────────────────────────────────────────
+function onPageInput(num){
+  const ta = document.getElementById('page' + num);
+  const len = ta.value.length;
+  document.getElementById('cc' + num).textContent = len.toLocaleString();
+
+  // Mark tab if has content
+  const tab = document.getElementById('tab-' + num);
+  tab.classList.toggle('has-content', len > 0);
+
+  updateTotal();
+}
+
+function updateTotal(){
+  let total = 0;
+  for(let i=1;i<=5;i++){
+    const ta = document.getElementById('page'+i);
+    if(ta) total += ta.value.length;
+  }
+  document.getElementById('charTotal').textContent = total.toLocaleString();
+}
+
+// ── Build combined penulisan from pages ──────────────────────
+function buildPenulisan(){
+  const parts = [];
+  for(let i=1;i<=5;i++){
+    const v = (document.getElementById('page'+i).value||'').trimEnd();
+    if(v) parts.push(v);
+  }
+  return parts.join('\n\n');
+}
+
+// ── Submit ────────────────────────────────────────────────────
 async function submitForm(){
-  const tajuk     = document.getElementById('tajuk').value.trim();
-  const siri      = document.getElementById('siri').value.trim();
-  const penulis   = document.getElementById('penulis').value.trim();
-  const kategori  = document.getElementById('kategori').value.trim();
-  const penulisan = document.getElementById('penulisan').value.trim();
-  const password  = document.getElementById('passwordKarya').value;
+  const tajuk      = document.getElementById('tajuk').value.trim();
+  const siri       = document.getElementById('siri').value.trim();
+  const penulis    = document.getElementById('penulis').value.trim();
+  const kategori   = document.getElementById('kategori').value.trim();
+  const penulisan  = buildPenulisan().trim();
+  const link       = document.getElementById('linkLanjut').value.trim();
+  const password   = document.getElementById('passwordKarya').value;
 
   // Validation
   let ok = true;
-  ['tajuk','siri','penulis','kategori','penulisan','passwordKarya'].forEach(id=>{
+  ['tajuk','siri','penulis','kategori'].forEach(id=>{
     const el = document.getElementById(id);
     if(!el.value.trim()){el.classList.add('error');ok=false;}
     else el.classList.remove('error');
   });
-  if(!ok){showToast('Sila lengkapkan semua ruangan bertanda *.','error');return;}
+
+  if(!penulisan){
+    // highlight page 1 tab
+    document.getElementById('tab-1').style.boxShadow='0 0 0 2px #dc2626';
+    showToast('Sila isi sekurang-kurangnya Muka Surat 1.','error');
+    ok=false;
+  } else {
+    document.getElementById('tab-1').style.boxShadow='';
+  }
+
+  if(!ok){if(penulisan) showToast('Sila lengkapkan semua ruangan bertanda *.','error'); return;}
 
   if(password !== SUBMIT_PASSWORD){
     document.getElementById('passwordKarya').classList.add('error');
@@ -361,18 +521,23 @@ async function submitForm(){
   try {
     const res = await fetch(SCRIPT_URL, {
       method:'POST',
-      body: JSON.stringify({ action:'add', tajuk, siri, penulisan, kategori, penulis }),
+      body: JSON.stringify({ action:'add', tajuk, siri, penulisan, kategori, penulis, link }),
     });
     const data = await res.json();
     if(data.success){
       showToast('✓ Penulisan berjaya dihantar!','success');
-      document.getElementById('tajuk').value='';
-      document.getElementById('siri').value='';
-      document.getElementById('penulis').value='';
-      document.getElementById('kategori').value='';
-      document.getElementById('penulisan').value='';
-      document.getElementById('passwordKarya').value='';
-      document.getElementById('charCount').textContent='0';
+      // Reset
+      ['tajuk','siri','penulis','kategori','passwordKarya','linkLanjut'].forEach(id=>{
+        document.getElementById(id).value='';
+      });
+      for(let i=1;i<=5;i++){
+        document.getElementById('page'+i).value='';
+        document.getElementById('cc'+i).textContent='0';
+        document.getElementById('tab-'+i).classList.remove('has-content');
+      }
+      document.getElementById('charTotal').textContent='0';
+      // Back to tab 1
+      switchPage(1, document.getElementById('tab-1'));
     } else {
       showToast(data.error || 'Ralat berlaku. Cuba lagi.','error');
     }
@@ -391,7 +556,7 @@ function showToast(msg, type='success'){
   setTimeout(()=>{ t.className=''; }, 4000);
 }
 
-// ── Coffee bubble animation ──────────────────────────────────
+// ── Coffee bubble animation ───────────────────────────────────
 setInterval(()=>{
   document.querySelectorAll('.bubble circle').forEach(b=>{
     b.style.animation='none';
