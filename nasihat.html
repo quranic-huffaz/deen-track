@@ -37,7 +37,6 @@
     padding:0 clamp(14px,4vw,44px);height:64px;gap:12px;
   }
 
-  /* Left: nasihat — tajuk premium */
   .h-left{flex:1;min-width:0;display:flex;align-items:center}
   .nasihah-badge{
     display:inline-flex;align-items:center;gap:9px;
@@ -56,7 +55,6 @@
     overflow:hidden;text-overflow:ellipsis;
   }
 
-  /* Right */
   .h-right{display:flex;align-items:center;gap:14px;flex-shrink:0;margin-left:auto}
 
   /* Coffee */
@@ -94,7 +92,7 @@
   }
   .btn-nav:hover{background:rgba(201,168,76,.14);border-color:var(--gold)}
 
-  /* Menu button — Floating Action Button, tengah-kanan skrin, gaya iPhone, pulse */
+  /* Menu button — Floating Action Button */
   .menu-wrap{
     position:fixed;top:50%;right:18px;transform:translateY(-50%);
     z-index:1050;flex-shrink:0;
@@ -141,7 +139,7 @@
   .menu-item:hover{background:rgba(201,168,76,.15);color:var(--gold2)}
   .menu-item-ico{color:var(--gold);font-size:15px;width:18px;text-align:center;flex-shrink:0}
 
-  /* Password gate — Tambah Karya */
+  /* Password gate */
   .pw-overlay{
     position:fixed;inset:0;background:rgba(15,23,42,.65);backdrop-filter:blur(6px);
     z-index:2500;display:flex;align-items:center;justify-content:center;
@@ -194,15 +192,6 @@
   }
   .hero h1 em{color:var(--gold);font-style:italic}
   .hero p{font-size:clamp(14px,2vw,17px);color:var(--ink3);line-height:1.7;max-width:520px;margin:0 auto 32px}
-
-  /* Stats row */
-  .stats{display:flex;justify-content:center;gap:clamp(20px,4vw,48px);flex-wrap:wrap;margin-bottom:40px}
-  .stat{text-align:center}
-  .stat-num{
-    font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,32px);
-    font-weight:700;color:var(--gold);line-height:1;
-  }
-  .stat-label{font-size:11px;color:var(--ink4);letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
 
   /* ── TOOLBAR ── */
   .toolbar{
@@ -289,7 +278,7 @@
   .card-read::after{content:'→';transition:transform .2s}
   .card:hover .card-read::after{transform:translateX(3px)}
 
-  /* Copy button — kad tajuk & item bab/siri */
+  /* Copy button */
   .copy-btn{
     position:relative;width:30px;height:30px;border-radius:50%;flex-shrink:0;
     border:1px solid var(--border2);background:var(--surface2);color:var(--ink3);
@@ -300,7 +289,6 @@
   .copy-btn.copied{border-color:var(--gold);color:var(--gold);background:var(--gold3)}
   .card-meta-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
 
-  /* Kad tajuk — denyut highlight semasa auto-scroll */
   @keyframes cardPing{
     0%{box-shadow:0 0 0 0 rgba(201,168,76,.55)}
     70%{box-shadow:0 0 0 14px rgba(201,168,76,0)}
@@ -313,7 +301,7 @@
   }
   .card-count b{color:var(--gold);font-weight:700}
 
-  /* ── SKRIN BAB/SIRI (drill-down) ── */
+  /* ── SKRIN BAB/SIRI ── */
   #screenSiri{display:none;padding-top:calc(64px + 36px)}
   .siri-topbar{
     max-width:1100px;margin:0 auto;padding:0 clamp(14px,4vw,48px) 18px;
@@ -356,7 +344,139 @@
   .siri-item-author{font-size:11.5px;color:var(--ink4);letter-spacing:.02em}
   .siri-item-author b{color:var(--gold);font-weight:700}
 
-  /* ── MODAL ── */
+  /* ── READER OVERLAY (Penuh Muka) ── */
+  .reader-overlay{
+    position:fixed;inset:0;background:rgba(15,23,42,.72);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    z-index:2000;display:flex;align-items:stretch;justify-content:center;
+    opacity:0;pointer-events:none;transition:opacity .35s;
+    padding:0;
+  }
+  .reader-overlay.open{opacity:1;pointer-events:all}
+
+  .reader-shell{
+    background:var(--surface);width:100%;max-width:780px;
+    display:flex;flex-direction:column;
+    box-shadow:var(--shadow-lg);
+    transform:translateY(28px);transition:transform .35s;
+    overflow:hidden;
+    margin:clamp(0px,2vh,32px) clamp(0px,3vw,24px);
+    border-radius:var(--radius);
+  }
+  .reader-overlay.open .reader-shell{transform:translateY(0)}
+
+  /* Top bar */
+  .reader-topbar{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    padding:16px 24px 14px;
+    border-bottom:1px solid var(--border);flex-shrink:0;
+    background:var(--surface);
+  }
+  .reader-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;flex:1;min-width:0}
+  .reader-close{
+    background:var(--surface3);border:none;width:36px;height:36px;border-radius:50%;
+    cursor:pointer;font-size:18px;color:var(--ink3);flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;transition:var(--transition);
+  }
+  .reader-close:hover{background:var(--border2);color:var(--ink)}
+  .reader-title{
+    font-family:'Playfair Display',serif;font-size:clamp(16px,2.5vw,22px);
+    font-weight:700;color:var(--ink);line-height:1.25;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;
+  }
+
+  /* Gold divider */
+  .reader-divider{
+    height:3px;flex-shrink:0;
+    background:linear-gradient(90deg,var(--gold),var(--gold2),transparent);
+  }
+
+  /* Dot indicators — atas */
+  .reader-dots{
+    display:flex;justify-content:center;align-items:center;gap:7px;
+    padding:12px 24px 8px;flex-shrink:0;background:var(--surface);
+  }
+  .reader-dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--border2);transition:all .25s;cursor:pointer;flex-shrink:0;
+  }
+  .reader-dot.active{
+    background:var(--gold);transform:scale(1.35);
+    box-shadow:0 0 0 3px rgba(201,168,76,.25);
+  }
+
+  /* Pages viewport — swipe/slide */
+  .reader-viewport{
+    flex:1;overflow:hidden;position:relative;touch-action:pan-y;
+  }
+  .reader-pages{
+    display:flex;height:100%;
+    transition:transform .38s cubic-bezier(.4,0,.2,1);
+    will-change:transform;
+  }
+  .reader-page{
+    min-width:100%;height:100%;
+    overflow-y:auto;
+    padding:24px clamp(20px,5vw,40px) 16px;
+    font-size:15.5px;color:var(--ink2);line-height:1.85;
+    white-space:pre-wrap;word-break:break-word;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  /* Bottom bar: page numbers + author + lanjut */
+  .reader-bottombar{
+    border-top:1px solid var(--border);padding:14px 24px 16px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    flex-shrink:0;background:var(--surface);flex-wrap:wrap;
+  }
+  .reader-author{font-size:12.5px;color:var(--ink4)}
+  .reader-author b{color:var(--gold);font-weight:700}
+
+  /* Page numbers row */
+  .reader-pagnums{
+    display:flex;align-items:center;gap:4px;justify-content:center;flex:1;
+  }
+  .pg-num{
+    min-width:30px;height:30px;border-radius:var(--radius-xs);
+    border:1.5px solid var(--border2);background:var(--surface2);
+    color:var(--ink3);font-size:12px;font-weight:600;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:var(--transition);padding:0 6px;
+  }
+  .pg-num:hover{border-color:var(--gold2);color:var(--gold)}
+  .pg-num.active{
+    background:linear-gradient(135deg,var(--gold),var(--gold2));
+    border-color:transparent;color:var(--ink);
+    box-shadow:0 2px 10px rgba(201,168,76,.35);
+  }
+  .pg-ellipsis{font-size:12px;color:var(--ink4);padding:0 3px}
+
+  /* Lanjut button */
+  .btn-lanjut{
+    font-size:12px;font-weight:700;color:var(--ink);text-decoration:none;
+    background:linear-gradient(135deg,var(--gold),var(--gold2));
+    padding:8px 18px;border-radius:20px;
+    box-shadow:0 3px 12px rgba(201,168,76,.35);
+    transition:var(--transition);white-space:nowrap;display:inline-flex;align-items:center;gap:5px;
+    border:none;cursor:pointer;letter-spacing:.03em;
+  }
+  .btn-lanjut:hover{box-shadow:0 6px 20px rgba(201,168,76,.5);transform:translateY(-1px)}
+  .btn-lanjut::after{content:'↗';font-size:13px}
+
+  /* Nav arrows inside reader (prev/next page) */
+  .reader-nav-arrows{
+    display:flex;align-items:center;gap:6px;flex-shrink:0;
+  }
+  .reader-arrow{
+    width:34px;height:34px;border-radius:50%;border:1.5px solid var(--border2);
+    background:var(--surface2);color:var(--ink3);font-size:14px;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:var(--transition);
+  }
+  .reader-arrow:hover:not(:disabled){border-color:var(--gold);color:var(--gold)}
+  .reader-arrow:disabled{opacity:.3;cursor:not-allowed}
+
+  /* Modal (legacy — kept for compatibility, hidden) */
   .modal-overlay{
     position:fixed;inset:0;background:rgba(15,23,42,.6);
     backdrop-filter:blur(6px);z-index:2000;
@@ -442,6 +562,12 @@
 
   /* ── RESPONSIVE ── */
   @media(max-width:600px){
+    .reader-shell{margin:0;border-radius:0}
+    .reader-overlay{padding:0}
+    .reader-topbar{padding:12px 16px 10px}
+    .reader-page{padding:16px 16px 12px}
+    .reader-bottombar{padding:10px 16px 14px}
+    .reader-dots{padding:10px 16px 6px}
     .modal-header,.modal-body,.modal-footer{padding-left:20px;padding-right:20px}
     .modal-divider{margin-left:20px;margin-right:20px}
   }
@@ -451,7 +577,15 @@
     .menu-wrap{right:12px}
     .nasihah-badge{font-size:11.5px}
     .nasihah-ico{font-size:13px}
+    .pg-num{min-width:26px;height:26px;font-size:11px}
   }
+
+  /* blink highlight for copy-scroll */
+  @keyframes readerBlink{
+    0%,100%{background:var(--surface)}
+    25%,75%{background:rgba(201,168,76,.18)}
+  }
+  .siri-item.blink-highlight{animation:readerBlink .7s ease 3}
 </style>
 </head>
 <body>
@@ -487,7 +621,7 @@
   </div>
 </header>
 
-<!-- MENU — Floating Action Button (tengah-kanan skrin) -->
+<!-- MENU — Floating Action Button -->
 <div class="menu-wrap">
   <button class="menu-btn" title="Menu" onclick="toggleMenu(event)">Menu</button>
   <div class="menu-panel" id="menuPanel">
@@ -500,7 +634,7 @@
   </div>
 </div>
 
-<!-- PASSWORD GATE — Tambah Karya -->
+<!-- PASSWORD GATE -->
 <div class="pw-overlay" id="pwOverlay" onclick="closePwGate(event)">
   <div class="pw-card">
     <div class="pw-icon">🔒</div>
@@ -514,8 +648,6 @@
   </div>
 </div>
 
-
-
 <!-- SKRIN 1 — SENARAI TAJUK -->
 <div id="screenTajuk">
 
@@ -524,10 +656,6 @@
   <div class="hero-eyebrow">✦ Koleksi Penulisan Islam</div>
   <h1>Ilmu itu <em>Cahaya</em></h1>
   <p>Himpunan penulisan, artikel dan renungan untuk menjernihkan minda dan menghidupkan hati.</p>
-  <div class="stats">
-    <div class="stat"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Artikel</div></div>
-    <div class="stat"><div class="stat-num" id="statKat">—</div><div class="stat-label">Kategori</div></div>
-  </div>
 </section>
 
 <!-- TOOLBAR -->
@@ -568,7 +696,49 @@
   <div class="siri-list" id="siriList"></div>
 </div>
 
-<!-- MODAL -->
+<!-- READER OVERLAY — Penuh Muka dengan Pagination -->
+<div class="reader-overlay" id="readerOverlay">
+  <div class="reader-shell" id="readerShell">
+
+    <!-- Top bar -->
+    <div class="reader-topbar">
+      <div style="flex:1;min-width:0">
+        <div class="reader-meta" id="readerMeta"></div>
+        <div class="reader-title" id="readerTitle"></div>
+      </div>
+      <button class="reader-close" onclick="closeReader()">✕</button>
+    </div>
+
+    <!-- Gold line -->
+    <div class="reader-divider"></div>
+
+    <!-- Dot indicators -->
+    <div class="reader-dots" id="readerDots"></div>
+
+    <!-- Pages swipe viewport -->
+    <div class="reader-viewport" id="readerViewport">
+      <div class="reader-pages" id="readerPages"></div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="reader-bottombar">
+      <span class="reader-author" id="readerAuthor"></span>
+
+      <div class="reader-pagnums" id="readerPagnums"></div>
+
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <div class="reader-nav-arrows">
+          <button class="reader-arrow" id="readerPrev" onclick="readerGoPage(readerCurPage-1)">‹</button>
+          <button class="reader-arrow" id="readerNext" onclick="readerGoPage(readerCurPage+1)">›</button>
+        </div>
+        <a class="btn-lanjut" id="readerLanjut" href="#" target="_blank" rel="noopener" style="display:none">Lanjut</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL (legacy, unused now) -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal" id="modal">
     <div class="modal-header">
@@ -599,6 +769,12 @@ let allData = [];
 let activeKat = 'Semua';
 let searchTimer;
 
+// ── READER STATE ────────────────────────────────────────────
+let readerPages   = [];
+let readerCurPage = 0;
+let readerTouchX  = null;
+const CHARS_PER_PAGE = 900; // aksara per muka (anggaran 1 skrin penuh)
+
 // ── MENU POPUP ───────────────────────────────────────────────
 function toggleMenu(e){
   e.stopPropagation();
@@ -612,10 +788,13 @@ document.addEventListener('click', (e)=>{
   }
 });
 document.addEventListener('keydown', (e)=>{
-  if(e.key === 'Escape') document.getElementById('menuPanel').classList.remove('open');
+  if(e.key === 'Escape'){
+    document.getElementById('menuPanel').classList.remove('open');
+    closeReader();
+  }
 });
 
-// ── PASSWORD GATE — Tambah Karya ─────────────────────────────
+// ── PASSWORD GATE ─────────────────────────────────────────────
 const ADMIN_PASSWORD = "wanh4897";
 
 function requestTambahKarya(){
@@ -657,7 +836,6 @@ async function loadData(){
     allData = json.data || [];
     document.getElementById('loader').style.display = 'none';
     renderCards(allData);
-    updateStats(allData);
     loadRemoteCategories();
   }catch(e){
     document.getElementById('loader').style.display = 'none';
@@ -683,10 +861,8 @@ function renderCards(data){
 
   const groups = groupByTajuk(data);
   grid.innerHTML = groups.map(g => cardHTML(g)).join('');
-  updateStats(data, groups);
 }
 
-// Kumpulkan entri ikut Tajuk → setiap kumpulan mengandungi senarai bab/siri
 function groupByTajuk(data){
   const map = new Map();
   data.forEach(d=>{
@@ -724,7 +900,6 @@ function cardHTML(g){
 function slugify(s){ return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') || 'tajuk'; }
 function escAttr(s){ return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 
-// Denyut + scroll ke kad tajuk sendiri (butang copy pada Skrin 1)
 function pingCard(slug){
   const el = document.getElementById('card-' + slug);
   if(!el) return;
@@ -742,11 +917,6 @@ function loadCategories(cats){
     `<button class="cat-pill" onclick="filterCat('${c.replace(/'/g,"\\'")}',this)">${esc(c)}</button>`
   ).join('');
   wrap.innerHTML = `<button class="cat-pill active" onclick="filterCat('Semua',this)">Semua</button>` + extra;
-  document.getElementById('statKat').textContent = cats.length;
-}
-
-function updateStats(data, groups){
-  document.getElementById('statTotal').textContent = data.length;
 }
 
 // ── SKRIN 2 — SENARAI BAB / SIRI BAGI SATU TAJUK ────────────
@@ -756,7 +926,7 @@ function openTajuk(tajuk){
 
   document.getElementById('siriKategori').textContent = items[0].kategori || 'Umum';
   document.getElementById('siriTajuk').textContent = tajuk;
-  document.getElementById('siriList').innerHTML = items.map(d => siriItemHTML(d)).join('');
+  document.getElementById('siriList').innerHTML = items.map((d,i) => siriItemHTML(d,i)).join('');
 
   document.getElementById('screenTajuk').style.display = 'none';
   document.getElementById('screenSiri').style.display = 'block';
@@ -769,33 +939,68 @@ function backToTajuk(){
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-function siriItemHTML(d){
+function siriItemHTML(d, idx){
   const excerpt = (d.penulisan||'').slice(0,160).replace(/</g,'&lt;') + ((d.penulisan||'').length > 160 ? '…' : '');
   const safe = JSON.stringify(d).replace(/'/g,"&#39;");
-  return `<div class="siri-item" onclick='openModal(${safe})'>
+  const itemId = 'siri-item-' + (d.id || idx);
+  return `<div class="siri-item" id="${itemId}" onclick='openReader(${safe})'>
     <div class="siri-item-main">
       ${d.siri ? `<span class="siri-item-badge">${esc(d.siri)}</span>` : ''}
       <div class="siri-item-excerpt">${excerpt}</div>
       <div class="siri-item-author">Oleh <b>${esc(d.penulis||'Hamba Allah')}</b></div>
     </div>
-    <button class="copy-btn" title="Salin penulisan penuh" onclick="event.stopPropagation();copyPenulisan(this,${safe})">⧉</button>
+    <button class="copy-btn" title="Salin & tuju ke artikel ini" onclick="event.stopPropagation();copyAndScrollTo('${itemId}',${safe})">⧉</button>
   </div>`;
 }
 
-// Salin kandungan penulisan penuh bagi satu bab/siri (dengan fallback)
-function copyPenulisan(btn, d){
+// ── COPY + SCROLL + BLINK ────────────────────────────────────
+function copyAndScrollTo(itemId, d){
   const text = d.penulisan || '';
-  copyToClipboard(text).then(()=>{
-    btn.classList.add('copied');
-    btn.textContent = '✓';
-    toast('Penulisan disalin!','ok');
-    setTimeout(()=>{ btn.classList.remove('copied'); btn.textContent = '⧉'; }, 1800);
+  const link  = window.location.href.split('#')[0] + '#' + itemId;
+
+  copyToClipboard(link).then(()=>{
+    toast('Pautan disalin! Menatal ke artikel…','ok');
+    const el = document.getElementById(itemId);
+    if(el){
+      el.scrollIntoView({ behavior:'smooth', block:'center' });
+      el.classList.remove('blink-highlight');
+      requestAnimationFrame(()=>{
+        el.classList.add('blink-highlight');
+        setTimeout(()=> el.classList.remove('blink-highlight'), 2200);
+      });
+    }
   }).catch(()=>{
-    toast('Gagal menyalin. Cuba lagi.','err');
+    // fallback: salin teks penulisan
+    copyToClipboard(text).then(()=>{
+      toast('Penulisan disalin!','ok');
+      const el = document.getElementById(itemId);
+      if(el){
+        el.scrollIntoView({ behavior:'smooth', block:'center' });
+        el.classList.remove('blink-highlight');
+        requestAnimationFrame(()=>{
+          el.classList.add('blink-highlight');
+          setTimeout(()=> el.classList.remove('blink-highlight'), 2200);
+        });
+      }
+    }).catch(()=> toast('Gagal menyalin. Cuba lagi.','err'));
   });
 }
 
-// Utiliti salin teks — guna Clipboard API, fallback ke execCommand jika gagal/tidak disokong
+// Auto-scroll & blink jika ada hash pada URL
+window.addEventListener('load', ()=>{
+  const hash = window.location.hash;
+  if(hash && hash.startsWith('#siri-item-')){
+    setTimeout(()=>{
+      const el = document.querySelector(hash);
+      if(el){
+        el.scrollIntoView({ behavior:'smooth', block:'center' });
+        el.classList.add('blink-highlight');
+        setTimeout(()=> el.classList.remove('blink-highlight'), 2500);
+      }
+    }, 600);
+  }
+});
+
 function copyToClipboard(text){
   if(navigator.clipboard && navigator.clipboard.writeText){
     return navigator.clipboard.writeText(text).catch(()=> legacyCopy(text));
@@ -817,6 +1022,187 @@ function legacyCopy(text){
     }catch(e){ reject(e); }
   });
 }
+
+// ── READER — PAGINATION ─────────────────────────────────────
+function splitIntoPages(text, charsPerPage){
+  // Split by paragraph, then group into pages
+  const paragraphs = text.split(/\n\n+/);
+  const pages = [];
+  let current = '';
+
+  for(const para of paragraphs){
+    const candidate = current ? current + '\n\n' + para : para;
+    if(candidate.length > charsPerPage && current.length > 0){
+      pages.push(current.trim());
+      current = para;
+    } else {
+      current = candidate;
+    }
+  }
+  if(current.trim()) pages.push(current.trim());
+  if(pages.length === 0) pages.push('');
+  return pages;
+}
+
+function openReader(d){
+  const text = d.penulisan || '';
+  readerPages   = splitIntoPages(text, CHARS_PER_PAGE);
+  readerCurPage = 0;
+
+  // Header
+  document.getElementById('readerTitle').textContent = d.tajuk || '';
+  document.getElementById('readerMeta').innerHTML =
+    `<span class="badge-kat">${esc(d.kategori||'Umum')}</span>${d.siri?`<span class="badge-siri" style="font-size:11px;color:var(--ink4);background:var(--surface3);padding:3px 9px;border-radius:4px">${esc(d.siri)}</span>`:''}`;
+  document.getElementById('readerAuthor').innerHTML =
+    `Oleh <b>${esc(d.penulis||'Hamba Allah')}</b>`;
+
+  // Lanjut button
+  const lanjutBtn = document.getElementById('readerLanjut');
+  if(d.link && d.link.trim()){
+    lanjutBtn.href = d.link.trim();
+    lanjutBtn.style.display = 'inline-flex';
+  } else {
+    lanjutBtn.href = '#';
+    lanjutBtn.style.display = 'none';
+  }
+
+  buildReaderPages();
+  buildDots();
+  buildPageNums();
+  goToPage(0, false);
+
+  document.getElementById('readerOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Touch/swipe
+  setupSwipe();
+}
+
+function buildReaderPages(){
+  const container = document.getElementById('readerPages');
+  container.innerHTML = readerPages.map((txt, i)=>
+    `<div class="reader-page" id="rp-${i}">${escText(txt)}</div>`
+  ).join('');
+}
+
+function escText(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function buildDots(){
+  const wrap = document.getElementById('readerDots');
+  if(readerPages.length <= 1){ wrap.style.display='none'; return; }
+  wrap.style.display = 'flex';
+  wrap.innerHTML = readerPages.map((_,i)=>
+    `<div class="reader-dot${i===0?' active':''}" onclick="readerGoPage(${i})" title="Muka ${i+1}"></div>`
+  ).join('');
+}
+
+function buildPageNums(){
+  const wrap = document.getElementById('readerPagnums');
+  const total = readerPages.length;
+  if(total <= 1){ wrap.innerHTML=''; return; }
+
+  // Show max 7 page numbers with ellipsis
+  function getVisible(cur, tot){
+    if(tot <= 7) return Array.from({length:tot},(_,i)=>i);
+    const pages = new Set([0, tot-1, cur]);
+    if(cur > 1) pages.add(cur-1);
+    if(cur < tot-2) pages.add(cur+1);
+    if(cur > 2) pages.add(cur-2);
+    if(cur < tot-3) pages.add(cur+2);
+    return Array.from(pages).sort((a,b)=>a-b);
+  }
+
+  const visible = getVisible(readerCurPage, total);
+  let html = '';
+  let prev = -1;
+  for(const pg of visible){
+    if(prev !== -1 && pg - prev > 1) html += `<span class="pg-ellipsis">…</span>`;
+    html += `<button class="pg-num${pg===readerCurPage?' active':''}" onclick="readerGoPage(${pg})">${pg+1}</button>`;
+    prev = pg;
+  }
+  wrap.innerHTML = html;
+}
+
+function goToPage(idx, animate=true){
+  const pages = document.getElementById('readerPages');
+  if(!animate) pages.style.transition = 'none';
+  pages.style.transform = `translateX(-${idx * 100}%)`;
+  if(!animate) requestAnimationFrame(()=>{ pages.style.transition=''; });
+
+  readerCurPage = idx;
+
+  // Scroll current page to top
+  const pg = document.getElementById('rp-' + idx);
+  if(pg) pg.scrollTop = 0;
+
+  // Update dots
+  document.querySelectorAll('.reader-dot').forEach((d,i)=>{
+    d.classList.toggle('active', i === idx);
+  });
+
+  // Update arrows
+  document.getElementById('readerPrev').disabled = idx === 0;
+  document.getElementById('readerNext').disabled = idx === readerPages.length - 1;
+
+  buildPageNums();
+}
+
+function readerGoPage(idx){
+  if(idx < 0 || idx >= readerPages.length) return;
+  goToPage(idx);
+}
+
+function closeReader(){
+  document.getElementById('readerOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── SWIPE SUPPORT ────────────────────────────────────────────
+function setupSwipe(){
+  const vp = document.getElementById('readerViewport');
+  vp.removeEventListener('touchstart', onTouchStart, {passive:true});
+  vp.removeEventListener('touchend', onTouchEnd);
+  vp.addEventListener('touchstart', onTouchStart, {passive:true});
+  vp.addEventListener('touchend', onTouchEnd);
+
+  // Mouse drag
+  vp.removeEventListener('mousedown', onMouseDown);
+  vp.addEventListener('mousedown', onMouseDown);
+}
+
+function onTouchStart(e){ readerTouchX = e.touches[0].clientX; }
+function onTouchEnd(e){
+  if(readerTouchX === null) return;
+  const dx = e.changedTouches[0].clientX - readerTouchX;
+  readerTouchX = null;
+  if(Math.abs(dx) > 48){
+    dx < 0 ? readerGoPage(readerCurPage+1) : readerGoPage(readerCurPage-1);
+  }
+}
+
+let _mxStart = null;
+function onMouseDown(e){
+  _mxStart = e.clientX;
+  const onUp = (eu)=>{
+    if(_mxStart === null) return;
+    const dx = eu.clientX - _mxStart;
+    _mxStart = null;
+    document.removeEventListener('mouseup', onUp);
+    if(Math.abs(dx) > 48){
+      dx < 0 ? readerGoPage(readerCurPage+1) : readerGoPage(readerCurPage-1);
+    }
+  };
+  document.addEventListener('mouseup', onUp);
+}
+
+// Keyboard left/right inside reader
+document.addEventListener('keydown', e=>{
+  if(!document.getElementById('readerOverlay').classList.contains('open')) return;
+  if(e.key === 'ArrowRight') readerGoPage(readerCurPage+1);
+  if(e.key === 'ArrowLeft')  readerGoPage(readerCurPage-1);
+});
 
 // ── FILTER & SEARCH ────────────────────────────────────────
 function filterCat(kat, btn){
@@ -843,7 +1229,7 @@ function applyFilters(){
   renderCards(res);
 }
 
-// ── MODAL ──────────────────────────────────────────────────
+// ── MODAL (legacy) ──────────────────────────────────────────
 function openModal(d){
   document.getElementById('modalTitle').textContent  = d.tajuk  || '';
   document.getElementById('modalBody').textContent   = d.penulisan || '';
@@ -858,7 +1244,6 @@ function closeModalDirect(){
   document.getElementById('modalOverlay').classList.remove('open');
   document.body.style.overflow = '';
 }
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModalDirect(); });
 
 // ── SCROLL TOP ─────────────────────────────────────────────
 window.addEventListener('scroll',()=>{
@@ -873,18 +1258,17 @@ function toast(msg,type='ok'){
   setTimeout(()=>{ t.className=''; }, 4000);
 }
 
-// ── DEMO DATA (used before SCRIPT_URL is set) ──────────────
+// ── DEMO DATA ──────────────────────────────────────────────
 function demoData(){
   return [
-    {id:'DEMO-1',tajuk:'Keutamaan Menuntut Ilmu dalam Islam',siri:'Siri 1',kategori:'Ilmu & Pendidikan',penulis:'Ustaz Ahmad Fadzli',tarikh:'01/01/2025 08:00',penulisan:'Sesungguhnya menuntut ilmu adalah satu kewajipan ke atas setiap Muslim. Rasulullah SAW bersabda: "Tuntutlah ilmu dari buaian hingga ke liang lahad."\n\nIlmu bukan sekadar bacaan di atas kertas, tetapi satu bentuk ibadat yang mendekatkan diri kita kepada Allah SWT. Dengan ilmu, hati menjadi terang dan langkah menjadi jelas.\n\nMaka janganlah kita berasa puas dengan apa yang kita ada. Teruslah mencari, teruslah belajar, kerana setiap ilmu yang bermanfaat adalah sedekah jariah buat diri dan umat.'},
-    {id:'DEMO-1b',tajuk:'Keutamaan Menuntut Ilmu dalam Islam',siri:'Siri 2',kategori:'Ilmu & Pendidikan',penulis:'Ustaz Ahmad Fadzli',tarikh:'03/01/2025 08:00',penulisan:'Sambungan daripada siri sebelumnya — ilmu yang tidak diamalkan umpama pohon tanpa buah. Para ulama sentiasa menekankan kepentingan mengikat ilmu dengan amal.\n\nSetiap pelajaran yang kita perolehi sewajarnya dipraktikkan dalam kehidupan seharian, agar ia menjadi cahaya bukan sekadar maklumat di dalam minda.'},
-    {id:'DEMO-2',tajuk:'Zikir Sebagai Penenang Jiwa',siri:'Bab 1',kategori:'Tasawwuf',penulis:'Ustazah Nur Aisyah',tarikh:'05/01/2025 10:30',penulisan:'Allah SWT berfirman: "Ketahuilah, hanya dengan mengingati Allah hati akan menjadi tenang." — Ar-Ra\'d: 28\n\nZikir bukan hanya pergerakan lidah, tetapi kehadiran hati bersama-sama lafaz yang dilantunkan. Apabila kita menyebut nama Allah dengan penuh kesedaran, jiwa kita dipenuhi ketenangan yang tiada tandingannya.\n\nMulailah hari anda dengan membaca Subhanallah, Alhamdulillah, dan Allahu Akbar. Rasakan getaran ketenangan yang mengalir ke dalam setiap sudut jiwa.'},
-    {id:'DEMO-2b',tajuk:'Zikir Sebagai Penenang Jiwa',siri:'Bab 2',kategori:'Tasawwuf',penulis:'Ustazah Nur Aisyah',tarikh:'07/01/2025 10:30',penulisan:'Selain zikir lisan, zikir hati memainkan peranan yang lebih mendalam. Ia adalah kesedaran berterusan akan kehadiran Allah dalam setiap keadaan, susah maupun senang.\n\nUlama tasawwuf menggariskan bahawa zikir yang paling tinggi adalah ketika hati sentiasa terpaut kepada Allah walau di tengah kesibukan dunia.'},
-    {id:'DEMO-3',tajuk:'Kisah Hijrah: Pengajaran untuk Kita',siri:'Sirah Nabi',kategori:'Sirah',penulis:'Ustaz Hafiz Rahman',tarikh:'10/01/2025 09:00',penulisan:'Peristiwa hijrah Rasulullah SAW dari Makkah ke Madinah bukan sekadar perpindahan fizikal. Ia adalah simbol pengorbanan, keberanian, dan tawakal kepada Allah SWT.\n\nBaginda meninggalkan tanah kelahiran, keluarga, dan segala yang dicintai semata-mata untuk menegakkan kalimah Allah di muka bumi ini.\n\nPengajaran buat kita: Apabila kita berhijrah dari kejahatan kepada kebaikan, dari kelalaian kepada ketaatan, itulah hijrah yang paling bermakna dalam kehidupan kita hari ini.'},
+    {id:'DEMO-1',tajuk:'Keutamaan Menuntut Ilmu dalam Islam',siri:'Siri 1',kategori:'Ilmu & Pendidikan',penulis:'Ustaz Ahmad Fadzli',tarikh:'01/01/2025 08:00',link:'',penulisan:'Sesungguhnya menuntut ilmu adalah satu kewajipan ke atas setiap Muslim. Rasulullah SAW bersabda: "Tuntutlah ilmu dari buaian hingga ke liang lahad."\n\nIlmu bukan sekadar bacaan di atas kertas, tetapi satu bentuk ibadat yang mendekatkan diri kita kepada Allah SWT. Dengan ilmu, hati menjadi terang dan langkah menjadi jelas.\n\nMaka janganlah kita berasa puas dengan apa yang kita ada. Teruslah mencari, teruslah belajar, kerana setiap ilmu yang bermanfaat adalah sedekah jariah buat diri dan umat.\n\nPara ulama dahulu kala sanggup menempuh perjalanan jauh hanya untuk mendapatkan satu hadith sahaja. Mereka memahami betapa berharganya setiap ilmu yang diperoleh.\n\nSemoga Allah SWT mengurniakan kita ilmu yang bermanfaat, amal yang diterima, dan rezeki yang berkat. Ameen.'},
+    {id:'DEMO-1b',tajuk:'Keutamaan Menuntut Ilmu dalam Islam',siri:'Siri 2',kategori:'Ilmu & Pendidikan',penulis:'Ustaz Ahmad Fadzli',tarikh:'03/01/2025 08:00',link:'https://example.com',penulisan:'Sambungan daripada siri sebelumnya — ilmu yang tidak diamalkan umpama pohon tanpa buah. Para ulama sentiasa menekankan kepentingan mengikat ilmu dengan amal.\n\nSetiap pelajaran yang kita perolehi sewajarnya dipraktikkan dalam kehidupan seharian, agar ia menjadi cahaya bukan sekadar maklumat di dalam minda.\n\nIbn al-Qayyim berkata: "Ilmu adalah imam bagi amal, dan amal adalah pengikut bagi ilmu." Maka tiadalah manfaat ilmu tanpa amal, dan tiadalah amal tanpa ilmu.'},
+    {id:'DEMO-2',tajuk:'Zikir Sebagai Penenang Jiwa',siri:'Bab 1',kategori:'Tasawwuf',penulis:'Ustazah Nur Aisyah',tarikh:'05/01/2025 10:30',link:'',penulisan:'Allah SWT berfirman: "Ketahuilah, hanya dengan mengingati Allah hati akan menjadi tenang." — Ar-Ra\'d: 28\n\nZikir bukan hanya pergerakan lidah, tetapi kehadiran hati bersama-sama lafaz yang dilantunkan. Apabila kita menyebut nama Allah dengan penuh kesedaran, jiwa kita dipenuhi ketenangan yang tiada tandingannya.\n\nMulailah hari anda dengan membaca Subhanallah, Alhamdulillah, dan Allahu Akbar. Rasakan getaran ketenangan yang mengalir ke dalam setiap sudut jiwa.\n\nUlama tasawwuf menggariskan bahawa zikir yang paling tinggi adalah ketika hati sentiasa terpaut kepada Allah walau di tengah kesibukan dunia.'},
+    {id:'DEMO-3',tajuk:'Kisah Hijrah: Pengajaran untuk Kita',siri:'Sirah Nabi',kategori:'Sirah',penulis:'Ustaz Hafiz Rahman',tarikh:'10/01/2025 09:00',link:'',penulisan:'Peristiwa hijrah Rasulullah SAW dari Makkah ke Madinah bukan sekadar perpindahan fizikal. Ia adalah simbol pengorbanan, keberanian, dan tawakal kepada Allah SWT.\n\nBaginda meninggalkan tanah kelahiran, keluarga, dan segala yang dicintai semata-mata untuk menegakkan kalimah Allah di muka bumi ini.\n\nPengajaran buat kita: Apabila kita berhijrah dari kejahatan kepada kebaikan, dari kelalaian kepada ketaatan, itulah hijrah yang paling bermakna dalam kehidupan kita hari ini.'},
   ];
 }
 
-// ── BUBBLE "TABUNG BELAJAR" — setiap 5 saat ─────────────────
+// ── BUBBLE ─────────────────────────────────────────────────
 setInterval(()=>{
   document.querySelectorAll('.bub').forEach(b=>{
     b.style.animation = 'none';
