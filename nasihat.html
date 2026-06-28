@@ -73,8 +73,9 @@
     100%{opacity:0;transform:translateY(-11px) scaleX(1.25)}
   }
   .bub{
-    position:absolute;border-radius:50%;background:var(--gold);
+    position:absolute;border-radius:50%;background:var(--gold);fill:var(--gold);
     opacity:0;animation:bPop 5s ease-in-out infinite;pointer-events:none;
+    transform-box:fill-box;transform-origin:center;
   }
   .bub:nth-child(1){width:5px;height:5px;bottom:9px;left:10px;animation-delay:0s}
   .bub:nth-child(2){width:3.5px;height:3.5px;bottom:13px;left:18px;animation-delay:.65s}
@@ -761,6 +762,8 @@
 <script>
 // ── CONFIG ─────────────────────────────────────────────────
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7UwfybsQ7psGOZ4Xce5in9wS49ZrPE4266bxqxmGaUJwphBSMFROKHlCG5ZgJCuFicQ/exec";
+const NASIHAT_BASE_URL = "https://deen-track.pages.dev/nasihat";
+const NASIHAT_PATH = "/nasihat";
 
 // ── STATE ──────────────────────────────────────────────────
 let allData = [];
@@ -824,8 +827,10 @@ function verifyPwGate(){
 async function loadData(){
   if(SCRIPT_URL.includes('PASTE_YOUR')){
     document.getElementById('loader').style.display = 'none';
-    renderCards(demoData());
+    allData = demoData();
+    renderCards(allData);
     loadCategories(['Aqidah','Tasawwuf','Sirah','Motivasi']);
+    handleDeepLink();
     return;
   }
   try{
@@ -835,6 +840,7 @@ async function loadData(){
     document.getElementById('loader').style.display = 'none';
     renderCards(allData);
     loadRemoteCategories();
+    handleDeepLink();
   }catch(e){
     document.getElementById('loader').style.display = 'none';
     showEmpty();
@@ -883,7 +889,7 @@ function cardHTML(g){
         <div class="card-meta">
           <span class="badge-kat">${esc(g.kategori)}</span>
         </div>
-        <button class="copy-btn" title="Tunjuk kad ini" onclick="event.stopPropagation();pingCard('${slug}')">⧉</button>
+        <button class="copy-btn" title="Salin pautan kad ini" onclick="event.stopPropagation();copyTajukLink('${slug}')">⧉</button>
       </div>
       <div class="card-title">${esc(g.tajuk)}</div>
       <div class="card-excerpt">${jumlah} bab/siri tersedia dalam tajuk ini.</div>
@@ -907,6 +913,14 @@ function pingCard(slug){
   setTimeout(()=> el.classList.remove('pinged'), 2200);
 }
 
+function copyTajukLink(slug){
+  const link = NASIHAT_BASE_URL + '/' + slug;
+  copyToClipboard(link).then(()=>{
+    toast('Pautan disalin!','ok');
+    pingCard(slug);
+  }).catch(()=> toast('Gagal menyalin. Cuba lagi.','err'));
+}
+
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 function loadCategories(cats){
@@ -922,9 +936,10 @@ function openTajuk(tajuk){
   const items = allData.filter(d => (d.tajuk||'Tanpa Tajuk').trim() === tajuk);
   if(items.length === 0) return;
 
+  const tajukSlug = slugify(tajuk);
   document.getElementById('siriKategori').textContent = items[0].kategori || 'Umum';
   document.getElementById('siriTajuk').textContent = tajuk;
-  document.getElementById('siriList').innerHTML = items.map((d,i) => siriItemHTML(d,i)).join('');
+  document.getElementById('siriList').innerHTML = items.map((d,i) => siriItemHTML(d,i,tajukSlug)).join('');
 
   document.getElementById('screenTajuk').style.display = 'none';
   document.getElementById('screenSiri').style.display = 'block';
@@ -937,67 +952,62 @@ function backToTajuk(){
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-function siriItemHTML(d, idx){
+function siriItemHTML(d, idx, tajukSlug){
   const excerpt = (d.penulisan||'').slice(0,160).replace(/</g,'&lt;') + ((d.penulisan||'').length > 160 ? '…' : '');
   const safe = JSON.stringify(d).replace(/'/g,"&#39;");
-  const itemId = 'siri-item-' + (d.id || idx);
+  const siriSlug = (d.siri && d.siri.trim()) ? slugify(d.siri) : ('bahagian-' + (idx+1));
+  const itemId = 'siri-item-' + tajukSlug + '-' + siriSlug;
   return `<div class="siri-item" id="${itemId}" onclick='openReader(${safe})'>
     <div class="siri-item-main">
       ${d.siri ? `<span class="siri-item-badge">${esc(d.siri)}</span>` : ''}
       <div class="siri-item-excerpt">${excerpt}</div>
       <div class="siri-item-author">Oleh <b>${esc(d.penulis||'Hamba Allah')}</b></div>
     </div>
-    <button class="copy-btn" title="Salin & tuju ke artikel ini" onclick="event.stopPropagation();copyAndScrollTo('${itemId}',${safe})">⧉</button>
+    <button class="copy-btn" title="Salin & tuju ke artikel ini" onclick="event.stopPropagation();copySiriLink('${tajukSlug}','${siriSlug}','${itemId}')">⧉</button>
   </div>`;
 }
 
 // ── COPY + SCROLL + BLINK ────────────────────────────────────
-function copyAndScrollTo(itemId, d){
-  const text = d.penulisan || '';
-  const link  = window.location.href.split('#')[0] + '#' + itemId;
-
-  copyToClipboard(link).then(()=>{
-    toast('Pautan disalin! Menatal ke artikel…','ok');
-    const el = document.getElementById(itemId);
-    if(el){
-      el.scrollIntoView({ behavior:'smooth', block:'center' });
-      el.classList.remove('blink-highlight');
-      requestAnimationFrame(()=>{
-        el.classList.add('blink-highlight');
-        setTimeout(()=> el.classList.remove('blink-highlight'), 2200);
-      });
-    }
-  }).catch(()=>{
-    // fallback: salin teks penulisan
-    copyToClipboard(text).then(()=>{
-      toast('Penulisan disalin!','ok');
-      const el = document.getElementById(itemId);
-      if(el){
-        el.scrollIntoView({ behavior:'smooth', block:'center' });
-        el.classList.remove('blink-highlight');
-        requestAnimationFrame(()=>{
-          el.classList.add('blink-highlight');
-          setTimeout(()=> el.classList.remove('blink-highlight'), 2200);
-        });
-      }
-    }).catch(()=> toast('Gagal menyalin. Cuba lagi.','err'));
-  });
+function blinkElement(itemId){
+  const el = document.getElementById(itemId);
+  if(el){
+    el.scrollIntoView({ behavior:'smooth', block:'center' });
+    el.classList.remove('blink-highlight');
+    requestAnimationFrame(()=>{
+      el.classList.add('blink-highlight');
+      setTimeout(()=> el.classList.remove('blink-highlight'), 2200);
+    });
+  }
 }
 
-// Auto-scroll & blink jika ada hash pada URL
-window.addEventListener('load', ()=>{
-  const hash = window.location.hash;
-  if(hash && hash.startsWith('#siri-item-')){
-    setTimeout(()=>{
-      const el = document.querySelector(hash);
-      if(el){
-        el.scrollIntoView({ behavior:'smooth', block:'center' });
-        el.classList.add('blink-highlight');
-        setTimeout(()=> el.classList.remove('blink-highlight'), 2500);
-      }
-    }, 600);
+function copySiriLink(tajukSlug, siriSlug, itemId){
+  const link = NASIHAT_BASE_URL + '/' + tajukSlug + '/' + siriSlug;
+  copyToClipboard(link).then(()=>{
+    toast('Pautan disalin!','ok');
+    blinkElement(itemId);
+  }).catch(()=> toast('Gagal menyalin. Cuba lagi.','err'));
+}
+
+// Auto-scroll & blink apabila pautan /nasihat/{tajuk} atau /nasihat/{tajuk}/{bab} dibuka
+function handleDeepLink(){
+  let path = window.location.pathname;
+  if(!path.startsWith(NASIHAT_PATH)) return;
+  path = path.slice(NASIHAT_PATH.length).replace(/^\/+|\/+$/g,'');
+  if(!path) return;
+
+  const parts = path.split('/').filter(Boolean);
+  const tajukSlug = parts[0];
+  const group = groupByTajuk(allData).find(g => slugify(g.tajuk) === tajukSlug);
+  if(!group) return;
+
+  if(parts.length === 1){
+    setTimeout(()=> pingCard(tajukSlug), 500);
+  } else {
+    const siriSlug = parts[1];
+    openTajuk(group.tajuk);
+    setTimeout(()=> blinkElement('siri-item-' + tajukSlug + '-' + siriSlug), 600);
   }
-});
+}
 
 function copyToClipboard(text){
   if(navigator.clipboard && navigator.clipboard.writeText){
