@@ -850,9 +850,6 @@
     <span class="ico">🔍</span>
     <input type="text" id="searchInput" placeholder="Cari tajuk atau kata kunci…" oninput="handleSearch(this.value)"/>
   </div>
-  <div class="cats" id="catPills">
-    <button class="cat-pill active" onclick="filterCat('Semua',this)">Semua</button>
-  </div>
 </div>
 
 <!-- GRID -->
@@ -879,6 +876,16 @@
       <h2 id="siriTajuk"></h2>
     </div>
   </div>
+
+  <!-- TOOLBAR KATEGORI — khusus untuk senarai bab/siri -->
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="ico">🔍</span>
+      <input type="text" id="siriKatSearch" placeholder="Cari kategori…" oninput="handleSiriKatSearch(this.value)"/>
+    </div>
+    <div class="cats" id="siriCatPills"></div>
+  </div>
+
   <div class="siri-list" id="siriList"></div>
 </div>
 
@@ -951,8 +958,14 @@ const NASIHAT_BASE_URL = "https://deen-track.pages.dev/nasihat";
 
 // ── STATE ──────────────────────────────────────────────────
 let allData = [];
-let activeKat = 'Semua';
 let searchTimer;
+
+// ── STATE — SKRIN 2 (kategori bab/siri) ─────────────────────
+let currentTajukItems = [];
+let currentTajukSlug  = '';
+let activeSiriKat     = 'Semua';
+let siriKatQuery      = '';
+let siriSearchTimer;
 
 // ── READER STATE ────────────────────────────────────────────
 let readerPages   = [];
@@ -1013,7 +1026,6 @@ async function loadData(){
     document.getElementById('loader').style.display = 'none';
     allData = demoData();
     renderCards(allData);
-    loadCategories(['Aqidah','Tasawwuf','Sirah','Motivasi']);
     handleDeepLink();
     return;
   }
@@ -1023,21 +1035,12 @@ async function loadData(){
     allData = json.data || [];
     document.getElementById('loader').style.display = 'none';
     renderCards(allData);
-    loadRemoteCategories();
     handleDeepLink();
   }catch(e){
     document.getElementById('loader').style.display = 'none';
     showEmpty();
     toast('Gagal memuatkan data. Semak SCRIPT_URL.','err');
   }
-}
-
-async function loadRemoteCategories(){
-  try{
-    const r = await fetch(SCRIPT_URL + '?action=getCategories');
-    const j = await r.json();
-    loadCategories(j.data || []);
-  }catch(e){}
 }
 
 // ── RENDER (Skrin 1 — Senarai Tajuk) ────────────────────────
@@ -1105,23 +1108,23 @@ function copyTajukLink(slug){
 
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-function loadCategories(cats){
-  const wrap = document.getElementById('catPills');
-  const extra = cats.map(c =>
-    `<button class="cat-pill" onclick="filterCat('${c.replace(/'/g,"\\'")}',this)">${esc(c)}</button>`
-  ).join('');
-  wrap.innerHTML = `<button class="cat-pill active" onclick="filterCat('Semua',this)">Semua</button>` + extra;
-}
-
 // ── SKRIN 2 — SENARAI BAB / SIRI BAGI SATU TAJUK ────────────
 function openTajuk(tajuk){
   const items = allData.filter(d => (d.tajuk||'Tanpa Tajuk').trim() === tajuk);
   if(items.length === 0) return;
 
-  const tajukSlug = slugify(tajuk);
+  currentTajukItems = items;
+  currentTajukSlug  = slugify(tajuk);
+  activeSiriKat     = 'Semua';
+  siriKatQuery      = '';
+  const katInput = document.getElementById('siriKatSearch');
+  if(katInput) katInput.value = '';
+
   document.getElementById('siriKategori').textContent = items[0].kategori || 'Umum';
   document.getElementById('siriTajuk').textContent = tajuk;
-  document.getElementById('siriList').innerHTML = items.map((d,i) => siriItemHTML(d,i,tajukSlug)).join('');
+
+  buildSiriCatPills(items);
+  renderSiriList();
 
   document.getElementById('screenTajuk').style.display = 'none';
   document.getElementById('screenSiri').style.display = 'block';
@@ -1148,6 +1151,54 @@ function siriItemHTML(d, idx, tajukSlug){
     </div>
     <button class="copy-btn" title="Salin & tuju ke artikel ini" onclick="event.stopPropagation();copySiriLink('${tajukSlug}','${siriSlug}','${itemId}')">⧉</button>
   </div>`;
+}
+
+// ── SKRIN 2 — FILTER & CARI KATEGORI BAB/SIRI ───────────────
+function buildSiriCatPills(items){
+  const cats = Array.from(new Set(items.map(d => (d.kategori||'Umum').trim()))).filter(Boolean);
+  const wrap = document.getElementById('siriCatPills');
+  const extra = cats.map(c =>
+    `<button class="cat-pill" onclick="filterSiriCat('${c.replace(/'/g,"\\'")}',this)">${esc(c)}</button>`
+  ).join('');
+  wrap.innerHTML = `<button class="cat-pill active" onclick="filterSiriCat('Semua',this)">Semua</button>` + extra;
+}
+
+function filterSiriCat(kat, btn){
+  activeSiriKat = kat;
+  document.querySelectorAll('#siriCatPills .cat-pill').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderSiriList();
+}
+
+function handleSiriKatSearch(q){
+  clearTimeout(siriSearchTimer);
+  siriSearchTimer = setTimeout(()=>{
+    siriKatQuery = q;
+    renderSiriList();
+  }, 280);
+}
+
+function renderSiriList(){
+  let items = currentTajukItems;
+
+  if(activeSiriKat !== 'Semua'){
+    items = items.filter(d => (d.kategori||'Umum').trim() === activeSiriKat);
+  }
+  if(siriKatQuery && siriKatQuery.trim()){
+    const q = siriKatQuery.toLowerCase().trim();
+    items = items.filter(d => (d.kategori||'Umum').toLowerCase().includes(q));
+  }
+
+  const listEl = document.getElementById('siriList');
+  if(items.length === 0){
+    listEl.innerHTML = `<div class="empty">
+      <div class="empty-icon">📂</div>
+      <h3>Tiada kategori dijumpai</h3>
+      <p>Cuba kata carian kategori lain atau pilih "Semua".</p>
+    </div>`;
+    return;
+  }
+  listEl.innerHTML = items.map((d,i) => siriItemHTML(d,i,currentTajukSlug)).join('');
 }
 
 // ── COPY + SCROLL + BLINK ────────────────────────────────────
@@ -1395,14 +1446,7 @@ document.addEventListener('keydown', e=>{
   if(e.key === 'ArrowLeft')  readerGoPage(readerCurPage-1);
 });
 
-// ── FILTER & SEARCH ────────────────────────────────────────
-function filterCat(kat, btn){
-  activeKat = kat;
-  document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
-  applyFilters();
-}
-
+// ── FILTER & SEARCH (Skrin 1) ───────────────────────────────
 function handleSearch(q){
   clearTimeout(searchTimer);
   searchTimer = setTimeout(()=> applyFilters(), 300);
@@ -1411,7 +1455,6 @@ function handleSearch(q){
 function applyFilters(){
   const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
   let res = allData;
-  if(activeKat !== 'Semua') res = res.filter(d => d.kategori === activeKat);
   if(q) res = res.filter(d =>
     (d.tajuk||'').toLowerCase().includes(q) ||
     (d.siri||'').toLowerCase().includes(q)  ||
