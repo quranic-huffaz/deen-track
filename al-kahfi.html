@@ -256,6 +256,82 @@
   .infaq-card:hover .infaq-arrow { background: rgba(201,168,76,0.2); transform: translateX(2px); }
   .infaq-arrow svg { width: 12px; height: 12px; stroke: var(--accent-gold); fill: none; }
 
+  /* ─── MEDIA CARDS (VIDEO & AUDIO) ─── */
+  .media-wrapper {
+    margin-top: 0;
+  }
+
+  .media-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .media-card {
+    background: linear-gradient(135deg, #0d1a2e 0%, #0a1520 55%, #0d1a2e 100%);
+    border: 1px solid rgba(201,168,76,0.18);
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,168,76,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .media-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 30px rgba(201,168,76,0.08);
+  }
+
+  .media-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+    opacity: 0.5; z-index: 2;
+  }
+
+  .media-card-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 14px; direction: ltr;
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+  }
+
+  .media-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, rgba(201,168,76,0.2), rgba(201,168,76,0.08));
+    border: 1px solid rgba(201,168,76,0.3); border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+
+  .media-text { flex: 1; min-width: 0; }
+  .media-label {
+    font-size: 9px; color: var(--accent-gold); font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1px;
+  }
+  .media-title {
+    font-size: 12.5px; font-weight: 600; color: var(--text-primary);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .media-embed-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #05080e;
+  }
+
+  .media-embed-wrap iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: 0; display: block;
+  }
+
+  @media (max-width: 640px) {
+    .media-grid {
+      grid-template-columns: 1fr;
+    }
+    .media-title { white-space: normal; }
+  }
+
   /* ─── CONTENT WRAPPER ─── */
   .content-wrapper {
     max-width: 800px; margin: 0 auto; padding: 0 16px;
@@ -771,6 +847,36 @@
         </div>
       </div>
     </a>
+  </div>
+
+  <!-- MEDIA CARDS: VIDEO & AUDIO -->
+  <div class="infaq-wrapper media-wrapper">
+    <div class="media-grid">
+      <div class="media-card">
+        <div class="media-card-header">
+          <div class="media-icon">🎬</div>
+          <div class="media-text">
+            <div class="media-label">Tazkirah Video</div>
+            <div class="media-title">Tontonan Pilihan Minggu Ini</div>
+          </div>
+        </div>
+        <div class="media-embed-wrap">
+          <iframe src="https://www.youtube.com/embed/uiwHkaPmkr0?si=fsumvR6QDmkcgdTz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>
+      <div class="media-card">
+        <div class="media-card-header">
+          <div class="media-icon">🎧</div>
+          <div class="media-text">
+            <div class="media-label">Bacaan Audio</div>
+            <div class="media-title">Dengar Al-Kahfi Sepenuhnya</div>
+          </div>
+        </div>
+        <div class="media-embed-wrap">
+          <iframe src="https://www.youtube.com/embed/XUNziJ-kPTY?si=1zl06rw3wKWCHFlK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- TAB PANELS -->
