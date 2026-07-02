@@ -186,62 +186,188 @@
     letter-spacing: 0.04em; font-weight: 500;
   }
 
-  /* ─── INFAQ SIDE TAB (fixed, melekat di kiri) ─── */
-  .infaq-side-tab {
+  /* ─── MENU FAB (fixed, melekat di kanan) — premium fintech circular launcher ─── */
+  .menu-fab-wrap {
     position: fixed;
-    left: 0;
+    right: 16px;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 1500;
+    z-index: 1600;
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 20px 9px 20px 11px;
-    background: linear-gradient(160deg, var(--accent-gold-light) 0%, var(--accent-gold) 48%, #8a6a1e 100%);
-    color: #100b02;
-    text-decoration: none;
-    border-radius: 0 14px 14px 0;
-    border: 1px solid rgba(255,255,255,0.28);
-    border-left: none;
-    box-shadow: 3px 0 24px rgba(0,0,0,0.45), 0 0 22px rgba(201,168,76,0.22), inset 0 1px 0 rgba(255,255,255,0.35);
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    transition: padding 0.28s ease, box-shadow 0.28s ease, transform 0.28s ease;
-    overflow: hidden;
+    direction: ltr;
   }
 
-  .infaq-side-tab::before {
+  .menu-fab {
+    position: relative;
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: radial-gradient(circle at 32% 28%, #2a2210 0%, #12100a 55%, #0a0805 100%);
+    box-shadow:
+      0 10px 30px rgba(0,0,0,0.55),
+      0 0 0 1px rgba(201,168,76,0.35),
+      inset 0 1px 1px rgba(255,255,255,0.12),
+      inset 0 -6px 12px rgba(0,0,0,0.5);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2px;
+    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease;
+  }
+
+  .menu-fab::before {
     content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(180deg, transparent 30%, rgba(255,255,255,0.18) 50%, transparent 70%);
-    transform: translateY(-100%);
-    animation: infaq-tab-sheen 3.4s ease-in-out infinite;
+    position: absolute; inset: -1px;
+    border-radius: 50%;
+    padding: 1px;
+    background: conic-gradient(from 180deg, rgba(201,168,76,0.05), var(--accent-gold-light) 25%, rgba(201,168,76,0.05) 50%, var(--accent-gold) 75%, rgba(201,168,76,0.05) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.9;
     pointer-events: none;
   }
 
-  @keyframes infaq-tab-sheen {
-    0%, 40% { transform: translateY(-120%); }
-    70%, 100% { transform: translateY(120%); }
+  .menu-fab-ring {
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    border: 1.5px solid rgba(201,168,76,0.55);
+    animation: menu-fab-pulse 2.6s ease-out infinite;
+    pointer-events: none;
   }
 
-  .infaq-side-tab:hover {
-    padding-right: 15px;
-    transform: translateY(-50%) translateX(3px);
-    box-shadow: 5px 0 30px rgba(0,0,0,0.5), 0 0 30px rgba(201,168,76,0.4), inset 0 1px 0 rgba(255,255,255,0.4);
+  @keyframes menu-fab-pulse {
+    0% { transform: scale(1); opacity: 0.65; }
+    75% { transform: scale(1.55); opacity: 0; }
+    100% { transform: scale(1.55); opacity: 0; }
   }
 
-  .infaq-tab-icon {
-    font-size: 15px;
-    writing-mode: horizontal-tb;
-    flex-shrink: 0;
+  .menu-fab-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent-gold-light);
+    box-shadow: 0 0 8px rgba(232,201,106,0.9);
+    animation: menu-fab-blink 2.6s ease-in-out infinite;
   }
 
-  .infaq-tab-label {
-    font-size: 12.5px;
+  @keyframes menu-fab-blink {
+    0%, 100% { opacity: 0.55; }
+    50% { opacity: 1; }
+  }
+
+  .menu-fab-label {
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: var(--accent-gold-light);
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  .menu-fab:hover {
+    transform: scale(1.07);
+    box-shadow:
+      0 14px 36px rgba(0,0,0,0.6),
+      0 0 0 1px rgba(201,168,76,0.55),
+      0 0 24px rgba(201,168,76,0.25),
+      inset 0 1px 1px rgba(255,255,255,0.15),
+      inset 0 -6px 12px rgba(0,0,0,0.5);
+  }
+
+  .menu-fab:active { transform: scale(0.96); }
+
+  .menu-fab-wrap.open .menu-fab {
+    transform: scale(1.05) rotate(90deg);
+  }
+
+  /* ─── MENU POPUP — premium fintech card, dua pilihan ─── */
+  .menu-popup {
+    position: absolute;
+    right: 76px;
+    top: 50%;
+    transform: translateY(-50%) translateX(8px) scale(0.94);
+    min-width: 240px;
+    background: linear-gradient(165deg, #16213a 0%, #0e1626 100%);
+    border: 1px solid rgba(201,168,76,0.28);
+    border-radius: 18px;
+    padding: 10px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.03), inset 0 1px 0 rgba(255,255,255,0.06);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  .menu-popup::after {
+    content: '';
+    position: absolute;
+    right: -6px; top: 50%; transform: translateY(-50%) rotate(45deg);
+    width: 12px; height: 12px;
+    background: #101a2e;
+    border-right: 1px solid rgba(201,168,76,0.28);
+    border-top: 1px solid rgba(201,168,76,0.28);
+  }
+
+  .menu-fab-wrap.open .menu-popup {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(-50%) translateX(0) scale(1);
+  }
+
+  .menu-popup-eyebrow {
+    font-size: 9.5px;
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    white-space: nowrap;
+    color: var(--text-muted);
+    padding: 6px 10px 8px;
+  }
+
+  .menu-popup-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 10px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: background 0.18s ease, transform 0.18s ease;
+    margin-bottom: 4px;
+  }
+
+  .menu-popup-item:last-child { margin-bottom: 0; }
+
+  .menu-popup-item:hover {
+    background: rgba(201,168,76,0.1);
+    transform: translateX(-3px);
+  }
+
+  .menu-popup-icon {
+    flex-shrink: 0;
+    width: 38px; height: 38px;
+    border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    background: linear-gradient(145deg, rgba(201,168,76,0.22), rgba(201,168,76,0.06));
+    border: 1px solid rgba(201,168,76,0.25);
+  }
+
+  .menu-popup-text { flex: 1; min-width: 0; }
+
+  .menu-popup-title {
+    font-size: 13px; font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1px;
+  }
+
+  .menu-popup-sub {
+    font-size: 10.5px;
+    color: var(--text-secondary);
+  }
+
+  .menu-popup-arrow {
+    flex-shrink: 0;
+    color: var(--accent-gold);
+    font-size: 13px;
+    opacity: 0.7;
   }
 
   /* ─── MEDIA CARDS (VIDEO) ─── */
@@ -948,9 +1074,16 @@
     .page-verse-arabic { font-size: 22px; line-height: 2.0; }
     .page-verse-item { padding: 12px 14px 8px; gap: 10px; }
     .quran-page { margin: 8px; }
-    .infaq-side-tab { padding: 16px 7px 16px 9px; }
-    .infaq-tab-label { font-size: 11px; letter-spacing: 0.1em; }
-    .infaq-tab-icon { font-size: 13px; }
+    .menu-fab-wrap { right: 10px; }
+    .menu-fab { width: 54px; height: 54px; }
+    .menu-fab-label { font-size: 7.5px; }
+    .menu-popup { right: 68px; min-width: 210px; }
+  }
+
+  @media (max-width: 380px) {
+    .menu-popup { min-width: 188px; }
+    .menu-popup-title { font-size: 12px; }
+    .menu-popup-sub { font-size: 10px; }
   }
 
   /* ─── GRID BG ─── */
@@ -968,11 +1101,33 @@
 
 <div class="bg-grid"></div>
 
-<!-- INFAQ SIDE TAB — butang memanjang melekat di kiri -->
-<a href="https://quranic-huffaz.github.io/quran-tracker/infaq-tahfiz-aqil.html" target="_blank" class="infaq-side-tab" title="Infaq Tahfiz — Amal Jariah">
-  <span class="infaq-tab-icon">🕌</span>
-  <span class="infaq-tab-label">Infaq Tahfiz</span>
-</a>
+<!-- MENU FAB — butang bulat premium melekat di kanan, buka popup 2 pilihan -->
+<div class="menu-fab-wrap" id="menuFabWrap">
+  <button class="menu-fab" id="menuFabBtn" onclick="toggleMenuFab(event)" aria-label="Buka menu" aria-haspopup="true">
+    <span class="menu-fab-ring"></span>
+    <span class="menu-fab-dot"></span>
+    <span class="menu-fab-label">MENU</span>
+  </button>
+  <div class="menu-popup" id="menuFabPopup">
+    <div class="menu-popup-eyebrow">Pautan Pantas</div>
+    <a href="https://deen-track.pages.dev/infaq-tahfiz-aqil" target="_blank" class="menu-popup-item">
+      <span class="menu-popup-icon">🕌</span>
+      <span class="menu-popup-text">
+        <span class="menu-popup-title">Infaq Tahfiz</span>
+        <span class="menu-popup-sub">Sumbang amal jariah</span>
+      </span>
+      <span class="menu-popup-arrow">›</span>
+    </a>
+    <a href="https://deen-track.pages.dev" target="_blank" class="menu-popup-item">
+      <span class="menu-popup-icon">📿</span>
+      <span class="menu-popup-text">
+        <span class="menu-popup-title">Deen Track</span>
+        <span class="menu-popup-sub">Ke laman utama</span>
+      </span>
+      <span class="menu-popup-arrow">›</span>
+    </a>
+  </div>
+</div>
 
 <!-- HEADER -->
 <header>
@@ -1178,6 +1333,21 @@ function showToast(msg) {
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2600);
 }
+
+// ═══ MENU FAB (kanan) ═══
+function toggleMenuFab(e) {
+  e.stopPropagation();
+  document.getElementById('menuFabWrap').classList.toggle('open');
+}
+
+function closeMenuFab() {
+  document.getElementById('menuFabWrap').classList.remove('open');
+}
+
+document.addEventListener('click', (e) => {
+  const wrap = document.getElementById('menuFabWrap');
+  if (wrap && !wrap.contains(e.target)) closeMenuFab();
+});
 
 // ═══ MAIN TAB SWITCH ═══
 let currentMainTab = 0;
