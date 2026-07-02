@@ -1182,7 +1182,7 @@
   <div class="content-wrapper" style="margin-top:16px;">
 
     <!-- ═══ TAB 0: SURAH PENUH ═══ -->
-    <div class="tab-panel active" id="tabPanel0">
+    <div class="tab-panel" id="tabPanel0">
       <div class="reader-card">
         <div class="reader-header">
           <div class="reader-header-left">
@@ -1225,7 +1225,7 @@
     </div>
 
     <!-- ═══ TAB 1: 10 AYAT ═══ -->
-    <div class="tab-panel" id="tabPanel1">
+    <div class="tab-panel active" id="tabPanel1">
       <div class="reader-card">
         <div class="reader-header">
           <span class="reader-title">✨ 10 Ayat Al-Kahfi</span>
@@ -1291,8 +1291,8 @@
 <!-- BOTTOM TAB NAV (fixed) -->
 <nav class="bottom-nav">
   <div class="bottom-nav-inner">
-    <button class="tab-btn" id="tab1" onclick="switchMainTab(1)">✨ 10 Ayat</button>
-    <button class="tab-btn active" id="tab0" onclick="switchMainTab(0)">📖 Surah Penuh</button>
+    <button class="tab-btn active" id="tab1" onclick="switchMainTab(1)">✨ 10 Ayat</button>
+    <button class="tab-btn" id="tab0" onclick="switchMainTab(0)">📖 Surah Penuh</button>
   </div>
 </nav>
 
@@ -1348,16 +1348,38 @@ document.addEventListener('click', (e) => {
 });
 
 // ═══ MAIN TAB SWITCH ═══
-let currentMainTab = 0;
+let currentMainTab = 1;
 
-function switchMainTab(idx) {
+// ═══ HASH ROUTING PER TAB ═══
+// idx 0 = Surah Penuh -> #surah-penuh
+// idx 1 = 10 Ayat     -> #10-ayat
+const TAB_HASHES = { 0: 'surah-penuh', 1: '10-ayat' };
+const HASH_TO_TAB = { 'surah-penuh': 0, '10-ayat': 1 };
+
+function switchMainTab(idx, skipHashUpdate) {
   currentMainTab = idx;
   document.getElementById('tab0').classList.toggle('active', idx === 0);
   document.getElementById('tab1').classList.toggle('active', idx === 1);
   document.getElementById('tabPanel0').classList.toggle('active', idx === 0);
   document.getElementById('tabPanel1').classList.toggle('active', idx === 1);
   closeDotsMenu();
+  if (!skipHashUpdate) {
+    const newHash = '#' + TAB_HASHES[idx];
+    if (window.location.hash !== newHash) {
+      history.replaceState(null, '', newHash);
+    }
+  }
 }
+
+function applyTabFromHash() {
+  const rawHash = window.location.hash.replace('#', '');
+  const idx = HASH_TO_TAB.hasOwnProperty(rawHash) ? HASH_TO_TAB[rawHash] : 1;
+  switchMainTab(idx, true);
+  history.replaceState(null, '', '#' + TAB_HASHES[idx]);
+}
+
+applyTabFromHash();
+window.addEventListener('hashchange', applyTabFromHash);
 
 // ═══ TITIK TIGA MENU ═══
 function toggleDotsMenu(e) {
