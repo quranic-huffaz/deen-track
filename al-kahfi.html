@@ -325,82 +325,118 @@
     border: 0; display: block;
   }
 
-  /* ─── AUDIO-ONLY PLAYER (replaces video embed for audio card) ─── */
-  .audio-player-wrap {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 9;
+  /* ─── VOICE-NOTE STYLE AUDIO PLAYER (native HTML5 audio, compact & horizontal) ─── */
+  .voice-note-player {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 16px;
+    min-height: 0;
     background:
-      radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.08) 0%, transparent 65%),
+      radial-gradient(ellipse at 0% 50%, rgba(201,168,76,0.06) 0%, transparent 60%),
       #05080e;
-    display: flex; align-items: center; justify-content: center;
-    padding: 16px;
+    direction: ltr;
   }
 
-  .audio-player-inner {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 12px; width: 100%; direction: ltr;
-  }
-
-  .audio-play-btn {
-    width: 54px; height: 54px; flex-shrink: 0;
+  .vn-play-btn {
+    width: 42px; height: 42px; flex-shrink: 0;
     background: linear-gradient(135deg, var(--accent-gold), #a07c28);
     border: none; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; transition: all 0.25s ease;
-    box-shadow: 0 4px 22px rgba(201,168,76,0.35);
+    box-shadow: 0 3px 18px rgba(201,168,76,0.35);
   }
 
-  .audio-play-btn:hover {
+  .vn-play-btn:hover {
     transform: scale(1.06);
-    box-shadow: 0 6px 28px rgba(201,168,76,0.5);
+    box-shadow: 0 5px 22px rgba(201,168,76,0.5);
   }
 
-  .audio-play-btn:active { transform: scale(0.96); }
+  .vn-play-btn:active { transform: scale(0.95); }
 
-  .audio-play-btn svg { width: 20px; height: 20px; fill: #080c14; }
+  .vn-play-btn svg { width: 18px; height: 18px; fill: #080c14; }
 
-  .audio-play-btn.loading {
+  .vn-play-btn.loading {
     opacity: 0.55; cursor: wait; pointer-events: none;
   }
 
-  .audio-status {
-    font-size: 11.5px; color: var(--text-secondary);
-    text-align: center; letter-spacing: 0.02em;
+  .vn-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
 
-  .audio-wave {
-    display: flex; align-items: flex-end; justify-content: center;
-    gap: 3px; height: 20px;
+  .vn-track {
+    position: relative;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
   }
 
-  .audio-wave span {
-    display: block; width: 3px; border-radius: 2px;
-    background: var(--accent-gold);
-    height: 6px;
-    opacity: 0.55;
-    animation: wave-idle 1.8s ease-in-out infinite;
+  .vn-wave {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 100%;
+    width: 100%;
   }
 
-  .audio-player-wrap.playing .audio-wave span {
-    animation-name: wave-play;
+  .vn-wave span {
+    flex: 0 0 2.5px;
+    width: 2.5px;
+    border-radius: 2px;
+    display: block;
+    transform-origin: center;
   }
 
-  .audio-wave span:nth-child(1) { animation-delay: 0s; }
-  .audio-wave span:nth-child(2) { animation-delay: 0.15s; }
-  .audio-wave span:nth-child(3) { animation-delay: 0.3s; }
-  .audio-wave span:nth-child(4) { animation-delay: 0.45s; }
-  .audio-wave span:nth-child(5) { animation-delay: 0.6s; }
+  .vn-wave-bg span { background: rgba(255,255,255,0.16); }
 
-  @keyframes wave-idle {
-    0%, 100% { height: 5px; }
-    50% { height: 9px; }
+  .vn-wave-fg {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    width: 0%;
+    overflow: hidden;
+    pointer-events: none;
   }
 
-  @keyframes wave-play {
-    0%, 100% { height: 5px; opacity: 0.55; }
-    50% { height: 19px; opacity: 1; }
+  .vn-wave-fg span { background: var(--accent-gold); }
+
+  .vn-wave span:nth-child(8n+1) { height: 38%; }
+  .vn-wave span:nth-child(8n+2) { height: 68%; }
+  .vn-wave span:nth-child(8n+3) { height: 100%; }
+  .vn-wave span:nth-child(8n+4) { height: 52%; }
+  .vn-wave span:nth-child(8n+5) { height: 82%; }
+  .vn-wave span:nth-child(8n+6) { height: 32%; }
+  .vn-wave span:nth-child(8n+7) { height: 62%; }
+  .vn-wave span:nth-child(8n+0) { height: 44%; }
+
+  .voice-note-player.playing .vn-wave-fg span {
+    animation: vn-wave-move 0.9s ease-in-out infinite;
   }
+  .vn-wave-fg span:nth-child(3n) { animation-delay: 0.1s !important; }
+  .vn-wave-fg span:nth-child(4n) { animation-delay: 0.2s !important; }
+  .vn-wave-fg span:nth-child(5n) { animation-delay: 0.3s !important; }
+
+  @keyframes vn-wave-move {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.68); }
+  }
+
+  .vn-time-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 10.5px;
+    color: var(--text-secondary);
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .vn-time-row #audioDuration { color: var(--text-muted); }
 
   /* ═══ RESPONSIVE ═══ */
   @media (max-width: 640px) {
@@ -943,7 +979,7 @@
         </div>
       </div>
 
-      <!-- AUDIO CARD — audio only, custom play/pause button, no video shown -->
+      <!-- AUDIO CARD — native HTML5 <audio>, compact WhatsApp-style voice-note player -->
       <div class="media-card">
         <div class="media-card-header">
           <div class="media-icon">🎧</div>
@@ -952,20 +988,25 @@
             <div class="media-title">Dengar Al-Kahfi Sepenuhnya</div>
           </div>
         </div>
-        <div class="audio-player-wrap" id="audioPlayerWrap">
-          <div class="audio-player-inner">
-            <button class="audio-play-btn" id="audioPlayBtn" onclick="toggleAudio()" aria-label="Main / Jeda audio">
-              <svg id="iconPlay" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-              <svg id="iconPause" viewBox="0 0 24 24" style="display:none;"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-            </button>
-            <div class="audio-wave" id="audioWave">
-              <span></span><span></span><span></span><span></span><span></span>
+        <div class="voice-note-player" id="audioPlayerWrap">
+          <button class="vn-play-btn" id="audioPlayBtn" onclick="toggleAudio()" aria-label="Main / Jeda audio">
+            <svg id="iconPlay" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg id="iconPause" viewBox="0 0 24 24" style="display:none;"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+          </button>
+          <div class="vn-body">
+            <div class="vn-track" id="vnTrack">
+              <div class="vn-wave vn-wave-bg" id="vnWaveBg"></div>
+              <div class="vn-wave-fg" id="vnWaveFg">
+                <div class="vn-wave" id="vnWaveFgInner"></div>
+              </div>
             </div>
-            <div class="audio-status" id="audioStatus">Tekan untuk dengar</div>
+            <div class="vn-time-row">
+              <span id="audioStatus">00:00</span>
+              <span id="audioDuration">00:00</span>
+            </div>
           </div>
-          <!-- Pemain YouTube disembunyikan — hanya audio digunakan -->
-          <div id="ytAudioHidden" style="width:0;height:0;overflow:hidden;position:absolute;"></div>
         </div>
+        <audio id="audioEl" preload="metadata" src="Bacaan Al-Kahfi 1-10 %26 100-110 - Ismail Annuri.mp3"></audio>
       </div>
     </div>
   </div>
@@ -1073,8 +1114,6 @@
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- YouTube IFrame API (digunakan hanya untuk audio, video disembunyikan) -->
-<script src="https://www.youtube.com/iframe_api"></script>
 <script>
 // ═══ BUBBLE ═══
 const bubble = document.getElementById('studyBubble');
@@ -1177,83 +1216,113 @@ document.getElementById('inputNombor').addEventListener('keydown', e => {
   if (e.key === 'Escape') document.getElementById('modalNombor').classList.remove('open');
 });
 
-// ═══ AUDIO-ONLY PLAYER (YouTube IFrame API, video hidden) ═══
-const AUDIO_VIDEO_ID = 'XUNziJ-kPTY';
-let ytAudioPlayer = null;
-let ytAudioReady = false;
-let ytAudioWantsPlay = false;
+// ═══ NATIVE HTML5 AUDIO — VOICE-NOTE STYLE PLAYER ═══
+const audioEl = document.getElementById('audioEl');
+const audioWrap = document.getElementById('audioPlayerWrap');
+const audioBtn = document.getElementById('audioPlayBtn');
+const iconPlay = document.getElementById('iconPlay');
+const iconPause = document.getElementById('iconPause');
+const audioStatus = document.getElementById('audioStatus');
+const audioDuration = document.getElementById('audioDuration');
+const vnTrack = document.getElementById('vnTrack');
+const vnWaveBg = document.getElementById('vnWaveBg');
+const vnWaveFg = document.getElementById('vnWaveFg');
+const vnWaveFgInner = document.getElementById('vnWaveFgInner');
 
-function onYouTubeIframeAPIReady() {
-  ytAudioPlayer = new YT.Player('ytAudioHidden', {
-    height: '0',
-    width: '0',
-    videoId: AUDIO_VIDEO_ID,
-    playerVars: {
-      playsinline: 1,
-      controls: 0,
-      disablekb: 1,
-      modestbranding: 1,
-      rel: 0
-    },
-    events: {
-      onReady: () => {
-        ytAudioReady = true;
-        if (ytAudioWantsPlay) {
-          ytAudioPlayer.playVideo();
-          ytAudioWantsPlay = false;
-        }
-      },
-      onStateChange: onAudioStateChange,
-      onError: () => {
-        document.getElementById('audioStatus').textContent = 'Gagal memuatkan audio';
-      }
-    }
-  });
+const VN_BAR_COUNT = 42;
+
+function buildWaveBars(container, count) {
+  container.innerHTML = '';
+  const frag = document.createDocumentFragment();
+  for (let i = 0; i < count; i++) frag.appendChild(document.createElement('span'));
+  container.appendChild(frag);
+}
+buildWaveBars(vnWaveBg, VN_BAR_COUNT);
+buildWaveBars(vnWaveFgInner, VN_BAR_COUNT);
+// Foreground wave must render the SAME total width as background so bars line up
+// when the overlay is clipped by width%.
+vnWaveFgInner.style.width = vnTrack.offsetWidth + 'px';
+window.addEventListener('resize', () => {
+  vnWaveFgInner.style.width = vnTrack.offsetWidth + 'px';
+});
+
+function formatTime(sec) {
+  if (!isFinite(sec) || isNaN(sec) || sec < 0) return '00:00';
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
 }
 
-function onAudioStateChange(e) {
-  const wrap = document.getElementById('audioPlayerWrap');
-  const status = document.getElementById('audioStatus');
-  const iconPlay = document.getElementById('iconPlay');
-  const iconPause = document.getElementById('iconPause');
-  const btn = document.getElementById('audioPlayBtn');
+audioEl.addEventListener('loadedmetadata', () => {
+  audioDuration.textContent = formatTime(audioEl.duration);
+});
 
-  btn.classList.remove('loading');
-
-  if (e.data === YT.PlayerState.PLAYING) {
-    wrap.classList.add('playing');
-    iconPlay.style.display = 'none';
-    iconPause.style.display = 'block';
-    status.textContent = 'Sedang dimainkan...';
-  } else if (e.data === YT.PlayerState.PAUSED) {
-    wrap.classList.remove('playing');
-    iconPlay.style.display = 'block';
-    iconPause.style.display = 'none';
-    status.textContent = 'Dijeda';
-  } else if (e.data === YT.PlayerState.ENDED) {
-    wrap.classList.remove('playing');
-    iconPlay.style.display = 'block';
-    iconPause.style.display = 'none';
-    status.textContent = 'Tamat — tekan untuk ulang';
-  } else if (e.data === YT.PlayerState.BUFFERING) {
-    status.textContent = 'Memuatkan...';
+audioEl.addEventListener('timeupdate', () => {
+  audioStatus.textContent = formatTime(audioEl.currentTime);
+  if (audioEl.duration) {
+    const pct = (audioEl.currentTime / audioEl.duration) * 100;
+    vnWaveFg.style.width = pct + '%';
   }
-}
+});
+
+audioEl.addEventListener('play', () => {
+  iconPlay.style.display = 'none';
+  iconPause.style.display = 'block';
+  audioWrap.classList.add('playing');
+  audioBtn.classList.remove('loading');
+});
+
+audioEl.addEventListener('pause', () => {
+  iconPlay.style.display = 'block';
+  iconPause.style.display = 'none';
+  audioWrap.classList.remove('playing');
+});
+
+audioEl.addEventListener('ended', () => {
+  iconPlay.style.display = 'block';
+  iconPause.style.display = 'none';
+  audioWrap.classList.remove('playing');
+  audioStatus.textContent = '00:00';
+  vnWaveFg.style.width = '0%';
+});
+
+audioEl.addEventListener('waiting', () => {
+  audioBtn.classList.add('loading');
+  audioStatus.textContent = 'Memuatkan...';
+});
+
+audioEl.addEventListener('canplay', () => {
+  audioBtn.classList.remove('loading');
+});
+
+audioEl.addEventListener('error', () => {
+  audioBtn.classList.remove('loading');
+  audioStatus.textContent = 'Gagal memuatkan audio';
+});
 
 function toggleAudio() {
-  if (!ytAudioReady || !ytAudioPlayer) {
-    ytAudioWantsPlay = true;
-    document.getElementById('audioPlayBtn').classList.add('loading');
-    document.getElementById('audioStatus').textContent = 'Memuatkan...';
-    return;
-  }
-  const state = ytAudioPlayer.getPlayerState();
-  if (state === YT.PlayerState.PLAYING) {
-    ytAudioPlayer.pauseVideo();
+  if (audioEl.paused) {
+    audioBtn.classList.add('loading');
+    audioEl.play()
+      .then(() => audioBtn.classList.remove('loading'))
+      .catch(() => {
+        audioBtn.classList.remove('loading');
+        audioStatus.textContent = 'Gagal main audio';
+      });
   } else {
-    ytAudioPlayer.playVideo();
+    audioEl.pause();
   }
 }
+
+function seekAudio(e) {
+  if (!audioEl.duration) return;
+  const rect = vnTrack.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const x = clientX - rect.left;
+  const pct = Math.min(Math.max(x / rect.width, 0), 1);
+  audioEl.currentTime = pct * audioEl.duration;
+}
+vnTrack.addEventListener('click', seekAudio);
 
 // ═══ FULL SURAH PAGINATION — same-height pages ═══
 let fullPages = [];
