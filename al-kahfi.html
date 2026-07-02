@@ -186,84 +186,72 @@
     letter-spacing: 0.04em; font-weight: 500;
   }
 
-  /* ─── INFAQ CARD ─── */
-  .infaq-wrapper {
-    max-width: 800px; margin: 0 auto 16px; padding: 0 16px;
+  /* ─── INFAQ SIDE TAB (fixed, melekat di kiri) ─── */
+  .infaq-side-tab {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 9px 20px 11px;
+    background: linear-gradient(160deg, var(--accent-gold-light) 0%, var(--accent-gold) 48%, #8a6a1e 100%);
+    color: #100b02;
+    text-decoration: none;
+    border-radius: 0 14px 14px 0;
+    border: 1px solid rgba(255,255,255,0.28);
+    border-left: none;
+    box-shadow: 3px 0 24px rgba(0,0,0,0.45), 0 0 22px rgba(201,168,76,0.22), inset 0 1px 0 rgba(255,255,255,0.35);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transition: padding 0.28s ease, box-shadow 0.28s ease, transform 0.28s ease;
+    overflow: hidden;
   }
 
-  .infaq-card {
-    background: linear-gradient(135deg, #0d1a2e 0%, #0a1520 50%, #0d1a2e 100%);
-    border: 1px solid rgba(201,168,76,0.18);
-    border-radius: 12px; overflow: hidden; position: relative;
-    cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease;
-    text-decoration: none; display: block;
-    box-shadow: 0 4px 30px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,168,76,0.05);
-  }
-
-  .infaq-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 30px rgba(201,168,76,0.08);
-  }
-
-  .infaq-card::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
-    opacity: 0.5;
-  }
-
-  .infaq-shimmer {
+  .infaq-side-tab::before {
+    content: '';
     position: absolute; inset: 0;
-    background: linear-gradient(105deg, transparent 40%, rgba(201,168,76,0.04) 50%, transparent 60%);
-    animation: shimmer 3s ease-in-out infinite;
+    background: linear-gradient(180deg, transparent 30%, rgba(255,255,255,0.18) 50%, transparent 70%);
+    transform: translateY(-100%);
+    animation: infaq-tab-sheen 3.4s ease-in-out infinite;
+    pointer-events: none;
   }
 
-  @keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+  @keyframes infaq-tab-sheen {
+    0%, 40% { transform: translateY(-120%); }
+    70%, 100% { transform: translateY(120%); }
   }
 
-  .infaq-inner {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 16px; direction: ltr; position: relative; z-index: 1;
+  .infaq-side-tab:hover {
+    padding-right: 15px;
+    transform: translateY(-50%) translateX(3px);
+    box-shadow: 5px 0 30px rgba(0,0,0,0.5), 0 0 30px rgba(201,168,76,0.4), inset 0 1px 0 rgba(255,255,255,0.4);
   }
 
-  .infaq-icon {
-    width: 36px; height: 36px;
-    background: linear-gradient(135deg, rgba(201,168,76,0.2), rgba(201,168,76,0.08));
-    border: 1px solid rgba(201,168,76,0.3); border-radius: 9px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 17px; flex-shrink: 0;
+  .infaq-tab-icon {
+    font-size: 15px;
+    writing-mode: horizontal-tb;
+    flex-shrink: 0;
   }
 
-  .infaq-text { flex: 1; }
-  .infaq-label {
-    font-size: 9px; color: var(--accent-gold); font-weight: 600;
-    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1px;
-  }
-  .infaq-title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 1px; }
-  .infaq-desc {
-    font-size: 11px; color: var(--text-secondary);
-    font-style: italic; font-family: 'Amiri', serif;
+  .infaq-tab-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
   }
 
-  .infaq-arrow {
-    width: 26px; height: 26px;
-    background: var(--accent-gold-dim); border: 1px solid rgba(201,168,76,0.2);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; transition: all 0.3s ease;
-  }
-
-  .infaq-card:hover .infaq-arrow { background: rgba(201,168,76,0.2); transform: translateX(2px); }
-  .infaq-arrow svg { width: 12px; height: 12px; stroke: var(--accent-gold); fill: none; }
-
-  /* ─── MEDIA CARDS (VIDEO & AUDIO) ─── */
+  /* ─── MEDIA CARDS (VIDEO) ─── */
   .media-wrapper {
     margin-top: 0;
   }
 
   .media-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 14px;
   }
 
@@ -365,12 +353,15 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 7px;
   }
 
+  /* Track holds the decorative wave bars UNDER a real, invisible <input type="range">
+     so users can click or drag anywhere on the wave to seek — full native slider
+     semantics with the WhatsApp-style waveform look preserved. */
   .vn-track {
     position: relative;
-    height: 22px;
+    height: 24px;
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -403,7 +394,7 @@
     pointer-events: none;
   }
 
-  .vn-wave-fg span { background: var(--accent-gold); }
+  .vn-wave-fg span { background: var(--accent-gold); box-shadow: 0 0 6px rgba(201,168,76,0.5); }
 
   .vn-wave span:nth-child(8n+1) { height: 38%; }
   .vn-wave span:nth-child(8n+2) { height: 68%; }
@@ -426,23 +417,87 @@
     50% { transform: scaleY(0.68); }
   }
 
+  /* Real range input — visually transparent, sits on top of the wave bars and
+     provides native click + drag seeking, keyboard support and accessibility. */
+  .vn-range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 3;
+  }
+
+  .vn-range:focus-visible {
+    outline: 2px solid var(--accent-gold-light);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  .vn-range::-webkit-slider-runnable-track {
+    background: transparent;
+    height: 100%;
+  }
+
+  .vn-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 4px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .vn-range::-moz-range-track {
+    background: transparent;
+    height: 100%;
+    border: none;
+  }
+
+  .vn-range::-moz-range-thumb {
+    width: 4px;
+    height: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
   .vn-time-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     font-size: 10.5px;
     color: var(--text-secondary);
-    letter-spacing: 0.02em;
+    letter-spacing: 0.03em;
     font-variant-numeric: tabular-nums;
   }
 
-  .vn-time-row #audioDuration { color: var(--text-muted); }
+  .vn-time-row #audioTimeLabel { color: var(--text-secondary); }
+  .vn-time-row #audioTimeLabel .vn-time-current { color: var(--accent-gold-light); font-weight: 600; }
+
+  /* ─── AUDIO BLOCK EMBEDDED INSIDE THE "10 AYAT" READER CARD ─── */
+  .tab-audio-block {
+    border-bottom: 1px solid var(--border-subtle);
+    background: rgba(0,0,0,0.14);
+  }
+
+  .tab-audio-block .media-card-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+  }
+
+  .tab-audio-block .voice-note-player {
+    background:
+      radial-gradient(ellipse at 0% 50%, rgba(201,168,76,0.07) 0%, transparent 60%),
+      rgba(5,8,14,0.6);
+  }
 
   /* ═══ RESPONSIVE ═══ */
   @media (max-width: 640px) {
-    .media-grid {
-      grid-template-columns: 1fr;
-    }
     .media-title { white-space: normal; }
   }
 
@@ -887,12 +942,15 @@
   /* ─── RESPONSIVE ─── */
   @media (max-width: 600px) {
     header { padding: 0 16px; }
-    .content-wrapper, .infaq-wrapper { padding: 0 12px; }
+    .content-wrapper, .media-wrapper { padding: 0 12px; }
     .logo-sub { display: none; }
     .study-bubble { font-size: 10px; padding: 6px 11px; }
     .page-verse-arabic { font-size: 22px; line-height: 2.0; }
     .page-verse-item { padding: 12px 14px 8px; gap: 10px; }
     .quran-page { margin: 8px; }
+    .infaq-side-tab { padding: 16px 7px 16px 9px; }
+    .infaq-tab-label { font-size: 11px; letter-spacing: 0.1em; }
+    .infaq-tab-icon { font-size: 13px; }
   }
 
   /* ─── GRID BG ─── */
@@ -909,6 +967,12 @@
 <body>
 
 <div class="bg-grid"></div>
+
+<!-- INFAQ SIDE TAB — butang memanjang melekat di kiri -->
+<a href="https://quranic-huffaz.github.io/quran-tracker/infaq-tahfiz-aqil.html" target="_blank" class="infaq-side-tab" title="Infaq Tahfiz — Amal Jariah">
+  <span class="infaq-tab-icon">🕌</span>
+  <span class="infaq-tab-label">Infaq Tahfiz</span>
+</a>
 
 <!-- HEADER -->
 <header>
@@ -943,28 +1007,8 @@
     </div>
   </div>
 
-  <!-- INFAQ CARD -->
-  <div class="infaq-wrapper">
-    <a href="https://quranic-huffaz.github.io/quran-tracker/infaq-tahfiz-aqil.html" target="_blank" class="infaq-card">
-      <div class="infaq-shimmer"></div>
-      <div class="infaq-inner">
-        <div class="infaq-icon">🕌</div>
-        <div class="infaq-text">
-          <div class="infaq-label">Amal Jariah</div>
-          <div class="infaq-title">Infaq Tahfiz AQIL</div>
-          <div class="infaq-desc">Sokong program tahfiz — sedekah terbaik untuk akhirat anda</div>
-        </div>
-        <div class="infaq-arrow">
-          <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 18l6-6-6-6"/>
-          </svg>
-        </div>
-      </div>
-    </a>
-  </div>
-
-  <!-- MEDIA CARDS: VIDEO & AUDIO -->
-  <div class="infaq-wrapper media-wrapper">
+  <!-- MEDIA CARD: VIDEO -->
+  <div class="content-wrapper media-wrapper">
     <div class="media-grid">
       <div class="media-card">
         <div class="media-card-header">
@@ -978,41 +1022,11 @@
           <iframe src="https://www.youtube.com/embed/uiwHkaPmkr0?si=fsumvR6QDmkcgdTz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
         </div>
       </div>
-
-      <!-- AUDIO CARD — native HTML5 <audio>, compact WhatsApp-style voice-note player -->
-      <div class="media-card">
-        <div class="media-card-header">
-          <div class="media-icon">🎧</div>
-          <div class="media-text">
-            <div class="media-label">Bacaan Audio</div>
-            <div class="media-title">Dengar Al-Kahfi Sepenuhnya</div>
-          </div>
-        </div>
-        <div class="voice-note-player" id="audioPlayerWrap">
-          <button class="vn-play-btn" id="audioPlayBtn" onclick="toggleAudio()" aria-label="Main / Jeda audio">
-            <svg id="iconPlay" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            <svg id="iconPause" viewBox="0 0 24 24" style="display:none;"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-          </button>
-          <div class="vn-body">
-            <div class="vn-track" id="vnTrack">
-              <div class="vn-wave vn-wave-bg" id="vnWaveBg"></div>
-              <div class="vn-wave-fg" id="vnWaveFg">
-                <div class="vn-wave" id="vnWaveFgInner"></div>
-              </div>
-            </div>
-            <div class="vn-time-row">
-              <span id="audioStatus">00:00</span>
-              <span id="audioDuration">00:00</span>
-            </div>
-          </div>
-        </div>
-        <audio id="audioEl" preload="metadata" src="Bacaan Al-Kahfi 1-10 %26 100-110 - Ismail Annuri.mp3"></audio>
-      </div>
     </div>
   </div>
 
   <!-- TAB PANELS -->
-  <div class="content-wrapper">
+  <div class="content-wrapper" style="margin-top:16px;">
 
     <!-- ═══ TAB 0: SURAH PENUH ═══ -->
     <div class="tab-panel active" id="tabPanel0">
@@ -1064,6 +1078,37 @@
           <span class="reader-title">✨ 10 Ayat Al-Kahfi</span>
           <span class="reader-badge" id="tenBadge" style="direction:ltr;">Ayat 1–10</span>
         </div>
+
+        <!-- AUDIO PLAYER — dipindah ke sini, di bawah header 10 Ayat -->
+        <div class="tab-audio-block">
+          <div class="media-card-header">
+            <div class="media-icon">🎧</div>
+            <div class="media-text">
+              <div class="media-label">Bacaan Audio</div>
+              <div class="media-title">Dengar Al-Kahfi Sepenuhnya</div>
+            </div>
+          </div>
+          <div class="voice-note-player" id="audioPlayerWrap">
+            <button class="vn-play-btn" id="audioPlayBtn" onclick="toggleAudio()" aria-label="Main / Jeda audio">
+              <svg id="iconPlay" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <svg id="iconPause" viewBox="0 0 24 24" style="display:none;"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+            </button>
+            <div class="vn-body">
+              <div class="vn-track" id="vnTrack">
+                <div class="vn-wave vn-wave-bg" id="vnWaveBg"></div>
+                <div class="vn-wave-fg" id="vnWaveFg">
+                  <div class="vn-wave" id="vnWaveFgInner"></div>
+                </div>
+                <input type="range" class="vn-range" id="audioRange" min="0" max="1000" value="0" step="0.1" aria-label="Seret untuk lompat ke masa audio">
+              </div>
+              <div class="vn-time-row">
+                <span id="audioTimeLabel"><span class="vn-time-current">00:00</span> / 00:00</span>
+              </div>
+            </div>
+          </div>
+          <audio id="audioEl" preload="metadata" src="Bacaan Al-Kahfi 1-10 %26 100-110 - Ismail Annuri.mp3"></audio>
+        </div>
+
         <div class="sub-toggle">
           <button class="sub-toggle-btn active" id="subBtn0" onclick="switchSubPage(0)">Al-Kahfi (Awal)</button>
           <button class="sub-toggle-btn" id="subBtn1" onclick="switchSubPage(1)">Al-Kahfi (Akhir)</button>
@@ -1216,20 +1261,21 @@ document.getElementById('inputNombor').addEventListener('keydown', e => {
   if (e.key === 'Escape') document.getElementById('modalNombor').classList.remove('open');
 });
 
-// ═══ NATIVE HTML5 AUDIO — VOICE-NOTE STYLE PLAYER ═══
+// ═══ NATIVE HTML5 AUDIO — VOICE-NOTE STYLE PLAYER WITH REAL RANGE SEEKING ═══
 const audioEl = document.getElementById('audioEl');
 const audioWrap = document.getElementById('audioPlayerWrap');
 const audioBtn = document.getElementById('audioPlayBtn');
 const iconPlay = document.getElementById('iconPlay');
 const iconPause = document.getElementById('iconPause');
-const audioStatus = document.getElementById('audioStatus');
-const audioDuration = document.getElementById('audioDuration');
+const audioTimeLabel = document.getElementById('audioTimeLabel');
 const vnTrack = document.getElementById('vnTrack');
 const vnWaveBg = document.getElementById('vnWaveBg');
 const vnWaveFg = document.getElementById('vnWaveFg');
 const vnWaveFgInner = document.getElementById('vnWaveFgInner');
+const audioRange = document.getElementById('audioRange');
 
 const VN_BAR_COUNT = 42;
+const RANGE_PRECISION = 1000; // range input works in a fixed 0-1000 scale, mapped to duration
 
 function buildWaveBars(container, count) {
   container.innerHTML = '';
@@ -1253,16 +1299,22 @@ function formatTime(sec) {
   return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
 }
 
+// Keeps the wave fill %, the range thumb position and the time label all in sync,
+// whichever source (audio playback OR manual drag) triggered the update.
+function syncProgressUI(currentTime, duration) {
+  const pct = duration ? Math.min(Math.max((currentTime / duration) * 100, 0), 100) : 0;
+  vnWaveFg.style.width = pct + '%';
+  audioRange.value = duration ? (currentTime / duration) * RANGE_PRECISION : 0;
+  audioTimeLabel.innerHTML = '<span class="vn-time-current">' + formatTime(currentTime) + '</span> / ' + formatTime(duration);
+}
+
 audioEl.addEventListener('loadedmetadata', () => {
-  audioDuration.textContent = formatTime(audioEl.duration);
+  syncProgressUI(audioEl.currentTime, audioEl.duration);
 });
 
 audioEl.addEventListener('timeupdate', () => {
-  audioStatus.textContent = formatTime(audioEl.currentTime);
-  if (audioEl.duration) {
-    const pct = (audioEl.currentTime / audioEl.duration) * 100;
-    vnWaveFg.style.width = pct + '%';
-  }
+  if (isScrubbing) return; // saat pengguna sedang menyeret, biar input jadi punca kebenaran
+  syncProgressUI(audioEl.currentTime, audioEl.duration);
 });
 
 audioEl.addEventListener('play', () => {
@@ -1282,13 +1334,11 @@ audioEl.addEventListener('ended', () => {
   iconPlay.style.display = 'block';
   iconPause.style.display = 'none';
   audioWrap.classList.remove('playing');
-  audioStatus.textContent = '00:00';
-  vnWaveFg.style.width = '0%';
+  syncProgressUI(0, audioEl.duration);
 });
 
 audioEl.addEventListener('waiting', () => {
   audioBtn.classList.add('loading');
-  audioStatus.textContent = 'Memuatkan...';
 });
 
 audioEl.addEventListener('canplay', () => {
@@ -1297,7 +1347,7 @@ audioEl.addEventListener('canplay', () => {
 
 audioEl.addEventListener('error', () => {
   audioBtn.classList.remove('loading');
-  audioStatus.textContent = 'Gagal memuatkan audio';
+  audioTimeLabel.innerHTML = '<span class="vn-time-current">Gagal memuatkan audio</span>';
 });
 
 function toggleAudio() {
@@ -1307,22 +1357,32 @@ function toggleAudio() {
       .then(() => audioBtn.classList.remove('loading'))
       .catch(() => {
         audioBtn.classList.remove('loading');
-        audioStatus.textContent = 'Gagal main audio';
+        audioTimeLabel.innerHTML = '<span class="vn-time-current">Gagal main audio</span>';
       });
   } else {
     audioEl.pause();
   }
 }
 
-function seekAudio(e) {
-  if (!audioEl.duration) return;
-  const rect = vnTrack.getBoundingClientRect();
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const x = clientX - rect.left;
-  const pct = Math.min(Math.max(x / rect.width, 0), 1);
-  audioEl.currentTime = pct * audioEl.duration;
-}
-vnTrack.addEventListener('click', seekAudio);
+// ═══ SEEK / SCRUB VIA <input type="range"> — klik ATAU seret di atas ombak ═══
+let isScrubbing = false;
+
+audioRange.addEventListener('input', () => {
+  if (!isFinite(audioEl.duration) || audioEl.duration <= 0) return;
+  isScrubbing = true;
+  const pct = audioRange.value / RANGE_PRECISION;
+  const previewTime = pct * audioEl.duration;
+  // Kemaskini visual & label serta-merta semasa diseret, sebelum audio benar-benar melompat
+  vnWaveFg.style.width = (pct * 100) + '%';
+  audioTimeLabel.innerHTML = '<span class="vn-time-current">' + formatTime(previewTime) + '</span> / ' + formatTime(audioEl.duration);
+  audioEl.currentTime = previewTime;
+});
+
+audioRange.addEventListener('change', () => {
+  isScrubbing = false;
+});
+// Selamatkan kes klik/keyboard tanpa event 'change' berturutan (contoh: arrow keys)
+audioRange.addEventListener('blur', () => { isScrubbing = false; });
 
 // ═══ FULL SURAH PAGINATION — same-height pages ═══
 let fullPages = [];
