@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetaMinda — Platform Kongsi Peta Minda</title>
+<meta name="description" content="Platform kongsi ilmu dalam bentuk peta minda poster — pengajian, teknologi dan lebih lagi.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/css/style.css">
+
+<!-- Lucide icons -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer></script>
+</head>
+<body>
+
+<div class="ambient-canvas" aria-hidden="true"></div>
+
+<header class="site-header" id="site-header">
+  <a class="brand" href="?" data-nav>
+    <span class="brand-mark">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="6" cy="6" r="2.4" fill="currentColor"/>
+        <circle cx="18" cy="6" r="2.4" fill="currentColor"/>
+        <circle cx="12" cy="18" r="2.4" fill="currentColor"/>
+        <path d="M6 8.4V12M18 8.4V12M8 6H16M9 16.5L12 12M15 16.5L12 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+    </span>
+    <span class="brand-text">PetaMinda</span>
+  </a>
+
+  <div class="header-search" id="header-search-wrap">
+    <svg class="icon-search" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    <input type="text" id="global-search" placeholder="Cari peta minda, tag, penulis..." autocomplete="off" aria-label="Carian global">
+    <button class="icon-clear" id="search-clear-btn" aria-label="Kosongkan carian" type="button">
+      <i data-lucide="x" style="width:14px;height:14px"></i>
+    </button>
+  </div>
+
+</header>
+
+<main class="app-shell" id="app">
+  <!-- Rendered dynamically by app.js -->
+</main>
+
+<footer class="site-footer">
+  Dibina dengan ❤ untuk komuniti pelajar &amp; pendidik Malaysia. Data poster boleh dikemaskini bila-bila masa —
+  lihat <a href="README.md">README.md</a> untuk cara sumbang.
+</footer>
+
+<nav class="mobile-bottom-nav" aria-label="Navigasi mudah alih">
+  <button id="nav-home-btn" type="button"><i data-lucide="home"></i>Utama</button>
+  <button id="nav-search-btn" type="button"><i data-lucide="search"></i>Cari</button>
+  <button id="nav-filter-btn" type="button"><i data-lucide="sliders-horizontal"></i>Tapis</button>
+</nav>
+
+<div class="sheet-backdrop" id="sheet-backdrop"></div>
+<div class="filter-sheet" id="filter-sheet"></div>
+
+<div class="modal-backdrop" id="modal-backdrop"></div>
+
+<script type="module" src="assets/js/app.js"></script>
+</body>
+</html>
