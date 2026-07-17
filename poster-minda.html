@@ -2,1188 +2,694 @@
 <html lang="ms">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PetaMinda — Platform Kongsi Peta Minda</title>
-<meta name="description" content="Platform kongsi ilmu dalam bentuk peta minda poster — pengajian, teknologi dan lebih lagi.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Vault — Peta Minda Ilmu</title>
+<meta name="description" content="Platform arkib peta minda tersusun mengikut subjek dan tajuk.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-<!-- Lucide icons -->
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 
 <style>
-/* ==========================================================================
-   PetaMinda — style (digabung daripada assets/css/style.css)
-   Design tokens: dark, premium, glassmorphism, gold + indigo accents
-   ========================================================================== */
+  :root{
+    --bg:            #0a0c10;
+    --bg-soft:       #0d1016;
+    --surface:       #12151c;
+    --surface-hover: #191d26;
+    --border:        #232833;
+    --border-soft:   #1a1e27;
+    --text:          #edeef0;
+    --text-muted:    #8b93a1;
+    --text-faint:    #4d5561;
+    --gold:          #c9a227;
+    --gold-bright:   #e4c558;
+    --teal:          #2f8f86;
+    --teal-dim:      #1b4d4a;
+    --radius-lg: 18px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --shadow-card: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -12px rgba(0,0,0,.55);
+    --ease: cubic-bezier(.22,.61,.36,1);
+  }
 
-:root {
-  /* Color */
-  --bg: #0A0B0D;
-  --bg-elevated: #0F1115;
-  --surface: rgba(255, 255, 255, 0.035);
-  --surface-strong: rgba(255, 255, 255, 0.06);
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.14);
-  --gold: #C9A96E;
-  --gold-bright: #E6C989;
-  --indigo: #6366F1;
-  --indigo-bright: #818CF8;
-  --text: #E5E7EB;
-  --text-muted: #9098A8;
-  --text-faint: #5B6272;
-  --danger: #E5675F;
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1100px 520px at 82% -8%, rgba(201,162,39,.07), transparent 60%),
+      radial-gradient(900px 500px at -10% 0%, rgba(47,143,134,.08), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  h1,h2,h3,.display{font-family:'Space Grotesk',system-ui,sans-serif;}
+  .mono{font-family:'IBM Plex Mono',monospace; letter-spacing:.02em;}
+  ::selection{background:rgba(201,162,39,.28); color:#fff;}
+  :focus-visible{outline:2px solid var(--gold-bright); outline-offset:2px; border-radius:6px;}
+  img{-webkit-user-drag:none; user-select:none;}
+  button{font-family:inherit;}
 
-  /* Type */
-  --font-display: 'Space Grotesk', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  a{color:inherit;text-decoration:none;}
 
-  /* Layout */
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 20px;
-  --header-h: 72px;
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --transition: 0.25s var(--ease);
-}
+  /* ---------- Top bar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    display:flex; align-items:center; gap:20px;
+    padding:16px 28px;
+    background:rgba(10,12,16,.72);
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid var(--border-soft);
+  }
+  .brand{display:flex; align-items:center; gap:10px; flex-shrink:0;}
+  .brand-mark{
+    width:34px; height:34px; border-radius:9px;
+    background:linear-gradient(150deg,var(--gold-bright),var(--gold) 55%,var(--teal-dim));
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 14px -4px rgba(201,162,39,.5);
+    flex-shrink:0;
+  }
+  .brand-mark svg{width:18px;height:18px;}
+  .brand-word{font-size:17px; font-weight:700; letter-spacing:-.01em;}
+  .brand-word span{color:var(--gold-bright); font-weight:500;}
 
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+  .searchbar{
+    flex:1; max-width:560px; position:relative;
+    display:flex; align-items:center;
+  }
+  .searchbar svg{position:absolute; left:14px; width:16px; height:16px; color:var(--text-faint); pointer-events:none;}
+  .searchbar input{
+    width:100%; padding:11px 14px 11px 40px;
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; color:var(--text); font-size:14px;
+    transition:border-color .2s var(--ease), background .2s var(--ease);
+  }
+  .searchbar input::placeholder{color:var(--text-faint); font-family:'IBM Plex Mono',monospace; font-size:13px;}
+  .searchbar input:focus{border-color:var(--gold); background:var(--surface-hover);}
+  .searchbar .kbd{
+    position:absolute; right:10px; font-size:11px; color:var(--text-faint);
+    border:1px solid var(--border); border-radius:5px; padding:2px 6px;
+    font-family:'IBM Plex Mono',monospace; pointer-events:none;
+  }
 
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-body);
-  font-size: clamp(14px, 0.9vw + 10px, 16px);
-  line-height: 1.55;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
+  .topbar-right{margin-left:auto; display:flex; align-items:center; gap:14px; flex-shrink:0;}
+  .owner-pill{
+    display:flex; align-items:center; gap:6px;
+    font-size:12px; color:var(--text-muted);
+    border:1px solid var(--border); border-radius:100px; padding:6px 12px 6px 6px;
+    white-space:nowrap;
+  }
+  .owner-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 3px rgba(47,143,134,.18);}
 
-h1, h2, h3, h4 {
-  font-family: var(--font-display);
-  margin: 0;
-  letter-spacing: -0.01em;
-  color: #fff;
-}
+  /* ---------- Breadcrumb ticker ---------- */
+  .ticker{
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    padding:16px 28px 4px; font-family:'IBM Plex Mono',monospace; font-size:12.5px;
+    color:var(--text-muted); max-width:1240px; margin:0 auto;
+  }
+  .ticker button{
+    background:none;border:none;color:var(--text-muted);cursor:pointer;padding:3px 2px;
+    transition:color .15s;
+  }
+  .ticker button:hover, .ticker .current{color:var(--gold-bright);}
+  .ticker .sep{color:var(--text-faint);}
 
-a { color: inherit; text-decoration: none; }
-button { font-family: inherit; cursor: pointer; }
-img { max-width: 100%; display: block; }
+  /* ---------- Main ---------- */
+  main{max-width:1240px; margin:0 auto; padding:18px 28px 90px;}
 
-::selection { background: var(--gold); color: #14110a; }
+  .hero-line{
+    display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
+    margin:10px 0 26px; flex-wrap:wrap;
+  }
+  .hero-line h1{font-size:26px; margin:0 0 4px; letter-spacing:-.01em;}
+  .hero-line p{margin:0; color:var(--text-muted); font-size:14.5px;}
+  .count-badge{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--gold-bright);
+    border:1px solid rgba(201,162,39,.35); background:rgba(201,162,39,.06);
+    padding:6px 12px; border-radius:100px; white-space:nowrap;
+  }
 
-/* Focus visibility */
-a:focus-visible, button:focus-visible, input:focus-visible {
-  outline: 2px solid var(--indigo-bright);
-  outline-offset: 2px;
-  border-radius: 6px;
-}
+  /* ---------- Grid & cards ---------- */
+  .grid{display:grid; gap:16px; grid-template-columns:repeat(auto-fill,minmax(240px,1fr));}
+  .grid.titles{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));}
+  .grid.posters{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));}
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
-}
+  .card{
+    position:relative;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    padding:20px;
+    cursor:pointer;
+    transition:transform .22s var(--ease), border-color .22s var(--ease), background .22s var(--ease), box-shadow .22s var(--ease);
+    box-shadow:var(--shadow-card);
+    overflow:hidden;
+  }
+  .card::after{
+    content:""; position:absolute; inset:0; opacity:0; pointer-events:none;
+    background:linear-gradient(160deg, rgba(201,162,39,.10), transparent 55%);
+    transition:opacity .25s var(--ease);
+  }
+  .card:hover{transform:translateY(-3px); border-color:rgba(201,162,39,.4); background:var(--surface-hover);}
+  .card:hover::after{opacity:1;}
 
-/* ==========================================================================
-   Ambient background — mind-map node motif (signature element)
-   ========================================================================== */
-.ambient-canvas {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.55;
-}
+  .card-top{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:14px;}
+  .card-icon{
+    width:42px; height:42px; border-radius:11px; flex-shrink:0;
+    background:linear-gradient(155deg, var(--teal-dim), rgba(255,255,255,.02));
+    border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center; color:var(--gold-bright);
+  }
+  .card-icon svg{width:20px;height:20px;}
+  .code-pill{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--gold-bright);
+    border:1px solid rgba(201,162,39,.3); border-radius:6px; padding:3px 7px;
+    background:rgba(201,162,39,.05); flex-shrink:0;
+  }
+  .card h3{margin:0 0 6px; font-size:16.5px; letter-spacing:-.005em;}
+  .card p.desc{margin:0 0 16px; font-size:13px; color:var(--text-muted); line-height:1.5; min-height:20px;}
+  .card-foot{display:flex; align-items:center; justify-content:space-between; font-size:12px; color:var(--text-faint);}
+  .card-foot .stat{font-family:'IBM Plex Mono',monospace; color:var(--text-muted);}
+  .card-foot .arrow{color:var(--gold-bright); opacity:0; transform:translateX(-4px); transition:all .2s var(--ease);}
+  .card:hover .card-foot .arrow{opacity:1; transform:translateX(0);}
 
-.ambient-canvas::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 900px 500px at 15% -5%, rgba(201, 169, 110, 0.10), transparent 60%),
-    radial-gradient(ellipse 700px 500px at 100% 10%, rgba(99, 102, 241, 0.10), transparent 60%);
-}
+  /* poster thumb card */
+  .poster-card{padding:0; display:flex; flex-direction:column;}
+  .poster-thumb{
+    aspect-ratio:4/3; width:100%; border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+    background:
+      linear-gradient(155deg, rgba(201,162,39,.14), rgba(47,143,134,.10)),
+      repeating-linear-gradient(135deg, rgba(255,255,255,.025) 0 2px, transparent 2px 14px);
+    display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;
+  }
+  .poster-thumb img{width:100%; height:100%; object-fit:cover; display:block;}
+  .poster-thumb .fallback-icon{color:rgba(228,197,88,.35); width:34px; height:34px;}
+  .poster-thumb .code-pill{position:absolute; top:10px; right:10px; background:rgba(10,12,16,.65); backdrop-filter:blur(4px);}
+  .poster-body{padding:14px 16px 16px;}
+  .poster-body h3{font-size:14.5px; margin:0 0 8px;}
+  .tags{display:flex; flex-wrap:wrap; gap:6px;}
+  .tag{
+    font-size:10.5px; font-family:'IBM Plex Mono',monospace; color:var(--text-muted);
+    background:var(--bg-soft); border:1px solid var(--border-soft); border-radius:5px; padding:3px 7px;
+  }
 
-/* ==========================================================================
-   Header
-   ========================================================================== */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  height: var(--header-h);
-  display: flex;
-  align-items: center;
-  padding: 0 clamp(16px, 4vw, 48px);
-  background: rgba(10, 11, 13, 0.55);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  border-bottom: 1px solid transparent;
-  transition: border-color var(--transition), background var(--transition);
-  gap: 20px;
-}
+  /* ---------- Empty / no results ---------- */
+  .empty{
+    text-align:center; padding:70px 20px; color:var(--text-muted);
+    border:1px dashed var(--border); border-radius:var(--radius-lg); margin-top:10px;
+  }
+  .empty svg{width:34px; height:34px; color:var(--text-faint); margin-bottom:14px;}
+  .empty h3{margin:0 0 6px; color:var(--text); font-size:16px;}
+  .empty p{margin:0; font-size:13.5px;}
 
-.site-header.is-scrolled {
-  border-bottom-color: var(--border);
-  background: rgba(10, 11, 13, 0.8);
-}
+  /* ---------- Lightbox ---------- */
+  .lightbox{
+    position:fixed; inset:0; z-index:100; display:none;
+    background:rgba(6,7,10,.88); backdrop-filter:blur(6px);
+    align-items:center; justify-content:center; padding:24px;
+  }
+  .lightbox.open{display:flex;}
+  .lb-inner{width:100%; max-width:900px; display:flex; flex-direction:column; gap:14px;}
+  .lb-frame{
+    position:relative; width:100%; border-radius:var(--radius-lg); overflow:hidden;
+    background:var(--surface); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center; min-height:280px;
+  }
+  .lb-frame img{width:100%; max-height:72vh; object-fit:contain; display:block;}
+  .lb-watermark{
+    position:absolute; bottom:12px; right:14px; font-family:'IBM Plex Mono',monospace;
+    font-size:11px; color:rgba(255,255,255,.55); background:rgba(0,0,0,.35);
+    padding:4px 9px; border-radius:6px; letter-spacing:.03em; pointer-events:none;
+  }
+  .lb-meta{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;}
+  .lb-meta h3{margin:0 0 4px; font-size:17px;}
+  .lb-meta .path{font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--text-faint);}
+  .lb-controls{display:flex; align-items:center; gap:8px;}
+  .icon-btn{
+    width:38px; height:38px; border-radius:10px; border:1px solid var(--border);
+    background:var(--surface); color:var(--text-muted); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:all .18s var(--ease);
+  }
+  .icon-btn:hover{border-color:var(--gold); color:var(--gold-bright); background:var(--surface-hover);}
+  .icon-btn svg{width:16px;height:16px;}
+  .lb-close{position:absolute; top:-46px; right:0;}
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1.05rem;
-  color: #fff;
-  white-space: nowrap;
-}
+  /* ---------- Footer ---------- */
+  footer{
+    max-width:1240px; margin:0 auto; padding:26px 28px 50px; color:var(--text-faint);
+    font-size:12px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+    border-top:1px solid var(--border-soft); margin-top:20px;
+  }
 
-.brand .brand-mark {
-  width: 30px;
-  height: 30px;
-  border-radius: 9px;
-  background: linear-gradient(155deg, var(--gold-bright), var(--gold) 55%, #8a6f3f);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #14110a;
-  flex-shrink: 0;
-}
-.brand .brand-mark svg { width: 17px; height: 17px; }
+  /* ---------- Responsive ---------- */
+  @media (max-width:720px){
+    .topbar{padding:12px 16px; gap:12px;}
+    .brand-word{display:none;}
+    .owner-pill span.label{display:none;}
+    .ticker{padding:12px 16px 2px;}
+    main{padding:14px 16px 70px;}
+    .hero-line h1{font-size:21px;}
+    .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px;}
+    .grid.posters{grid-template-columns:repeat(2,1fr);}
+    .lb-close{top:auto; bottom:-46px; right:0;}
+    footer{padding:20px 16px 40px;}
+  }
 
-.header-search {
-  flex: 1;
-  max-width: 480px;
-  position: relative;
-  margin-left: auto;
-}
-
-.header-search input {
-  width: 100%;
-  height: 42px;
-  padding: 0 40px 0 40px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
-  font-size: 0.9rem;
-  transition: border-color var(--transition), background var(--transition);
-}
-.header-search input::placeholder { color: var(--text-faint); }
-.header-search input:focus {
-  border-color: var(--gold);
-  background: var(--surface-strong);
-  outline: none;
-}
-.header-search .icon-search {
-  position: absolute;
-  left: 13px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-faint);
-  width: 17px;
-  height: 17px;
-}
-.header-search .icon-clear {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 26px;
-  height: 26px;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  color: var(--text-muted);
-  background: transparent;
-  border: none;
-}
-.header-search .icon-clear:hover { background: var(--surface-strong); color: var(--text); }
-.header-search.has-value .icon-clear { display: flex; }
-
-/* ==========================================================================
-   Layout shell
-   ========================================================================== */
-.app-shell {
-  position: relative;
-  z-index: 1;
-  max-width: 1360px;
-  margin: 0 auto;
-  padding: 0 clamp(16px, 4vw, 48px) 80px;
-}
-
-/* Hero */
-.hero {
-  padding: clamp(40px, 6vw, 76px) 0 clamp(28px, 4vw, 40px);
-  position: relative;
-}
-
-.hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--gold);
-  padding: 6px 12px;
-  border: 1px solid rgba(201, 169, 110, 0.3);
-  border-radius: 100px;
-  background: rgba(201, 169, 110, 0.06);
-  margin-bottom: 22px;
-}
-.hero-eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 8px var(--gold); }
-
-.hero h1 {
-  font-size: clamp(2.1rem, 4.2vw, 3.6rem);
-  font-weight: 600;
-  line-height: 1.08;
-  max-width: 15ch;
-}
-.hero h1 .accent {
-  background: linear-gradient(100deg, var(--gold-bright), var(--indigo-bright));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.hero p.lead {
-  margin-top: 18px;
-  max-width: 56ch;
-  color: var(--text-muted);
-  font-size: clamp(0.95rem, 0.5vw + 0.8rem, 1.08rem);
-}
-
-.hero-stats {
-  display: flex;
-  gap: clamp(20px, 4vw, 48px);
-  margin-top: clamp(32px, 5vw, 44px);
-  flex-wrap: wrap;
-}
-.hero-stat .num {
-  font-family: var(--font-mono);
-  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
-  font-weight: 500;
-  color: #fff;
-  display: block;
-}
-.hero-stat .label {
-  font-size: 0.78rem;
-  color: var(--text-faint);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-top: 4px;
-}
-
-/* Breadcrumb */
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  font-size: 0.84rem;
-  color: var(--text-faint);
-  margin: 28px 0 22px;
-  font-family: var(--font-mono);
-}
-.breadcrumb a { color: var(--text-muted); transition: color var(--transition); }
-.breadcrumb a:hover { color: var(--gold); }
-.breadcrumb .sep { opacity: 0.4; }
-.breadcrumb .current { color: var(--gold); }
-
-/* ==========================================================================
-   Section headings
-   ========================================================================== */
-.section-heading {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  margin: 0 0 22px;
-  flex-wrap: wrap;
-}
-.section-heading h2 { font-size: clamp(1.2rem, 1.6vw, 1.5rem); font-weight: 600; }
-.section-heading .count {
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  color: var(--text-faint);
-}
-
-/* ==========================================================================
-   Folder cards (subjek & topik guna templat sama)
-   ========================================================================== */
-.category-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 18px;
-}
-
-.category-card {
-  position: relative;
-  padding: 26px;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
-  background: linear-gradient(160deg, var(--surface), rgba(255,255,255,0.015));
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  overflow: hidden;
-  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
-  cursor: pointer;
-  display: block;
-}
-.category-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(201, 169, 110, 0.4);
-  box-shadow: 0 20px 45px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,169,110,0.08), 0 0 40px -12px rgba(201,169,110,0.25);
-}
-.category-card .cat-icon {
-  width: 46px;
-  height: 46px;
-  border-radius: 13px;
-  background: rgba(201, 169, 110, 0.1);
-  border: 1px solid rgba(201, 169, 110, 0.22);
-  color: var(--gold-bright);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 18px;
-}
-.category-card .cat-icon svg { width: 22px; height: 22px; }
-.category-card h3 { font-size: 1.12rem; font-weight: 600; margin-bottom: 6px; }
-.category-card p { color: var(--text-muted); font-size: 0.86rem; margin: 0 0 18px; }
-.category-card .cat-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  color: var(--text-faint);
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
-}
-.category-card .cat-meta .arrow { color: var(--gold); transition: transform var(--transition); }
-.category-card:hover .cat-meta .arrow { transform: translateX(3px); }
-
-/* ==========================================================================
-   Toolbar (konteks carian / bilangan hasil)
-   ========================================================================== */
-.toolbar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 22px;
-  flex-wrap: wrap;
-}
-.toolbar .result-text { color: var(--text-muted); font-size: 0.88rem; }
-.toolbar .result-text strong { color: var(--text); }
-
-/* ==========================================================================
-   Poster grid + card
-   ========================================================================== */
-.poster-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-}
-
-.poster-card {
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  background: var(--surface);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
-  display: flex;
-  flex-direction: column;
-}
-.poster-card:hover {
-  transform: translateY(-5px) scale(1.01);
-  border-color: rgba(201, 169, 110, 0.35);
-  box-shadow: 0 22px 40px -18px rgba(0,0,0,0.65), 0 0 30px -10px rgba(201,169,110,0.2);
-}
-.poster-card.highlight {
-  border-color: var(--gold);
-  animation: pulseHighlight 1.8s var(--ease);
-}
-@keyframes pulseHighlight {
-  0% { box-shadow: 0 0 0 0 rgba(201,169,110,0.55); }
-  60% { box-shadow: 0 0 0 16px rgba(201,169,110,0); }
-  100% { box-shadow: 0 0 0 0 rgba(201,169,110,0); }
-}
-.poster-card .thumb-wrap {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  background: var(--bg-elevated);
-}
-.poster-card .thumb-wrap img {
-  width: 100%; height: 100%; object-fit: cover;
-  transition: transform 0.5s var(--ease);
-}
-.poster-card:hover .thumb-wrap img { transform: scale(1.06); }
-.poster-card .thumb-wrap .level-tag {
-  position: absolute;
-  top: 10px; left: 10px;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  padding: 4px 9px;
-  border-radius: 100px;
-  background: rgba(10,11,13,0.65);
-  backdrop-filter: blur(6px);
-  border: 1px solid var(--border-strong);
-  color: var(--text);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-.poster-card .card-body { padding: 16px; flex: 1; display: flex; flex-direction: column; }
-.poster-card h4 { font-size: 0.94rem; font-weight: 600; line-height: 1.3; margin-bottom: 4px; }
-.poster-card .subtitle { font-size: 0.78rem; color: var(--text-muted); }
-.poster-card .card-footer {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 16px; border-top: 1px solid var(--border);
-  font-size: 0.76rem; color: var(--text-faint); font-family: var(--font-mono);
-  margin-top: auto;
-}
-
-/* Skeleton loading */
-.skeleton { position: relative; overflow: hidden; background: var(--surface-strong); }
-.skeleton::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(100deg, transparent, rgba(255,255,255,0.06), transparent);
-  animation: shimmer 1.5s infinite;
-}
-@keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
-.poster-card.skeleton-card .thumb-wrap { background: var(--surface-strong); }
-.poster-card.skeleton-card .sk-line { height: 10px; border-radius: 6px; background: var(--surface-strong); margin-bottom: 8px; }
-
-/* Empty state */
-.empty-state {
-  text-align: center;
-  padding: 70px 20px;
-  border: 1px dashed var(--border-strong);
-  border-radius: var(--radius-lg);
-  grid-column: 1 / -1;
-}
-.empty-state .icon-wrap {
-  width: 60px; height: 60px; margin: 0 auto 20px;
-  border-radius: 16px; background: var(--surface-strong);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--text-faint);
-}
-.empty-state .icon-wrap svg { width: 28px; height: 28px; }
-.empty-state h3 { font-size: 1.05rem; margin-bottom: 6px; }
-.empty-state p { color: var(--text-muted); font-size: 0.88rem; max-width: 40ch; margin: 0 auto; }
-
-/* ==========================================================================
-   Modal / lightbox (lihat penuh)
-   ========================================================================== */
-.modal-backdrop {
-  position: fixed; inset: 0; z-index: 200;
-  background: rgba(6, 7, 9, 0.78);
-  backdrop-filter: blur(6px);
-  display: flex; align-items: center; justify-content: center;
-  padding: 24px;
-  opacity: 0; pointer-events: none;
-  transition: opacity var(--transition);
-}
-.modal-backdrop.open { opacity: 1; pointer-events: all; }
-
-.modal-panel {
-  width: 100%; max-width: 980px; max-height: 88vh;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  transform: translateY(16px) scale(0.98);
-  transition: transform var(--transition);
-  box-shadow: 0 40px 90px -30px rgba(0,0,0,0.7);
-}
-.modal-backdrop.open .modal-panel { transform: translateY(0) scale(1); }
-
-.modal-image {
-  position: relative;
-  background: #050607;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-  min-height: 320px;
-}
-.modal-image img {
-  width: 100%; height: 100%; object-fit: contain;
-  transition: transform 0.3s var(--ease);
-  cursor: zoom-in;
-}
-.modal-image img.zoomed { cursor: zoom-out; transform: scale(1.7); }
-.modal-image .zoom-hint {
-  position: absolute; bottom: 12px; left: 12px;
-  font-family: var(--font-mono); font-size: 0.7rem;
-  color: var(--text-faint); background: rgba(0,0,0,0.5);
-  padding: 4px 10px; border-radius: 100px; pointer-events: none;
-}
-
-.modal-info { padding: 28px; overflow-y: auto; display: flex; flex-direction: column; position: relative; }
-.modal-info .modal-close {
-  position: absolute; top: 16px; right: 16px;
-  width: 38px; height: 38px; border-radius: 50%;
-  background: rgba(0,0,0,0.4); border: 1px solid var(--border-strong);
-  color: var(--text); display: flex; align-items: center; justify-content: center;
-  transition: var(--transition);
-}
-.modal-info .modal-close:hover { background: rgba(0,0,0,0.65); }
-.modal-info .modal-close svg { width: 17px; height: 17px; }
-
-.modal-info .level-tag {
-  align-self: flex-start;
-  font-family: var(--font-mono); font-size: 0.7rem;
-  padding: 4px 10px; border-radius: 100px;
-  border: 1px solid var(--border-strong); color: var(--gold-bright);
-  background: rgba(201,169,110,0.08);
-  margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.04em;
-}
-.modal-info h2 { font-size: 1.4rem; margin-bottom: 6px; }
-.modal-info .subtitle { color: var(--text-muted); font-size: 0.92rem; margin-bottom: 20px; }
-
-.modal-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
-.modal-meta .meta-item .meta-label { font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase; color: var(--text-faint); letter-spacing: 0.05em; margin-bottom: 4px; }
-.modal-meta .meta-item .meta-value { font-size: 0.9rem; color: var(--text); }
-
-.modal-actions { margin-top: auto; display: flex; gap: 10px; }
-.btn-primary, .btn-secondary {
-  flex: 1; padding: 13px 18px; border-radius: 11px; font-size: 0.88rem; font-weight: 600;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  border: 1px solid transparent; transition: var(--transition);
-}
-.btn-primary { background: linear-gradient(135deg, var(--gold-bright), var(--gold)); color: #14110a; }
-.btn-primary:hover { filter: brightness(1.08); box-shadow: 0 8px 24px -8px rgba(201,169,110,0.5); }
-.btn-primary svg, .btn-secondary svg { width: 16px; height: 16px; }
-
-/* ==========================================================================
-   Footer
-   ========================================================================== */
-.site-footer {
-  border-top: 1px solid var(--border);
-  padding: 30px clamp(16px, 4vw, 48px);
-  text-align: center;
-  color: var(--text-faint);
-  font-size: 0.82rem;
-  position: relative; z-index: 1;
-}
-.site-footer a { color: var(--gold-bright); }
-
-/* ==========================================================================
-   Bottom nav (mobile)
-   ========================================================================== */
-.mobile-bottom-nav {
-  display: none;
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
-  background: rgba(10,11,13,0.9);
-  backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border);
-  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
-  justify-content: space-around;
-}
-.mobile-bottom-nav button {
-  background: none; border: none; color: var(--text-faint);
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  font-size: 0.65rem; font-family: var(--font-mono);
-  padding: 6px 14px; min-width: 44px; min-height: 44px;
-  border-radius: 10px;
-}
-.mobile-bottom-nav button.active { color: var(--gold-bright); }
-.mobile-bottom-nav button svg { width: 20px; height: 20px; }
-
-/* ==========================================================================
-   Butang bulat "Kembali" (gaya iPhone) — tetap di tepi kanan, tengah menegak
-   ========================================================================== */
-.back-fab {
-  position: fixed;
-  right: 18px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(15, 17, 21, 0.72);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  border: 1px solid var(--border-strong);
-  color: var(--gold-bright);
-  box-shadow: 0 12px 30px -10px rgba(0,0,0,0.65), 0 0 0 1px rgba(201,169,110,0.08);
-  z-index: 90;
-  transition: var(--transition);
-}
-.back-fab:hover {
-  transform: translateY(-50%) scale(1.08);
-  border-color: var(--gold);
-  box-shadow: 0 16px 40px -12px rgba(201,169,110,0.4), 0 0 0 1px rgba(201,169,110,0.15);
-  color: #fff;
-}
-.back-fab:active { transform: translateY(-50%) scale(0.96); }
-.back-fab svg { width: 22px; height: 22px; }
-
-/* ==========================================================================
-   Responsive breakpoints
-   ========================================================================== */
-@media (max-width: 1024px) {
-  .poster-grid { grid-template-columns: repeat(3, 1fr); }
-}
-
-@media (max-width: 640px) {
-  .poster-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-  .modal-panel { grid-template-columns: 1fr; max-height: 92vh; }
-  .modal-image { min-height: 220px; max-height: 40vh; }
-  .header-search { position: static; }
-  .site-header { gap: 10px; padding: 0 14px; }
-  .brand span.brand-text { display: none; }
-  .app-shell { padding: 0 14px 100px; }
-  .mobile-bottom-nav { display: flex; }
-  body { padding-bottom: 0; }
-  .back-fab { width: 44px; height: 44px; right: 10px; }
-  .back-fab svg { width: 19px; height: 19px; }
-}
-
-@media (max-width: 400px) {
-  .poster-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-}
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important; scroll-behavior:auto !important;}
+  }
 </style>
 </head>
 <body>
 
-<div class="ambient-canvas" aria-hidden="true"></div>
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3" fill="#0a0c10"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.8 2.8M15.2 15.2 18 18M18 6l-2.8 2.8M8.8 15.2 6 18" stroke="#0a0c10" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </div>
+    <div class="brand-word">Vault<span>.ilmu</span></div>
+  </div>
 
-<header class="site-header" id="site-header">
-  <a class="brand" href="?" data-nav>
-    <span class="brand-mark">
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="6" cy="6" r="2.4" fill="currentColor"/>
-        <circle cx="18" cy="6" r="2.4" fill="currentColor"/>
-        <circle cx="12" cy="18" r="2.4" fill="currentColor"/>
-        <path d="M6 8.4V12M18 8.4V12M8 6H16M9 16.5L12 12M15 16.5L12 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-      </svg>
-    </span>
-    <span class="brand-text">PetaMinda</span>
-  </a>
+  <div class="searchbar">
+    <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M21 21l-3.8-3.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <input id="searchInput" type="text" placeholder="cari subjek, tajuk atau poster…" autocomplete="off">
+    <span class="kbd">/</span>
+  </div>
 
-  <div class="header-search" id="header-search-wrap">
-    <svg class="icon-search" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-    <input type="text" id="global-search" placeholder="Cari peta minda, penulis, subjek..." autocomplete="off" aria-label="Carian global">
-    <button class="icon-clear" id="search-clear-btn" aria-label="Kosongkan carian" type="button">
-      <i data-lucide="x" style="width:14px;height:14px"></i>
-    </button>
+  <div class="topbar-right">
+    <div class="owner-pill"><span class="dot"></span><span class="label">Hak milik</span>&nbsp;<span id="ownerName" class="mono"></span></div>
   </div>
 </header>
 
-<main class="app-shell" id="app">
-  <!-- Dirender secara dinamik oleh skrip di bawah -->
-</main>
+<nav class="ticker" id="ticker"></nav>
 
-<footer class="site-footer">
-  Dibina dengan ❤ untuk komuniti pelajar &amp; pendidik Malaysia. Data poster boleh dikemaskini bila-bila masa —
-  lihat fail <code>data-poster.js</code> untuk cara sumbang.
+<main id="main"></main>
+
+<footer>
+  <span id="footerOwner"></span>
+  <span class="mono" id="footerCount"></span>
 </footer>
 
-<nav class="mobile-bottom-nav" aria-label="Navigasi mudah alih">
-  <button id="nav-home-btn" type="button"><i data-lucide="home"></i>Utama</button>
-  <button id="nav-search-btn" type="button"><i data-lucide="search"></i>Cari</button>
-</nav>
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <div class="lb-inner">
+    <div style="display:flex; justify-content:flex-end; position:relative;">
+      <button class="icon-btn lb-close" id="lbCloseBtn" aria-label="Tutup">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="lb-frame" id="lbFrame">
+      <img id="lbImage" src="" alt="">
+      <span class="lb-watermark" id="lbWatermark"></span>
+    </div>
+    <div class="lb-meta">
+      <div>
+        <h3 id="lbTitle"></h3>
+        <div class="path mono" id="lbPath"></div>
+      </div>
+      <div class="lb-controls">
+        <button class="icon-btn" id="lbPrev" aria-label="Poster sebelum">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="icon-btn" id="lbNext" aria-label="Poster seterusnya">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
-<div class="modal-backdrop" id="modal-backdrop"></div>
-
-<a class="back-fab" id="back-fab-btn" href="https://deen-track.pages.dev/" title="Kembali" aria-label="Kembali">
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M15 18l-6-6 6-6"/>
-  </svg>
-</a>
-
-<!-- Fail data khas poster (mesti dimuatkan sebelum skrip aplikasi) -->
-<script src="data-poster.js"></script>
-
+<script src="posters-data.js"></script>
 <script>
-(function () {
+(function(){
   "use strict";
 
-  /* ------------------------------------------------------------------ */
-  /* Helpers                                                             */
-  /* ------------------------------------------------------------------ */
-  const $ = (sel, ctx) => (ctx || document).querySelector(sel);
-  const $$ = (sel, ctx) => Array.from((ctx || document).querySelectorAll(sel));
-
-  function icon(name, extraAttrs) {
-    return '<i data-lucide="' + name + '" ' + (extraAttrs || '') + '></i>';
-  }
-  function refreshIcons() {
-    if (window.lucide) window.lucide.createIcons();
-  }
-  function escapeHtml(str) {
-    const div = document.createElement('div');
-    div.textContent = str == null ? '' : String(str);
-    return div.innerHTML;
-  }
-  function formatTarikh(iso) {
-    const d = new Date(iso);
-    if (isNaN(d.getTime())) return iso;
-    return d.toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' });
-  }
-  function formatNumber(n) {
-    return new Intl.NumberFormat('ms-MY').format(n || 0);
-  }
-
-  const TOPIC_ICON_MAP = {
-    sains: 'flask-conical',
-    sejarah: 'landmark',
-    matematik: 'sigma',
-    bahasa: 'languages',
-    pengaturcaraan: 'code-2',
-    rangkaian: 'network',
-    ai: 'brain-circuit',
-    keselamatan: 'shield-check'
+  /* ============ Icons ============ */
+  const ICONS = {
+    "square-function": '<svg viewBox="0 0 24 24" fill="none"><path d="M9 20c2-1 3-3 3.5-6M14 4c-2 1-3 3-3.5 6M6 12h12" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>',
+    "flask-conical":   '<svg viewBox="0 0 24 24" fill="none"><path d="M9 3h6M10 3v6l-5.5 9.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-3.02L14 9V3" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></svg>',
+    "book-open-text":  '<svg viewBox="0 0 24 24" fill="none"><path d="M12 6.5C10 5 7 4.5 4 5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5V5c-3-.5-6 0-8 1.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 6.5V20" stroke="currentColor" stroke-width="1.6"/></svg>',
+    "landmark":        '<svg viewBox="0 0 24 24" fill="none"><path d="M3 21h18M4 10h16M12 3l9 5H3l9-5ZM5 10v9M9 10v9M15 10v9M19 10v9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    "folder":          '<svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+    "image":           '<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="9.5" r="1.6" stroke="currentColor" stroke-width="1.4"/><path d="M21 16l-5.5-5.5a2 2 0 0 0-2.8 0L4 19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    "search-off":      '<svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M21 21l-3.8-3.8M8 8l6 6M14 8l-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'
   };
+  function icon(name){ return ICONS[name] || ICONS.folder; }
 
-  /* ------------------------------------------------------------------ */
-  /* Data: ratakan & lookup                                              */
-  /* ------------------------------------------------------------------ */
-  const SEMUA_DATA = window.SEMUA_DATA || [];
-  const kategoriBySlug = new Map(SEMUA_DATA.map((k) => [k.slug, k]));
+  /* ============ Setup from data file ============ */
+  const OWNER = (typeof SITE_OWNER !== "undefined") ? SITE_OWNER : "Pemilik Laman";
+  document.getElementById("ownerName").textContent = OWNER;
+  document.getElementById("footerOwner").textContent = "© " + (typeof SITE_YEAR !== "undefined" ? SITE_YEAR : new Date().getFullYear()) + " " + OWNER + ". Semua poster dilindungi hak cipta.";
 
-  const allPosters = SEMUA_DATA.flatMap((k) =>
-    k.posters.map((p) => Object.assign({}, p, { kategoriNama: k.kategori, kategoriIkon: k.ikon }))
-  );
-  const posterById = new Map(allPosters.map((p) => [p.id, p]));
+  const DATA = (typeof posterData !== "undefined") ? posterData : { subjects: [] };
 
-  const TOTAL_POSTERS = allPosters.length;
-  const TOTAL_KATEGORI = SEMUA_DATA.length;
+  /* ============ Helpers: flatten & code generation ============ */
+  function pad(n, len){ return String(n).padStart(len, "0"); }
 
-  function topicsForSubject(slug) {
-    const posters = allPosters.filter((p) => p.folder === slug);
-    const map = new Map();
-    posters.forEach((p) => {
-      const key = p.subfolder;
-      if (!map.has(key)) {
-        map.set(key, { slug: key, label: p.subfolderLabel || key, count: 0 });
-      }
-      map.get(key).count += 1;
+  // Precompute a sequential code per poster within its subject: e.g. MM-001
+  function buildIndex(){
+    const flat = []; // {subject, title, poster, code}
+    DATA.subjects.forEach(subject => {
+      let counter = 0;
+      subject.titles.forEach(title => {
+        title.posters.forEach(poster => {
+          counter++;
+          flat.push({
+            subject, title, poster,
+            code: (subject.code || "XX") + "-" + pad(counter, 3)
+          });
+        });
+      });
     });
-    return Array.from(map.values()).sort((a, b) => a.label.localeCompare(b.label, 'ms'));
+    return flat;
   }
+  const FLAT = buildIndex();
 
-  /* ------------------------------------------------------------------ */
-  /* DOM refs                                                             */
-  /* ------------------------------------------------------------------ */
-  const app = $('#app');
-  const searchInput = $('#global-search');
-  const searchWrap = $('#header-search-wrap');
-  const searchClearBtn = $('#search-clear-btn');
-  const header = $('#site-header');
-  const modalBackdrop = $('#modal-backdrop');
-
-  /* ------------------------------------------------------------------ */
-  /* Router (state disimpan di URL query params — boleh dikongsi)        */
-  /* ------------------------------------------------------------------ */
-  const PARAM_KEYS = ['subjek', 'topik', 'cari', 'poster'];
-
-  function getState() {
-    const params = new URLSearchParams(window.location.search);
-    return {
-      subjek: params.get('subjek') || null,
-      topik: params.get('topik') || null,
-      cari: params.get('cari') || '',
-      poster: params.get('poster') || null
-    };
+  function countPostersInSubject(subject){
+    return subject.titles.reduce((sum, t) => sum + t.posters.length, 0);
   }
+  function countPostersInTitle(title){ return title.posters.length; }
 
-  function setState(partial, opts) {
-    const push = !opts || opts.push !== false;
-    const current = getState();
-    const next = Object.assign({}, current, partial);
-    const params = new URLSearchParams();
-    PARAM_KEYS.forEach((key) => {
-      const val = next[key];
-      if (val !== null && val !== undefined && val !== '') params.set(key, val);
-    });
-    const qs = params.toString();
-    const url = qs ? (window.location.pathname + '?' + qs) : window.location.pathname;
-    if (push) window.history.pushState(next, '', url);
-    else window.history.replaceState(next, '', url);
-    return next;
-  }
+  document.getElementById("footerCount").textContent = FLAT.length + " POSTER TERSIMPAN";
 
-  window.addEventListener('popstate', () => render(getState()));
+  /* ============ App state ============ */
+  const state = { view: "home", subjectId: null, titleId: null, query: "" };
 
-  /* ------------------------------------------------------------------ */
-  /* Templates                                                            */
-  /* ------------------------------------------------------------------ */
-  function tplBreadcrumb(parts) {
-    return '<nav class="breadcrumb" aria-label="Breadcrumb">' + parts.map((p, i) => {
-      const isLast = i === parts.length - 1;
-      const sep = i > 0 ? '<span class="sep">/</span>' : '';
-      if (isLast || !p.href) {
-        return sep + '<span class="' + (isLast ? 'current' : '') + '">' + escapeHtml(p.label) + '</span>';
-      }
-      return sep + '<a href="' + p.href + '" data-nav>' + escapeHtml(p.label) + '</a>';
-    }).join('') + '</nav>';
-  }
+  function findSubject(id){ return DATA.subjects.find(s => s.id === id); }
+  function findTitle(subject, id){ return subject.titles.find(t => t.id === id); }
 
-  function tplSubjekCard(kat) {
-    const iconName = kat.ikon || 'folder';
-    return '' +
-    '<a class="category-card" href="?subjek=' + kat.slug + '" data-nav data-slug="' + kat.slug + '">' +
-      '<div class="cat-icon">' + icon(iconName) + '</div>' +
-      '<h3>' + escapeHtml(kat.kategori) + '</h3>' +
-      '<p>' + escapeHtml(kat.deskripsi) + '</p>' +
-      '<div class="cat-meta">' +
-        '<span>' + kat.posters.length + ' poster</span>' +
-        '<span class="arrow">' + icon('arrow-right') + '</span>' +
-      '</div>' +
-    '</a>';
-  }
+  function goHome(){ state.view = "home"; state.subjectId = null; state.titleId = null; state.query=""; searchInput.value=""; render(); }
+  function goSubject(id){ state.view = "subject"; state.subjectId = id; state.titleId = null; render(); window.scrollTo({top:0,behavior:"smooth"}); }
+  function goTitle(subjectId, titleId){ state.view = "title"; state.subjectId = subjectId; state.titleId = titleId; render(); window.scrollTo({top:0,behavior:"smooth"}); }
 
-  function tplTopikCard(subjekSlug, topik) {
-    const iconName = TOPIC_ICON_MAP[topik.slug] || 'folder';
-    return '' +
-    '<a class="category-card" href="?subjek=' + subjekSlug + '&topik=' + topik.slug + '" data-nav>' +
-      '<div class="cat-icon">' + icon(iconName) + '</div>' +
-      '<h3>' + escapeHtml(topik.label) + '</h3>' +
-      '<p>Senarai peta minda dalam topik ini.</p>' +
-      '<div class="cat-meta">' +
-        '<span>' + topik.count + ' poster</span>' +
-        '<span class="arrow">' + icon('arrow-right') + '</span>' +
-      '</div>' +
-    '</a>';
-  }
+  /* ============ Breadcrumb ============ */
+  function renderTicker(){
+    const el = document.getElementById("ticker");
+    const parts = [];
+    parts.push(`<button data-nav="home">◆ INDEKS</button>`);
 
-  function tplPosterCard(p) {
-    return '' +
-    '<article class="poster-card" data-id="' + p.id + '" tabindex="0" role="button" aria-label="Buka ' + escapeHtml(p.tajuk) + '">' +
-      '<div class="thumb-wrap">' +
-        '<img src="' + p.gambarThumbnail + '" alt="' + escapeHtml(p.tajuk) + '" loading="lazy">' +
-        '<span class="level-tag">' + escapeHtml(p.tahapKesukaran) + '</span>' +
-      '</div>' +
-      '<div class="card-body">' +
-        '<h4>' + escapeHtml(p.tajuk) + '</h4>' +
-        '<p class="subtitle">' + escapeHtml(p.subtajuk) + '</p>' +
-      '</div>' +
-      '<div class="card-footer">' +
-        '<span>' + escapeHtml(p.penulis) + '</span>' +
-        '<span>' + icon('eye', 'width="12" height="12"') + ' ' + formatNumber(p.bilanganPapar) + '</span>' +
-      '</div>' +
-    '</article>';
-  }
-
-  function tplEmptyState(msg) {
-    return '' +
-    '<div class="empty-state">' +
-      '<div class="icon-wrap">' + icon('search-x') + '</div>' +
-      '<h3>Tiada hasil dijumpai</h3>' +
-      '<p>' + escapeHtml(msg || 'Cuba kata kunci lain atau semak folder subjek/topik yang berbeza.') + '</p>' +
-    '</div>';
-  }
-
-  /* ------------------------------------------------------------------ */
-  /* View renderers                                                       */
-  /* ------------------------------------------------------------------ */
-  function renderHome() {
-    app.innerHTML = '' +
-    '<section class="hero">' +
-      '<span class="hero-eyebrow"><span class="dot"></span> Platform Kongsi Peta Minda</span>' +
-      '<h1>Kongsi &amp; terokai <span class="accent">peta minda</span> berkualiti premium</h1>' +
-      '<p class="lead">Koleksi peta minda pengajian dan teknologi yang tersusun rapi mengikut folder subjek dan topik — cari terus atau terokai satu persatu.</p>' +
-      '<div class="hero-stats">' +
-        '<div class="hero-stat"><span class="num">' + formatNumber(TOTAL_POSTERS) + '</span><span class="label">Jumlah Poster</span></div>' +
-        '<div class="hero-stat"><span class="num">' + formatNumber(TOTAL_KATEGORI) + '</span><span class="label">Folder Subjek</span></div>' +
-      '</div>' +
-    '</section>' +
-    '<div class="section-heading">' +
-      '<h2>Folder Subjek</h2>' +
-      '<span class="count">' + TOTAL_KATEGORI + ' subjek</span>' +
-    '</div>' +
-    '<div class="category-grid">' + SEMUA_DATA.map(tplSubjekCard).join('') + '</div>';
-    refreshIcons();
-  }
-
-  function renderSubjek(slug) {
-    const kat = kategoriBySlug.get(slug);
-    if (!kat) { renderHome(); return; }
-    const topics = topicsForSubject(slug);
-    app.innerHTML = '' +
-    tplBreadcrumb([{ label: 'Utama', href: '?' }, { label: kat.kategori }]) +
-    '<div class="section-heading">' +
-      '<h2>Folder Topik — ' + escapeHtml(kat.kategori) + '</h2>' +
-      '<span class="count">' + topics.length + ' topik</span>' +
-    '</div>' +
-    '<div class="category-grid">' +
-      (topics.length ? topics.map((t) => tplTopikCard(slug, t)).join('') : tplEmptyState('Belum ada topik dalam subjek ini.')) +
-    '</div>';
-    refreshIcons();
-  }
-
-  function renderTopik(subjekSlug, topikSlug) {
-    const kat = kategoriBySlug.get(subjekSlug);
-    if (!kat) { renderHome(); return; }
-    const topics = topicsForSubject(subjekSlug);
-    const topik = topics.find((t) => t.slug === topikSlug);
-    const posters = allPosters.filter((p) => p.folder === subjekSlug && p.subfolder === topikSlug);
-    const topikLabel = topik ? topik.label : topikSlug;
-
-    app.innerHTML = '' +
-    tplBreadcrumb([
-      { label: 'Utama', href: '?' },
-      { label: kat.kategori, href: '?subjek=' + subjekSlug },
-      { label: topikLabel }
-    ]) +
-    '<div class="toolbar">' +
-      '<span class="result-text"><strong>' + posters.length + '</strong> peta minda dalam topik ini</span>' +
-    '</div>' +
-    '<div class="poster-grid" id="poster-grid">' +
-      (posters.length ? posters.map(tplPosterCard).join('') : tplEmptyState()) +
-    '</div>';
-    refreshIcons();
-    bindPosterCardEvents();
-  }
-
-  function renderSearchResults(query) {
-    const q = query.toLowerCase();
-    const results = allPosters.filter((p) => {
-      const haystack = [p.tajuk, p.subtajuk, p.penulis, p.kategoriNama, p.subfolderLabel]
-        .concat(p.tags || [])
-        .join(' ')
-        .toLowerCase();
-      return haystack.includes(q);
-    });
-
-    app.innerHTML = '' +
-    tplBreadcrumb([{ label: 'Utama', href: '?' }, { label: 'Carian: "' + query + '"' }]) +
-    '<div class="toolbar">' +
-      '<span class="result-text"><strong>' + results.length + '</strong> hasil dijumpai</span>' +
-    '</div>' +
-    '<div class="poster-grid" id="poster-grid">' +
-      (results.length ? results.map(tplPosterCard).join('') : tplEmptyState('Cuba kata kunci lain.')) +
-    '</div>';
-    refreshIcons();
-    bindPosterCardEvents();
-  }
-
-  function render(state) {
-    if (state.cari) {
-      renderSearchResults(state.cari);
-    } else if (state.subjek && state.topik) {
-      renderTopik(state.subjek, state.topik);
-    } else if (state.subjek) {
-      renderSubjek(state.subjek);
-    } else {
-      renderHome();
+    if(state.query){
+      el.innerHTML = parts.join(`<span class="sep">›</span>`) + `<span class="sep">›</span><span class="current">CARIAN: "${escapeHtml(state.query)}"</span>`;
+      bindTicker(el); return;
     }
-    syncSearchInput(state);
 
-    if (state.poster) {
-      scrollToPoster(state.poster);
+    if(state.view === "home"){
+      el.innerHTML = parts.join("") + `<span class="sep">›</span><span class="current">SEMUA SUBJEK</span>`;
+    } else if(state.view === "subject"){
+      const subject = findSubject(state.subjectId);
+      parts.push(`<span class="current">${subject.code} · ${escapeHtml(subject.name)}</span>`);
+      el.innerHTML = parts.join(`<span class="sep">›</span>`);
+    } else if(state.view === "title"){
+      const subject = findSubject(state.subjectId);
+      const title = findTitle(subject, state.titleId);
+      parts.push(`<button data-nav="subject" data-id="${subject.id}">${subject.code} · ${escapeHtml(subject.name)}</button>`);
+      parts.push(`<span class="current">${escapeHtml(title.name)}</span>`);
+      el.innerHTML = parts.join(`<span class="sep">›</span>`);
     }
+    bindTicker(el);
   }
-
-  /* ------------------------------------------------------------------ */
-  /* Poster card events + modal                                          */
-  /* ------------------------------------------------------------------ */
-  function bindPosterCardEvents() {
-    $$('#poster-grid .poster-card').forEach((card) => {
-      const id = card.dataset.id;
-      const open = () => openModal(id);
-      card.addEventListener('click', open);
-      card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+  function bindTicker(el){
+    el.querySelectorAll("[data-nav]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const nav = btn.getAttribute("data-nav");
+        if(nav === "home") goHome();
+        else if(nav === "subject") goSubject(btn.getAttribute("data-id"));
       });
     });
   }
 
-  function buildPermalink(p) {
-    const params = new URLSearchParams();
-    params.set('subjek', p.folder);
-    params.set('topik', p.subfolder);
-    params.set('poster', p.id);
-    return window.location.origin + window.location.pathname + '?' + params.toString();
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   }
 
-  function openModal(id) {
-    const p = posterById.get(id);
-    if (!p) return;
+  /* ============ Rendering: views ============ */
+  const mainEl = document.getElementById("main");
 
-    modalBackdrop.innerHTML = '' +
-    '<div class="modal-panel" role="dialog" aria-modal="true" aria-label="' + escapeHtml(p.tajuk) + '">' +
-      '<div class="modal-image">' +
-        '<img src="' + p.gambar + '" alt="' + escapeHtml(p.tajuk) + '" id="modal-img">' +
-        '<span class="zoom-hint">' + icon('zoom-in', 'width="12" height="12"') + ' Klik untuk zoom</span>' +
-      '</div>' +
-      '<div class="modal-info">' +
-        '<button class="modal-close" id="modal-close-btn" aria-label="Tutup">' + icon('x') + '</button>' +
-        '<span class="level-tag">' + escapeHtml(p.tahapKesukaran) + '</span>' +
-        '<h2>' + escapeHtml(p.tajuk) + '</h2>' +
-        '<p class="subtitle">' + escapeHtml(p.subtajuk) + '</p>' +
-        '<div class="modal-meta">' +
-          '<div class="meta-item"><div class="meta-label">Penulis</div><div class="meta-value">' + escapeHtml(p.penulis) + '</div></div>' +
-          '<div class="meta-item"><div class="meta-label">Tarikh</div><div class="meta-value">' + formatTarikh(p.tarikh) + '</div></div>' +
-          '<div class="meta-item"><div class="meta-label">Subjek</div><div class="meta-value">' + escapeHtml(p.kategoriNama) + '</div></div>' +
-          '<div class="meta-item"><div class="meta-label">Topik</div><div class="meta-value">' + escapeHtml(p.subfolderLabel || p.subfolder) + '</div></div>' +
-        '</div>' +
-        '<div class="modal-actions">' +
-          '<button class="btn-primary" id="modal-copy-link-btn">' + icon('link', 'width="16" height="16"') + ' Salin Pautan</button>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
+  function render(){
+    renderTicker();
+    if(state.query){ renderSearchResults(); return; }
+    if(state.view === "home") renderHome();
+    else if(state.view === "subject") renderSubject();
+    else if(state.view === "title") renderTitleView();
+  }
 
-    modalBackdrop.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    refreshIcons();
+  function renderHome(){
+    const totalPosters = FLAT.length;
+    let html = `
+      <div class="hero-line">
+        <div>
+          <h1>Arkib Peta Minda</h1>
+          <p>Semua bahan disusun mengikut subjek — pilih folder untuk teroka.</p>
+        </div>
+        <div class="count-badge mono">${DATA.subjects.length} SUBJEK · ${totalPosters} POSTER</div>
+      </div>
+      <div class="grid">
+    `;
+    DATA.subjects.forEach(subject => {
+      const total = countPostersInSubject(subject);
+      html += `
+        <div class="card" data-open-subject="${subject.id}">
+          <div class="card-top">
+            <div class="card-icon">${icon(subject.icon)}</div>
+            <span class="code-pill mono">${subject.code}</span>
+          </div>
+          <h3>${escapeHtml(subject.name)}</h3>
+          <p class="desc">${escapeHtml(subject.description || "")}</p>
+          <div class="card-foot">
+            <span class="stat">${subject.titles.length} TAJUK · ${total} POSTER</span>
+            <span class="arrow">→</span>
+          </div>
+        </div>`;
+    });
+    html += `</div>`;
 
-    const img = $('#modal-img');
-    img.addEventListener('click', () => img.classList.toggle('zoomed'));
+    if(DATA.subjects.length === 0){
+      html = emptyState("folder", "Belum ada subjek", "Tambah subjek pertama anda dalam posters-data.js untuk mula membina arkib.");
+    }
 
-    $('#modal-close-btn').addEventListener('click', closeModal);
-
-    $('#modal-copy-link-btn').addEventListener('click', async () => {
-      const url = buildPermalink(p);
-      const btn = $('#modal-copy-link-btn');
-      const original = btn.innerHTML;
-      try {
-        await navigator.clipboard.writeText(url);
-        btn.innerHTML = icon('check', 'width="16" height="16"') + ' Disalin';
-      } catch (err) {
-        btn.innerHTML = icon('link', 'width="16" height="16"') + ' Gagal salin';
-      }
-      refreshIcons();
-      setTimeout(() => { btn.innerHTML = original; refreshIcons(); }, 1600);
+    mainEl.innerHTML = html;
+    mainEl.querySelectorAll("[data-open-subject]").forEach(card=>{
+      card.addEventListener("click", ()=> goSubject(card.getAttribute("data-open-subject")));
     });
   }
 
-  function closeModal() {
-    modalBackdrop.classList.remove('open');
-    document.body.style.overflow = '';
-  }
+  function renderSubject(){
+    const subject = findSubject(state.subjectId);
+    if(!subject){ goHome(); return; }
+    let html = `
+      <div class="hero-line">
+        <div>
+          <h1>${escapeHtml(subject.name)}</h1>
+          <p>${escapeHtml(subject.description || "Senarai tajuk dalam subjek ini.")}</p>
+        </div>
+        <div class="count-badge mono">${subject.titles.length} TAJUK</div>
+      </div>
+      <div class="grid titles">
+    `;
+    subject.titles.forEach(title=>{
+      const n = countPostersInTitle(title);
+      html += `
+        <div class="card" data-open-title="${title.id}">
+          <div class="card-top">
+            <div class="card-icon">${icon("folder")}</div>
+            <span class="code-pill mono">${subject.code}</span>
+          </div>
+          <h3>${escapeHtml(title.name)}</h3>
+          <p class="desc">${escapeHtml(title.description || "")}</p>
+          <div class="card-foot">
+            <span class="stat">${n} POSTER</span>
+            <span class="arrow">→</span>
+          </div>
+        </div>`;
+    });
+    html += `</div>`;
 
-  modalBackdrop.addEventListener('click', (e) => {
-    if (e.target === modalBackdrop) closeModal();
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
-  });
-
-  /* ------------------------------------------------------------------ */
-  /* Pautan dikongsi: navigasi ke skop yang betul, scroll & sorot poster  */
-  /* ------------------------------------------------------------------ */
-  function scrollToPoster(id) {
-    const p = posterById.get(id);
-    if (!p) return;
-    setTimeout(() => {
-      const card = document.querySelector('.poster-card[data-id="' + id + '"]');
-      if (card) {
-        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        card.classList.add('highlight');
-        setTimeout(() => card.classList.remove('highlight'), 1800);
-      }
-      openModal(id);
-    }, 80);
-  }
-
-  /* ------------------------------------------------------------------ */
-  /* Carian global                                                        */
-  /* ------------------------------------------------------------------ */
-  function syncSearchInput(state) {
-    if (document.activeElement !== searchInput) {
-      searchInput.value = state.cari || '';
+    if(subject.titles.length === 0){
+      html += emptyState("folder", "Belum ada tajuk", "Tambah tajuk pertama untuk subjek ini dalam posters-data.js.");
     }
-    searchWrap.classList.toggle('has-value', !!searchInput.value);
+
+    mainEl.innerHTML = html;
+    mainEl.querySelectorAll("[data-open-title]").forEach(card=>{
+      card.addEventListener("click", ()=> goTitle(subject.id, card.getAttribute("data-open-title")));
+    });
   }
 
+  function renderTitleView(){
+    const subject = findSubject(state.subjectId);
+    if(!subject){ goHome(); return; }
+    const title = findTitle(subject, state.titleId);
+    if(!title){ goSubject(subject.id); return; }
+
+    let html = `
+      <div class="hero-line">
+        <div>
+          <h1>${escapeHtml(title.name)}</h1>
+          <p>${escapeHtml(title.description || "Senarai poster dalam tajuk ini.")}</p>
+        </div>
+        <div class="count-badge mono">${title.posters.length} POSTER</div>
+      </div>
+      <div class="grid posters">
+    `;
+
+    const list = FLAT.filter(f => f.subject.id === subject.id && f.title.id === title.id);
+    list.forEach((f, i) => {
+      html += posterCardHtml(f, i, list);
+    });
+    html += `</div>`;
+
+    if(title.posters.length === 0){
+      html += emptyState("image", "Belum ada poster", "Upload imej ke posters/" + subject.id + "/" + title.id + "/ dan daftarkan dalam posters-data.js.");
+    }
+
+    mainEl.innerHTML = html;
+    bindPosterCards(list);
+  }
+
+  function posterCardHtml(f, i, list){
+    const src = `posters/${f.subject.id}/${f.title.id}/${f.poster.file}`;
+    const tags = (f.poster.tags || []).map(t => `<span class="tag">#${escapeHtml(t)}</span>`).join("");
+    return `
+      <div class="card poster-card" data-poster-index="${i}">
+        <div class="poster-thumb">
+          <img src="${src}" alt="${escapeHtml(f.poster.title)}" loading="lazy"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="fallback-icon" style="display:none; align-items:center; justify-content:center; width:100%; height:100%;">${icon("image")}</div>
+          <span class="code-pill mono">${f.code}</span>
+        </div>
+        <div class="poster-body">
+          <h3>${escapeHtml(f.poster.title)}</h3>
+          <div class="tags">${tags}</div>
+        </div>
+      </div>`;
+  }
+
+  function bindPosterCards(list){
+    mainEl.querySelectorAll("[data-poster-index]").forEach(card=>{
+      card.addEventListener("click", ()=>{
+        const idx = parseInt(card.getAttribute("data-poster-index"), 10);
+        openLightbox(list, idx);
+      });
+    });
+  }
+
+  function emptyState(iconName, title, desc){
+    return `
+      <div class="empty">
+        ${icon(iconName)}
+        <h3>${escapeHtml(title)}</h3>
+        <p>${escapeHtml(desc)}</p>
+      </div>`;
+  }
+
+  /* ============ Search ============ */
+  const searchInput = document.getElementById("searchInput");
   let searchDebounce;
-  searchInput.addEventListener('input', () => {
-    searchWrap.classList.toggle('has-value', !!searchInput.value);
+  searchInput.addEventListener("input", ()=>{
     clearTimeout(searchDebounce);
-    searchDebounce = setTimeout(() => {
-      const val = searchInput.value.trim();
-      setState({ cari: val, poster: null });
-      render(getState());
-    }, 180);
+    searchDebounce = setTimeout(()=>{
+      state.query = searchInput.value.trim().toLowerCase();
+      render();
+    }, 140);
+  });
+  document.addEventListener("keydown", (e)=>{
+    if(e.key === "/" && document.activeElement !== searchInput){
+      e.preventDefault(); searchInput.focus();
+    }
+    if(e.key === "Escape" && document.activeElement === searchInput && searchInput.value){
+      searchInput.value=""; state.query=""; render();
+    }
   });
 
-  searchClearBtn.addEventListener('click', () => {
-    searchInput.value = '';
-    searchWrap.classList.remove('has-value');
-    setState({ cari: '' });
-    render(getState());
-    searchInput.focus();
-  });
+  function renderSearchResults(){
+    const q = state.query;
+    const results = FLAT.filter(f=>{
+      return f.subject.name.toLowerCase().includes(q)
+        || f.title.name.toLowerCase().includes(q)
+        || f.poster.title.toLowerCase().includes(q)
+        || (f.poster.tags||[]).some(t=>t.toLowerCase().includes(q))
+        || f.code.toLowerCase().includes(q);
+    });
 
-  /* ------------------------------------------------------------------ */
-  /* Navigasi via data-nav (breadcrumb, kad folder)                       */
-  /* ------------------------------------------------------------------ */
-  document.addEventListener('click', (e) => {
-    const navEl = e.target.closest('[data-nav]');
-    if (!navEl) return;
-    e.preventDefault();
-    const href = navEl.getAttribute('href');
-    const params = new URLSearchParams(href.replace('?', ''));
-    const next = {
-      subjek: params.get('subjek') || null,
-      topik: params.get('topik') || null,
-      cari: '',
-      poster: null
-    };
-    setState(next);
-    render(getState());
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+    let html = `
+      <div class="hero-line">
+        <div>
+          <h1>Hasil Carian</h1>
+          <p>Dipadankan dengan subjek, tajuk, poster & tag.</p>
+        </div>
+        <div class="count-badge mono">${results.length} DIJUMPAI</div>
+      </div>
+      <div class="grid posters">
+    `;
+    results.forEach((f,i)=>{ html += posterCardHtml(f, i, results); });
+    html += `</div>`;
 
-  /* ------------------------------------------------------------------ */
-  /* Header scroll shadow                                                 */
-  /* ------------------------------------------------------------------ */
-  window.addEventListener('scroll', () => {
-    header.classList.toggle('is-scrolled', window.scrollY > 4);
-  }, { passive: true });
-
-  /* ------------------------------------------------------------------ */
-  /* Bottom nav (mobile)                                                  */
-  /* ------------------------------------------------------------------ */
-  const navHomeBtn = $('#nav-home-btn');
-  const navSearchBtn = $('#nav-search-btn');
-  if (navHomeBtn) navHomeBtn.addEventListener('click', () => {
-    setState({ subjek: null, topik: null, cari: '', poster: null });
-    render(getState());
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-  if (navSearchBtn) navSearchBtn.addEventListener('click', () => {
-    searchInput.focus();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  /* ------------------------------------------------------------------ */
-  /* Skeleton awal, kemudian render sebenar                               */
-  /* ------------------------------------------------------------------ */
-  function showInitialSkeleton() {
-    app.innerHTML = '' +
-    '<section class="hero">' +
-      '<span class="hero-eyebrow"><span class="dot"></span> Platform Kongsi Peta Minda</span>' +
-      '<h1>Kongsi &amp; terokai <span class="accent">peta minda</span> berkualiti premium</h1>' +
-    '</section>' +
-    '<div class="category-grid">' +
-      Array.from({ length: 3 }).map(() => '<div class="category-card skeleton" style="height:170px"></div>').join('') +
-    '</div>';
+    if(results.length === 0){
+      html += emptyState("search-off", "Tiada hasil", `Tiada padanan untuk "${q}". Cuba kata kunci lain.`);
+    }
+    mainEl.innerHTML = html;
+    bindPosterCards(results);
   }
 
-  showInitialSkeleton();
-  setTimeout(() => { render(getState()); }, 220);
+  /* ============ Lightbox ============ */
+  const lightbox = document.getElementById("lightbox");
+  const lbImage  = document.getElementById("lbImage");
+  const lbTitle  = document.getElementById("lbTitle");
+  const lbPath   = document.getElementById("lbPath");
+  const lbWatermark = document.getElementById("lbWatermark");
+  let currentList = [], currentIdx = 0;
+
+  function openLightbox(list, idx){
+    currentList = list; currentIdx = idx;
+    paintLightbox();
+    lightbox.classList.add("open");
+    lightbox.setAttribute("aria-hidden","false");
+    document.body.style.overflow = "hidden";
+  }
+  function closeLightbox(){
+    lightbox.classList.remove("open");
+    lightbox.setAttribute("aria-hidden","true");
+    document.body.style.overflow = "";
+  }
+  function paintLightbox(){
+    const f = currentList[currentIdx];
+    if(!f) return;
+    const src = `posters/${f.subject.id}/${f.title.id}/${f.poster.file}`;
+    lbImage.src = src;
+    lbImage.alt = f.poster.title;
+    lbTitle.textContent = f.poster.title;
+    lbPath.textContent = `${f.code}  ·  ${f.subject.name} / ${f.title.name}`;
+    lbWatermark.textContent = "© " + OWNER;
+  }
+  document.getElementById("lbCloseBtn").addEventListener("click", closeLightbox);
+  lightbox.addEventListener("click", (e)=>{ if(e.target === lightbox) closeLightbox(); });
+  document.getElementById("lbPrev").addEventListener("click", ()=>{
+    currentIdx = (currentIdx - 1 + currentList.length) % currentList.length; paintLightbox();
+  });
+  document.getElementById("lbNext").addEventListener("click", ()=>{
+    currentIdx = (currentIdx + 1) % currentList.length; paintLightbox();
+  });
+  document.addEventListener("keydown", (e)=>{
+    if(!lightbox.classList.contains("open")) return;
+    if(e.key === "Escape") closeLightbox();
+    if(e.key === "ArrowLeft") document.getElementById("lbPrev").click();
+    if(e.key === "ArrowRight") document.getElementById("lbNext").click();
+  });
+
+  /* Basic protective measures for poster ownership */
+  document.addEventListener("contextmenu", (e)=>{
+    if(e.target.tagName === "IMG") e.preventDefault();
+  });
+  document.addEventListener("dragstart", (e)=>{
+    if(e.target.tagName === "IMG") e.preventDefault();
+  });
+
+  /* ============ Init ============ */
+  render();
 })();
 </script>
+
 </body>
 </html>
