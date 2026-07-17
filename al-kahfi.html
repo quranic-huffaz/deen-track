@@ -1574,6 +1574,17 @@ audioRange.addEventListener('change', () => {
 // Selamatkan kes klik/keyboard tanpa event 'change' berturutan (contoh: arrow keys)
 audioRange.addEventListener('blur', () => { isScrubbing = false; });
 
+// ═══ BISMILLAH CLEANUP — ayat 1 setiap surah (kecuali At-Taubah) datang dengan
+// Bismillah terselit di hadapan teks dari API. Kita buang di sini kerana Bismillah
+// sudah dipaparkan berasingan di bahagian atas (header) kad bacaan. ═══
+const BISMILLAH_UTHMANI = 'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ';
+function cleanVerseText(v) {
+  if (v.numberInSurah === 1 && typeof v.text === 'string' && v.text.startsWith(BISMILLAH_UTHMANI)) {
+    return v.text.slice(BISMILLAH_UTHMANI.length).trim();
+  }
+  return v.text;
+}
+
 // ═══ FULL SURAH PAGINATION — same-height pages ═══
 let fullPages = [];
 let currentFullPage = 0;
@@ -1590,8 +1601,8 @@ function buildEqualHeightPages(verses) {
 
   const verseHeights = verses.map(v => {
     probe.innerHTML = `<div class="page-verses"><div class="page-verse-item">
+      <div class="page-verse-arabic">${cleanVerseText(v)}</div>
       <div class="page-verse-num">${v.numberInSurah}</div>
-      <div class="page-verse-arabic">${v.text}</div>
     </div></div>`;
     return probe.offsetHeight;
   });
@@ -1631,7 +1642,7 @@ function renderFullPages(verses) {
     const endNum = pageVerses[pageVerses.length - 1].numberInSurah;
     const panel = document.createElement('div');
     panel.className = 'page-panel';
-    // Tiada bismillah — sudah ada di header quran-page sebagai hiasan (dibuang seperti permintaan)
+    const showBismi = pi === 0;
     panel.innerHTML = `
       <div class="quran-page" style="min-height:${targetPageHeight}px;">
         <div class="page-top-info">
@@ -1641,11 +1652,12 @@ function renderFullPages(verses) {
           </div>
           <div class="page-ayat-range">Ayat ${startNum}–${endNum}</div>
         </div>
+        ${showBismi ? `<div class="page-bismillah">بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ</div>` : ''}
         <div class="page-verses">
           ${pageVerses.map(a => `
             <div class="page-verse-item">
+              <div class="page-verse-arabic">${cleanVerseText(a)}</div>
               <div class="page-verse-num">${a.numberInSurah}</div>
-              <div class="page-verse-arabic">${a.text}</div>
             </div>`).join('')}
         </div>
       </div>`;
@@ -1713,8 +1725,8 @@ function buildTenPage(verses, title, range, showBismi) {
       <div class="page-verses">
         ${verses.map(a => `
           <div class="page-verse-item">
+            <div class="page-verse-arabic">${cleanVerseText(a)}</div>
             <div class="page-verse-num">${a.numberInSurah}</div>
-            <div class="page-verse-arabic">${a.text}</div>
           </div>`).join('')}
       </div>
     </div>`;
