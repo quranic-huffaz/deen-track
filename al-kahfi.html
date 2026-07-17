@@ -1577,10 +1577,22 @@ audioRange.addEventListener('blur', () => { isScrubbing = false; });
 // ═══ BISMILLAH CLEANUP — ayat 1 setiap surah (kecuali At-Taubah) datang dengan
 // Bismillah terselit di hadapan teks dari API. Kita buang di sini kerana Bismillah
 // sudah dipaparkan berasingan di bahagian atas (header) kad bacaan. ═══
-const BISMILLAH_UTHMANI = 'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ';
+// Diacritic-tolerant matcher: teks Bismillah dari pelbagai edisi API boleh berbeza
+// dari segi tanda baris (sukun biasa ْ lawan sukun kecil ۡ), tatweel hiasan (ـ)
+// sebelum alif kecil, dan variasi huruf alif (ا / ٱ). Regex ini padankan rangka
+// huruf asas sahaja supaya ia berfungsi tanpa mengira variasi tersebut.
+const AR_DIACRITIC = '[\\u0610-\\u061A\\u064B-\\u065F\\u0670\\u06D6-\\u06ED\\u0640\\u08D4-\\u08FF]*';
+const AR_ALEF = '[اأإآٱ]';
+const BISMILLAH_REGEX = new RegExp(
+  '^\\s*' +
+  'ب' + AR_DIACRITIC + 'س' + AR_DIACRITIC + 'م' + AR_DIACRITIC + '\\s*' +
+  AR_ALEF + AR_DIACRITIC + 'ل' + AR_DIACRITIC + 'ل' + AR_DIACRITIC + 'ه' + AR_DIACRITIC + '\\s*' +
+  AR_ALEF + AR_DIACRITIC + 'ل' + AR_DIACRITIC + 'ر' + AR_DIACRITIC + 'ح' + AR_DIACRITIC + 'م' + AR_DIACRITIC + 'ن' + AR_DIACRITIC + '\\s*' +
+  AR_ALEF + AR_DIACRITIC + 'ل' + AR_DIACRITIC + 'ر' + AR_DIACRITIC + 'ح' + AR_DIACRITIC + 'ي' + AR_DIACRITIC + 'م' + AR_DIACRITIC + '\\s*'
+);
 function cleanVerseText(v) {
-  if (v.numberInSurah === 1 && typeof v.text === 'string' && v.text.startsWith(BISMILLAH_UTHMANI)) {
-    return v.text.slice(BISMILLAH_UTHMANI.length).trim();
+  if (v.numberInSurah === 1 && typeof v.text === 'string') {
+    return v.text.replace(BISMILLAH_REGEX, '').trim();
   }
   return v.text;
 }
