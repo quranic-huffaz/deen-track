@@ -3020,9 +3020,15 @@ function checkKahfiReminder() {
     el.kahfiReminder.classList.remove('show');
     return;
   }
-  // Dalam waktu — tunjuk tanpa syarat dismiss (supaya keluar setiap masuk)
+  // Popup ini hanya dipaparkan SEKALI setiap sesi pelayar (browser session).
+  // Jika pengguna masih dalam laman/sesi yang sama, popup tidak akan
+  // dipaparkan semula supaya tidak mengganggu — walaupun tab ditukar
+  // atau app kembali fokus (visibilitychange).
+  if (sessionStorage.getItem('qt_kahfi_popup_shown') === '1') return;
+
   setTimeout(() => {
     el.kahfiReminder.classList.add('show');
+    sessionStorage.setItem('qt_kahfi_popup_shown', '1');
   }, 3000);
 }
 
@@ -3041,7 +3047,8 @@ function startReminderCheck() {
   reminderInterval = setInterval(checkKahfiReminder, 60000);
 }
 
-/* document visibility — re-check when user comes back */
+/* document visibility — re-check when user comes back
+   (tidak akan popup semula kerana dihadkan sekali per sesi) */
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) checkKahfiReminder();
 });
@@ -3589,6 +3596,34 @@ const TABS = {
   kahfi:   { btn: null, page: $('pg-lazim')   }
 };
 
+/* ═══════════════════════════════════════════════════════════
+   HASH ROUTING — link khas untuk setiap tab
+   Contoh:
+     https://deen-track.pages.dev/tilawah          → Tab Utama
+     https://deen-track.pages.dev/tilawah#quran    → Tab Al-Quran
+     https://deen-track.pages.dev/tilawah#halaman  → Tab Halaman
+     https://deen-track.pages.dev/tilawah#rekod    → Tab Rekod
+     https://deen-track.pages.dev/tilawah#al-kahfi → Tab Al-Kahfi
+═══════════════════════════════════════════════════════════ */
+const TAB_TO_HASH = {
+  dash:    'utama',
+  quran:   'quran',
+  hafazan: 'halaman',
+  rekod:   'rekod',
+  kahfi:   'al-kahfi'
+};
+const HASH_TO_TAB = {
+  '':          'dash',
+  'utama':     'dash',
+  'quran':     'quran',
+  'al-quran':  'quran',
+  'halaman':   'hafazan',
+  'hafazan':   'hafazan',
+  'rekod':     'rekod',
+  'al-kahfi':  'kahfi',
+  'kahfi':     'kahfi'
+};
+
 // Regular tab buttons
 document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
   const key = btn.dataset.tab;
@@ -3602,14 +3637,31 @@ if (tabHomeBtn) {
   tabHomeBtn.addEventListener('click', () => { window.location.href = 'https://deen-track.pages.dev'; });
 }
 
-function switchTab(key) {
+function switchTab(key, updateHash = true) {
   Object.entries(TABS).forEach(([k, t]) => {
     if (t.btn) t.btn.classList.toggle('active', k === key);
     if (t.page) t.page.classList.toggle('active', k === key);
   });
   // Home centre button visual active if dash
   if (tabHomeBtn) tabHomeBtn.classList.toggle('active', key === 'dash');
+
+  // Kemaskini hash URL supaya boleh dikongsi sebagai link khusus tab
+  if (updateHash && TAB_TO_HASH[key]) {
+    const newHash = '#' + TAB_TO_HASH[key];
+    if (window.location.hash !== newHash) {
+      try { history.replaceState(null, '', newHash); }
+      catch (_) { window.location.hash = newHash; }
+    }
+  }
 }
+
+/* Baca hash semasa dimuat & bila hash berubah (contoh: pautan luar) */
+function applyHashRoute() {
+  const raw = (window.location.hash || '').replace('#', '').toLowerCase();
+  const key = HASH_TO_TAB[raw] || 'dash';
+  switchTab(key, false);
+}
+window.addEventListener('hashchange', applyHashRoute);
 
 /* ── EVENT LISTENERS ───────────────────────────────────────── */
 
@@ -4116,6 +4168,31 @@ function initHalTab() {
   renderHalGrid('semua');
 }
 
+/* ═══════════════════════════════════════════════════════════
+   WELCOME MODAL — dipaparkan setiap kali masuk/refresh
+═══════════════════════════════════════════════════════════ */
+function openWelcomeModal() {
+  const bg = $('welcome-modal-bg');
+  if (bg) bg.classList.add('open');
+}
+function closeWelcomeModal() {
+  const bg = $('welcome-modal-bg');
+  if (bg) bg.classList.remove('open');
+}
+function initWelcomeModal() {
+  const bg        = $('welcome-modal-bg');
+  const btnClose  = $('welcome-modal-close');
+  const btnCta    = $('welcome-modal-cta');
+  if (!bg) return;
+
+  btnClose && btnClose.addEventListener('click', closeWelcomeModal);
+  bg.addEventListener('click', e => { if (e.target === bg) closeWelcomeModal(); });
+  btnCta && btnCta.addEventListener('click', () => setTimeout(closeWelcomeModal, 300));
+
+  // Paparkan setiap kali laman dimuatkan (setiap masuk / refresh)
+  setTimeout(openWelcomeModal, 500);
+}
+
 /* ── BOOT ──────────────────────────────────────────────────── */
 function init() {
   checkDailyReset();
@@ -4125,11 +4202,13 @@ function init() {
   showLazimTab(0);
   initSwipe();
   initKahfiSwipe();
+  applyHashRoute();
   startReminderCheck();
   showInfaqFab();
   initHalTab();
   initNavDropdown();
   initRekodTab();
+  initWelcomeModal();
   console.log('%c☽ Quran Tracker v3', 'color:#00d68f;font-size:13px;font-weight:bold');
 }
 
