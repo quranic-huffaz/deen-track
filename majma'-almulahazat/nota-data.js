@@ -38,8 +38,8 @@ const SUBJEK = [
       {
         nama: "Doa Keluar Tandas",
         siri: [
-          { siri: 1, embed: "https://purring-talos-7f4.notion.site/Siri-1-3a74b078389f8077a436ced3d234e968" },
-          { siri: 2, embed: "https://purring-talos-7f4.notion.site/Siri-2-3a74b078389f8004ab8fe330af5aa937" }
+          { siri: 1, embed: "https://purring-talos-7f4.notion.site/ebd//3a74b078389f8077a436ced3d234e968" },
+          { siri: 2, embed: "https://purring-talos-7f4.notion.site/ebd//3a74b078389f8004ab8fe330af5aa937" }
         ]
       },
       {
