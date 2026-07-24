@@ -25,12 +25,12 @@
 
 const SUBJEK = [
   {
-    nama: "Matematik",
+    nama: "Feqah",
     tajuk: [
       {
-        nama: "Nombor Bulat",
+        nama: "Tayammum",
         siri: [
-          { siri: 1, embed: "" },
+          { siri: 1, embed: "<iframe src="https://purring-talos-7f4.notion.site/ebd//1694b078389f80708d57eff338b6e11e" width="100%" height="600" frameborder="0" allowfullscreen />" },
           { siri: 2, embed: "" }
         ]
       },
