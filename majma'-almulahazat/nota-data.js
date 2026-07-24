@@ -33,13 +33,19 @@
 
 const SUBJEK = [
   {
-    nama: "Feqah",
+    nama: "Muqaddimah al-Hadramiyyah",
     tajuk: [
+      {
+        nama: "Doa Keluar Tandas",
+        siri: [
+          { siri: 1, embed: "https://purring-talos-7f4.notion.site/Siri-1-3a74b078389f8077a436ced3d234e968" },
+          { siri: 2, embed: "https://purring-talos-7f4.notion.site/Siri-2-3a74b078389f8004ab8fe330af5aa937" }
+        ]
+      },
       {
         nama: "Tayammum",
         siri: [
-          { siri: 1, embed: "https://purring-talos-7f4.notion.site/ebd//1694b078389f80708d57eff338b6e11e" },
-          { siri: 2, embed: "https://purring-talos-7f4.notion.site/ebd//1694b078389f80a3b186d0e71cda00eb" }
+          { siri: 1, embed: "https://purring-talos-7f4.notion.site/ebd/3a74b078389f802dba93cc8e0432a6f4" }
         ]
       }
     ]
