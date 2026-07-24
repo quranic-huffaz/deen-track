@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Hantar Penulisan — Ruang Penulisan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  /* ── TOKENS ── */
+  :root{
+    --ink:#0f172a; --ink2:#334155; --ink3:#64748b;
+    --gold:#c9a84c; --gold2:#e8c97a; --gold3:#f5e4b0;
+    --surface:#ffffff; --surface2:#f8fafc; --surface3:#f1f5f9;
+    --border:#e2e8f0; --border2:#cbd5e1;
+    --success:#059669; --error:#dc2626;
+    --radius:14px; --radius-sm:8px;
+    --shadow:0 4px 24px rgba(15,23,42,.08);
+    --shadow-lg:0 16px 48px rgba(15,23,42,.14);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',sans-serif;background:var(--surface2);
+    color:var(--ink);min-height:100vh;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%,rgba(201,168,76,.12),transparent),
+      radial-gradient(ellipse 60% 40% at 80% 110%,rgba(201,168,76,.07),transparent);
+  }
+
+  /* ── HEADER ── */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:999;
+    background:rgba(15,23,42,.96);backdrop-filter:blur(20px);
+    border-bottom:1px solid rgba(201,168,76,.25);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 clamp(16px,4vw,40px);height:64px;
+  }
+  .h-left{display:flex;align-items:center;gap:14px;flex:1}
+  .h-nasihah{
+    font-size:clamp(10px,1.8vw,13px);color:var(--gold2);
+    font-style:italic;line-height:1.4;max-width:340px;
+    border-left:2px solid var(--gold);padding-left:12px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .h-brand{
+    font-family:'Playfair Display',serif;font-size:clamp(13px,2vw,16px);
+    color:#fff;letter-spacing:.04em;white-space:nowrap;
+    text-decoration:none;
+  }
+  .h-brand span{color:var(--gold)}
+  .h-right{display:flex;align-items:center;gap:16px}
+
+  /* Coffee cup */
+  .coffee-wrap{position:relative;cursor:pointer;width:44px;height:44px;flex-shrink:0}
+  .coffee-wrap a{display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+  .coffee-svg{width:36px;height:36px}
+  .steam path{animation:steamRise 2s ease-in-out infinite}
+  .steam path:nth-child(2){animation-delay:.4s}
+  .steam path:nth-child(3){animation-delay:.8s}
+  @keyframes steamRise{
+    0%{opacity:0;transform:translateY(4px) scaleX(1)}
+    40%{opacity:.9}
+    100%{opacity:0;transform:translateY(-10px) scaleX(1.3)}
+  }
+  .bubble{
+    position:absolute;border-radius:50%;background:rgba(201,168,76,.7);
+    animation:bubblePop 5s ease-in-out infinite;pointer-events:none;
+  }
+  .b1{width:6px;height:6px;bottom:8px;left:12px;animation-delay:0s}
+  .b2{width:4px;height:4px;bottom:12px;left:20px;animation-delay:.6s}
+  .b3{width:5px;height:5px;bottom:6px;left:18px;animation-delay:1.2s}
+  @keyframes bubblePop{
+    0%,80%,100%{opacity:0;transform:scale(0)}
+    85%{opacity:1;transform:scale(1)}
+    95%{opacity:0;transform:scale(.5) translateY(-6px)}
+  }
+
+  /* nav link */
+  .nav-link{
+    font-size:13px;color:var(--gold2);text-decoration:none;
+    border:1px solid rgba(201,168,76,.35);padding:6px 14px;
+    border-radius:20px;transition:all .2s;white-space:nowrap;
+  }
+  .nav-link:hover{background:rgba(201,168,76,.15);border-color:var(--gold)}
+
+  /* ── MAIN ── */
+  main{
+    max-width:780px;margin:0 auto;
+    padding:calc(64px + 40px) clamp(16px,5vw,40px) 60px;
+  }
+  .page-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);
+    color:var(--gold);font-size:11px;font-weight:600;letter-spacing:.1em;
+    text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:20px;
+  }
+  .page-title{
+    font-family:'Playfair Display',serif;font-size:clamp(26px,5vw,38px);
+    color:var(--ink);font-weight:700;line-height:1.2;margin-bottom:8px;
+  }
+  .page-sub{font-size:15px;color:var(--ink3);margin-bottom:36px;line-height:1.6}
+
+  /* ── FORM CARD ── */
+  .form-card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);box-shadow:var(--shadow-lg);
+    padding:clamp(24px,5vw,44px);
+  }
+  .form-section-title{
+    font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:20px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .form-section-title::after{
+    content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(201,168,76,.3),transparent);
+  }
+
+  .field{margin-bottom:24px}
+  label{
+    display:block;font-size:12px;font-weight:600;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);margin-bottom:8px;
+  }
+  label span.req{color:var(--gold)}
+  input[type=text],select,textarea{
+    width:100%;font-family:'Inter',sans-serif;font-size:15px;
+    color:var(--ink);background:var(--surface2);
+    border:1.5px solid var(--border2);border-radius:var(--radius-sm);
+    padding:12px 16px;transition:all .2s;outline:none;
+    -webkit-appearance:none;
+  }
+  input[type=text]:focus,select:focus,textarea:focus{
+    border-color:var(--gold);background:var(--surface);
+    box-shadow:0 0 0 3px rgba(201,168,76,.15);
+  }
+  input.error,select.error,textarea.error{border-color:var(--error)}
+  textarea{resize:vertical;min-height:180px;line-height:1.7}
+  .char-count{font-size:11px;color:var(--ink3);text-align:right;margin-top:4px}
+
+  /* Row 2-col */
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:560px){.field-row{grid-template-columns:1fr}}
+
+  /* select arrow */
+  .select-wrap{position:relative}
+  .select-wrap::after{
+    content:'▾';position:absolute;right:14px;top:50%;transform:translateY(-50%);
+    color:var(--gold);pointer-events:none;font-size:14px;
+  }
+  select{padding-right:36px;cursor:pointer}
+
+  /* ── PAGES BLOCK ── */
+  .pages-block{margin-bottom:24px}
+  .pages-label{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    margin-bottom:14px;
+  }
+  .pages-label label{margin-bottom:0}
+  .pages-hint{
+    font-size:11px;color:var(--ink3);background:var(--surface3);
+    padding:4px 10px;border-radius:20px;letter-spacing:.02em;
+    white-space:nowrap;text-transform:none;font-weight:500;
+  }
+
+  /* Tab nav for pages */
+  .page-tabs{
+    display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;
+  }
+  .page-tab{
+    font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;
+    border:1.5px solid var(--border2);background:var(--surface2);color:var(--ink3);
+    cursor:pointer;transition:all .2s;white-space:nowrap;
+    font-family:'Inter',sans-serif;
+  }
+  .page-tab:hover{border-color:var(--gold2);color:var(--gold)}
+  .page-tab.active{
+    background:linear-gradient(135deg,var(--gold),var(--gold2));
+    border-color:transparent;color:var(--ink);
+    box-shadow:0 2px 10px rgba(201,168,76,.3);
+  }
+  .page-tab.has-content::after{
+    content:'•';margin-left:4px;color:var(--gold);font-size:16px;line-height:0;vertical-align:middle;
+  }
+  .page-tab.active.has-content::after{color:var(--ink)}
+
+  .page-panel{display:none}
+  .page-panel.active{display:block}
+
+  .page-panel-header{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    margin-bottom:8px;
+  }
+  .page-num-badge{
+    font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--gold);background:rgba(201,168,76,.1);padding:3px 10px;border-radius:20px;
+    border:1px solid rgba(201,168,76,.25);
+  }
+  .page-char-count{font-size:11px;color:var(--ink4)}
+
+  /* ── SUBMIT ── */
+  .btn-submit{
+    width:100%;padding:16px;font-family:'Inter',sans-serif;font-size:15px;
+    font-weight:700;letter-spacing:.04em;cursor:pointer;border:none;
+    border-radius:var(--radius-sm);
+    background:linear-gradient(135deg,#c9a84c,#e8c97a,#c9a84c);
+    background-size:200% 100%;background-position:right center;
+    color:var(--ink);transition:all .3s;position:relative;overflow:hidden;
+  }
+  .btn-submit:hover:not(:disabled){
+    background-position:left center;transform:translateY(-1px);
+    box-shadow:0 8px 24px rgba(201,168,76,.4);
+  }
+  .btn-submit:active{transform:translateY(0)}
+  .btn-submit:disabled{opacity:.6;cursor:not-allowed}
+  .btn-submit .spinner{
+    display:none;width:18px;height:18px;border:2px solid rgba(15,23,42,.3);
+    border-top-color:var(--ink);border-radius:50%;animation:spin .7s linear infinite;
+    position:absolute;right:18px;top:50%;transform:translateY(-50%);
+  }
+  .btn-submit.loading .spinner{display:block}
+  .btn-submit.loading .btn-text{opacity:.6}
+  @keyframes spin{to{transform:translateY(-50%) rotate(360deg)}}
+
+  /* ── TOAST ── */
+  #toast{
+    position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);
+    padding:14px 24px;border-radius:var(--radius-sm);font-size:14px;font-weight:500;
+    opacity:0;pointer-events:none;z-index:2000;transition:all .35s ease;
+    display:flex;align-items:center;gap:10px;white-space:nowrap;
+    box-shadow:0 8px 30px rgba(0,0,0,.18);min-width:260px;
+  }
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  #toast.success{background:#064e3b;color:#a7f3d0;border:1px solid #065f46}
+  #toast.error-t{background:#450a0a;color:#fca5a5;border:1px solid #7f1d1d}
+
+  /* ── FOOTER ── */
+  footer{
+    text-align:center;padding:24px;font-size:12px;color:var(--ink3);
+    border-top:1px solid var(--border);margin-top:40px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="h-left">
+    <div class="h-nasihah" id="nasihah">
+      "Sesungguhnya sesudah kesulitan itu ada kemudahan." — Al-Insyirah: 6
+    </div>
+  </div>
+
+  <a href="index.html" class="h-brand">Ruang<span>Penulisan</span></a>
+
+  <div class="h-right">
+    <a href="index.html" class="nav-link">← Interface</a>
+    <div class="coffee-wrap" title="Tabung Belajar">
+      <a href="https://deen-track.pages.dev/tabung-belajar" target="_blank">
+        <svg class="coffee-svg" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g class="steam">
+            <path d="M12 10 Q13 7 12 4" stroke="#c9a84c" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+            <path d="M17 9 Q18 6 17 3" stroke="#c9a84c" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+            <path d="M22 10 Q23 7 22 4" stroke="#c9a84c" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+          </g>
+          <rect x="7" y="13" width="19" height="14" rx="3" fill="#1e293b" stroke="#c9a84c" stroke-width="1.2"/>
+          <path d="M26 17 Q30 17 30 21 Q30 25 26 25" stroke="#c9a84c" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          <rect x="6" y="27" width="21" height="3" rx="1.5" fill="#c9a84c" opacity=".7"/>
+          <ellipse cx="16.5" cy="20" rx="7" ry="4" fill="#c9a84c" opacity=".15"/>
+          <g class="bubble">
+            <circle class="b1" cx="13" cy="20" r="2" fill="#c9a84c" opacity=".5"/>
+            <circle class="b2" cx="18" cy="18" r="1.5" fill="#c9a84c" opacity=".5"/>
+            <circle class="b3" cx="21" cy="21" r="1.8" fill="#c9a84c" opacity=".5"/>
+          </g>
+        </svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main>
+  <div class="page-badge">✦ Hantar Karya</div>
+  <h1 class="page-title">Kongsi Penulisan Anda</h1>
+  <p class="page-sub">Isi borang di bawah untuk memuatkan artikel atau penulisan anda ke dalam pangkalan Ruang Penulisan.</p>
+
+  <div class="form-card">
+    <div class="form-section-title">Maklumat Penulisan</div>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="tajuk">Tajuk <span class="req">*</span></label>
+        <input type="text" id="tajuk" placeholder="Tajuk penulisan anda…" maxlength="120"/>
+      </div>
+      <div class="field">
+        <label for="siri">Siri / Bab <span class="req">*</span></label>
+        <input type="text" id="siri" placeholder="Contoh: Siri 1, Bab 3…" maxlength="80"/>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="penulis">Nama Penulis <span class="req">*</span></label>
+      <input type="text" id="penulis" placeholder="Nama anda atau nama pena…" maxlength="80"/>
+    </div>
+
+    <div class="field">
+      <label for="kategori">Kategori <span class="req">*</span></label>
+      <input type="text" id="kategori" list="kategoriSaranan" placeholder="Taip kategori anda… contoh: Aqidah, Fiqh, Motivasi" maxlength="60" autocomplete="off"/>
+      <datalist id="kategoriSaranan">
+        <option value="Aqidah"></option>
+        <option value="Fiqh"></option>
+        <option value="Sirah"></option>
+        <option value="Tasawwuf"></option>
+        <option value="Motivasi"></option>
+        <option value="Ilmu & Pendidikan"></option>
+        <option value="Keluarga"></option>
+        <option value="Umum"></option>
+      </datalist>
+    </div>
+
+    <!-- ── PENULISAN PER PAGE ── -->
+    <div class="pages-block">
+      <div class="pages-label">
+        <label>Penulisan / Artikel — Per Muka Surat <span class="req">*</span></label>
+        <span class="pages-hint">5 muka surat</span>
+      </div>
+
+      <!-- Tab nav -->
+      <div class="page-tabs" id="pageTabs">
+        <button class="page-tab active" onclick="switchPage(1,this)" id="tab-1">Muka 1</button>
+        <button class="page-tab" onclick="switchPage(2,this)" id="tab-2">Muka 2</button>
+        <button class="page-tab" onclick="switchPage(3,this)" id="tab-3">Muka 3</button>
+        <button class="page-tab" onclick="switchPage(4,this)" id="tab-4">Muka 4</button>
+        <button class="page-tab" onclick="switchPage(5,this)" id="tab-5">Muka 5</button>
+      </div>
+
+      <!-- Page 1 -->
+      <div class="page-panel active" id="panel-1">
+        <div class="page-panel-header">
+          <span class="page-num-badge">Muka Surat 1</span>
+          <span class="page-char-count"><span id="cc1">0</span> aksara</span>
+        </div>
+        <textarea id="page1" placeholder="Tulis atau tampal kandungan muka surat pertama di sini…" maxlength="3000" oninput="onPageInput(1)"></textarea>
+      </div>
+
+      <!-- Page 2 -->
+      <div class="page-panel" id="panel-2">
+        <div class="page-panel-header">
+          <span class="page-num-badge">Muka Surat 2</span>
+          <span class="page-char-count"><span id="cc2">0</span> aksara</span>
+        </div>
+        <textarea id="page2" placeholder="Sambungan — muka surat kedua…" maxlength="3000" oninput="onPageInput(2)"></textarea>
+      </div>
+
+      <!-- Page 3 -->
+      <div class="page-panel" id="panel-3">
+        <div class="page-panel-header">
+          <span class="page-num-badge">Muka Surat 3</span>
+          <span class="page-char-count"><span id="cc3">0</span> aksara</span>
+        </div>
+        <textarea id="page3" placeholder="Sambungan — muka surat ketiga…" maxlength="3000" oninput="onPageInput(3)"></textarea>
+      </div>
+
+      <!-- Page 4 -->
+      <div class="page-panel" id="panel-4">
+        <div class="page-panel-header">
+          <span class="page-num-badge">Muka Surat 4</span>
+          <span class="page-char-count"><span id="cc4">0</span> aksara</span>
+        </div>
+        <textarea id="page4" placeholder="Sambungan — muka surat keempat…" maxlength="3000" oninput="onPageInput(4)"></textarea>
+      </div>
+
+      <!-- Page 5 -->
+      <div class="page-panel" id="panel-5">
+        <div class="page-panel-header">
+          <span class="page-num-badge">Muka Surat 5</span>
+          <span class="page-char-count"><span id="cc5">0</span> aksara</span>
+        </div>
+        <textarea id="page5" placeholder="Sambungan — muka surat kelima…" maxlength="3000" oninput="onPageInput(5)"></textarea>
+      </div>
+
+      <div class="char-count" style="margin-top:10px">
+        Jumlah: <span id="charTotal">0</span> / 15,000 aksara
+      </div>
+    </div>
+
+    <!-- Link Lanjut -->
+    <div class="field">
+      <label for="linkLanjut">Pautan Lanjut <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink4)">(pilihan — butang "Lanjut" pada paparan)</span></label>
+      <input type="text" id="linkLanjut" placeholder="https://… (kosongkan jika tiada)" maxlength="500"/>
+    </div>
+
+    <div class="form-section-title" style="margin-top:8px">Pengesahan</div>
+    <div class="field">
+      <label for="passwordKarya">Kata Laluan Hantar Karya <span class="req">*</span></label>
+      <input type="password" id="passwordKarya" placeholder="Masukkan kata laluan…" autocomplete="off"/>
+    </div>
+
+    <button class="btn-submit" id="submitBtn" onclick="submitForm()">
+      <span class="btn-text">✦ Hantar Penulisan</span>
+      <span class="spinner"></span>
+    </button>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 Ruang Penulisan &mdash; Ilmu itu cahaya.
+</footer>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7UwfybsQ7psGOZ4Xce5in9wS49ZrPE4266bxqxmGaUJwphBSMFROKHlCG5ZgJCuFicQ/exec";
+const SUBMIT_PASSWORD = "wanh4897";
+
+// ── Nasihat Agama ────────────────────────────────────────────
+const nasihat = [
+  '"Sesungguhnya sesudah kesulitan itu ada kemudahan." — Al-Insyirah: 6',
+  '"Bacalah dengan nama Tuhanmu yang menciptakan." — Al-Alaq: 1',
+  '"Katakanlah: Adakah sama orang yang tahu dengan orang yang tidak tahu?" — Az-Zumar: 9',
+  '"Ilmu itu cahaya, dan cahaya Allah tidak diberikan kepada orang yang bermaksiat." — Ibn Masʿud',
+  '"Tuntutlah ilmu dari buaian hingga ke liang lahad." — Hadith',
+  '"Sebaik-baik manusia adalah yang paling bermanfaat bagi manusia lain." — HR Ahmad',
+  '"Jangan berputus asa daripada rahmat Allah." — Az-Zumar: 53',
+];
+let ni = 0;
+function rotateNasihat(){
+  ni = (ni+1) % nasihat.length;
+  const el = document.getElementById('nasihah');
+  el.style.opacity = 0;
+  setTimeout(()=>{ el.textContent = nasihat[ni]; el.style.opacity=1; }, 400);
+}
+document.getElementById('nasihah').style.transition='opacity .4s';
+setInterval(rotateNasihat, 7000);
+
+// ── PAGE TABS ────────────────────────────────────────────────
+function switchPage(num, btn){
+  // Hide all panels
+  document.querySelectorAll('.page-panel').forEach(p=> p.classList.remove('active'));
+  document.querySelectorAll('.page-tab').forEach(t=> t.classList.remove('active'));
+  document.getElementById('panel-' + num).classList.add('active');
+  btn.classList.add('active');
+}
+
+function onPageInput(num){
+  const ta = document.getElementById('page' + num);
+  const len = ta.value.length;
+  document.getElementById('cc' + num).textContent = len.toLocaleString();
+
+  // Mark tab if has content
+  const tab = document.getElementById('tab-' + num);
+  tab.classList.toggle('has-content', len > 0);
+
+  updateTotal();
+}
+
+function updateTotal(){
+  let total = 0;
+  for(let i=1;i<=5;i++){
+    const ta = document.getElementById('page'+i);
+    if(ta) total += ta.value.length;
+  }
+  document.getElementById('charTotal').textContent = total.toLocaleString();
+}
+
+// ── Build combined penulisan from pages ──────────────────────
+function buildPenulisan(){
+  const parts = [];
+  for(let i=1;i<=5;i++){
+    const v = (document.getElementById('page'+i).value||'').trimEnd();
+    if(v) parts.push(v);
+  }
+  return parts.join('\n\n');
+}
+
+// ── Submit ────────────────────────────────────────────────────
+async function submitForm(){
+  const tajuk      = document.getElementById('tajuk').value.trim();
+  const siri       = document.getElementById('siri').value.trim();
+  const penulis    = document.getElementById('penulis').value.trim();
+  const kategori   = document.getElementById('kategori').value.trim();
+  const penulisan  = buildPenulisan().trim();
+  const link       = document.getElementById('linkLanjut').value.trim();
+  const password   = document.getElementById('passwordKarya').value;
+
+  // Validation
+  let ok = true;
+  ['tajuk','siri','penulis','kategori'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el.value.trim()){el.classList.add('error');ok=false;}
+    else el.classList.remove('error');
+  });
+
+  if(!penulisan){
+    // highlight page 1 tab
+    document.getElementById('tab-1').style.boxShadow='0 0 0 2px #dc2626';
+    showToast('Sila isi sekurang-kurangnya Muka Surat 1.','error');
+    ok=false;
+  } else {
+    document.getElementById('tab-1').style.boxShadow='';
+  }
+
+  if(!ok){if(penulisan) showToast('Sila lengkapkan semua ruangan bertanda *.','error'); return;}
+
+  if(password !== SUBMIT_PASSWORD){
+    document.getElementById('passwordKarya').classList.add('error');
+    showToast('Kata laluan tidak sah.','error');
+    return;
+  }
+  document.getElementById('passwordKarya').classList.remove('error');
+
+  if(SCRIPT_URL.includes('PASTE_YOUR')){
+    showToast('Sila kemas kini SCRIPT_URL dalam fail form.html','error');return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+
+  try {
+    const res = await fetch(SCRIPT_URL, {
+      method:'POST',
+      body: JSON.stringify({ action:'add', tajuk, siri, penulisan, kategori, penulis, link }),
+    });
+    const data = await res.json();
+    if(data.success){
+      showToast('✓ Penulisan berjaya dihantar!','success');
+      // Reset
+      ['tajuk','siri','penulis','kategori','passwordKarya','linkLanjut'].forEach(id=>{
+        document.getElementById(id).value='';
+      });
+      for(let i=1;i<=5;i++){
+        document.getElementById('page'+i).value='';
+        document.getElementById('cc'+i).textContent='0';
+        document.getElementById('tab-'+i).classList.remove('has-content');
+      }
+      document.getElementById('charTotal').textContent='0';
+      // Back to tab 1
+      switchPage(1, document.getElementById('tab-1'));
+    } else {
+      showToast(data.error || 'Ralat berlaku. Cuba lagi.','error');
+    }
+  } catch(e){
+    showToast('Gagal menghubungi pelayan. Semak SCRIPT_URL.','error');
+  } finally {
+    btn.disabled=false;
+    btn.classList.remove('loading');
+  }
+}
+
+function showToast(msg, type='success'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show ' + (type==='success'?'success':'error-t');
+  setTimeout(()=>{ t.className=''; }, 4000);
+}
+
+// ── Coffee bubble animation ───────────────────────────────────
+setInterval(()=>{
+  document.querySelectorAll('.bubble circle').forEach(b=>{
+    b.style.animation='none';
+    requestAnimationFrame(()=>{ b.style.animation=''; });
+  });
+}, 5000);
+</script>
+</body>
+</html>

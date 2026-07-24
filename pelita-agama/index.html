@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Pelita Agama, Cahaya Kehidupan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  /* ── TOKENS ── */
+  :root{
+    --ink:#0f172a;--ink2:#334155;--ink3:#64748b;--ink4:#94a3b8;
+    --gold:#c9a84c;--gold2:#e8c97a;--gold3:#fdf6e3;--gold-glow:rgba(201,168,76,.18);
+    --surface:#ffffff;--surface2:#f8fafc;--surface3:#f1f5f9;
+    --border:#e2e8f0;--border2:#cbd5e1;
+    --radius:16px;--radius-sm:10px;--radius-xs:6px;
+    --shadow:0 4px 20px rgba(15,23,42,.07);
+    --shadow-lg:0 16px 50px rgba(15,23,42,.13);
+    --transition:.22s cubic-bezier(.4,0,.2,1);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    font-family:'Inter',sans-serif;color:var(--ink);
+    background:var(--surface2);min-height:100vh;overflow-x:hidden;
+    background-image:
+      radial-gradient(ellipse 90% 60% at 50% -10%,rgba(201,168,76,.09),transparent),
+      radial-gradient(ellipse 50% 40% at 90% 100%,rgba(201,168,76,.06),transparent);
+  }
+
+  /* ── HEADER ── */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:1000;
+    background:rgba(15,23,42,.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+    border-bottom:1px solid rgba(201,168,76,.2);
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 clamp(14px,4vw,44px);height:64px;gap:12px;
+  }
+
+  .h-left{flex:1;min-width:0;display:flex;align-items:center}
+
+  /* ── PELITA BADGE — Premium Redesign ── */
+  .pelita-badge{
+    display:inline-flex;align-items:center;gap:11px;
+    white-space:nowrap;overflow:hidden;
+    text-decoration:none;cursor:default;
+  }
+  .pelita-brand-icon{
+    position:relative;width:30px;height:30px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  }
+  /* Outer glow ring */
+  .pelita-brand-icon::before{
+    content:'';position:absolute;inset:-4px;border-radius:50%;
+    background:conic-gradient(from 0deg,transparent 60%,rgba(201,168,76,.35) 80%,transparent 100%);
+    animation:iconSpin 6s linear infinite;
+  }
+  @keyframes iconSpin{to{transform:rotate(360deg)}}
+  .pelita-brand-svg{position:relative;z-index:1;width:22px;height:22px}
+
+  .pelita-brand-text{display:flex;flex-direction:column;gap:1px;min-width:0;overflow:hidden}
+  .pelita-brand-name{
+    font-family:'Playfair Display',serif;font-style:italic;font-weight:700;
+    font-size:clamp(13px,2.2vw,16px);letter-spacing:.04em;line-height:1.1;
+    background:linear-gradient(100deg,#e8c97a 0%,#fff 45%,#c9a84c 70%,#e8c97a 100%);
+    background-size:200% auto;
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    animation:shimmerText 4s linear infinite;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  @keyframes shimmerText{0%{background-position:0% center}100%{background-position:200% center}}
+  .pelita-brand-sub{
+    font-family:'Inter',sans-serif;font-weight:500;font-style:normal;
+    font-size:clamp(8px,1.2vw,9.5px);letter-spacing:.18em;text-transform:uppercase;
+    color:rgba(201,168,76,.65);line-height:1;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  /* Thin gold separator between icon and text */
+  .pelita-sep{
+    width:1px;height:28px;flex-shrink:0;
+    background:linear-gradient(to bottom,transparent,rgba(201,168,76,.5),transparent);
+  }
+
+  .h-right{display:flex;align-items:center;gap:14px;flex-shrink:0;margin-left:auto}
+
+  /* ── CANDLE ANIMATION ── */
+  .lamp-wrap{
+    position:relative;width:40px;height:40px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .lamp-wrap a{display:flex;align-items:center;justify-content:center}
+  .lamp-svg{width:36px;height:36px;overflow:visible}
+
+  /* Candle flame layers — lebih menyerlah & hidup */
+  .candle-flame-outer{
+    transform-origin:50% 100%;animation:candleOuter 1.35s ease-in-out infinite;
+    filter:drop-shadow(0 0 7px rgba(245,166,35,.65)) drop-shadow(0 0 14px rgba(245,166,35,.35));
+  }
+  .candle-flame-mid{transform-origin:50% 100%;animation:candleMid 1.05s ease-in-out infinite .15s}
+  .candle-flame-core{
+    transform-origin:50% 100%;animation:candleCore .9s ease-in-out infinite .06s;
+    filter:drop-shadow(0 0 5px rgba(255,255,230,.85));
+  }
+  @keyframes candleOuter{
+    0%,100%{transform:scaleX(1) scaleY(1) rotate(-1.6deg);opacity:.95}
+    10%{transform:scaleX(.74) scaleY(1.22) rotate(3.4deg);opacity:1}
+    24%{transform:scaleX(1.16) scaleY(.86) rotate(-3.8deg);opacity:.9}
+    38%{transform:scaleX(.82) scaleY(1.16) rotate(2.6deg);opacity:1}
+    52%{transform:scaleX(1.13) scaleY(.9) rotate(-2.4deg);opacity:.92}
+    66%{transform:scaleX(.88) scaleY(1.14) rotate(3deg);opacity:1}
+    80%{transform:scaleX(1.08) scaleY(.94) rotate(-2deg);opacity:.95}
+    92%{transform:scaleX(.95) scaleY(1.05) rotate(1.2deg);opacity:1}
+  }
+  @keyframes candleMid{
+    0%,100%{transform:scaleX(1) scaleY(1) rotate(1.4deg);opacity:.9}
+    15%{transform:scaleX(.72) scaleY(1.26) rotate(-3.4deg);opacity:1}
+    32%{transform:scaleX(1.2) scaleY(.84) rotate(3.2deg);opacity:.85}
+    48%{transform:scaleX(.8) scaleY(1.18) rotate(-2.6deg);opacity:1}
+    64%{transform:scaleX(1.14) scaleY(.88) rotate(2.4deg);opacity:.88}
+    80%{transform:scaleX(.9) scaleY(1.1) rotate(-1.8deg);opacity:.97}
+  }
+  @keyframes candleCore{
+    0%,100%{transform:scaleX(1) scaleY(1);opacity:.98}
+    20%{transform:scaleX(.8) scaleY(1.16);opacity:1}
+    40%{transform:scaleX(1.18) scaleY(.86);opacity:.92}
+    60%{transform:scaleX(.85) scaleY(1.12);opacity:1}
+    80%{transform:scaleX(1.1) scaleY(.92);opacity:.95}
+  }
+
+  /* Glow pulse under flame */
+  .lamp-glow{
+    position:absolute;top:4px;left:50%;transform:translateX(-50%);
+    width:22px;height:22px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,225,90,.85),rgba(245,166,35,.3),transparent 70%);
+    animation:glowPulse 1.35s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes glowPulse{
+    0%,100%{opacity:.7;transform:translateX(-50%) scale(1)}
+    30%{opacity:1;transform:translateX(-50%) scale(1.55)}
+    55%{opacity:.85;transform:translateX(-50%) scale(1.25)}
+    75%{opacity:1;transform:translateX(-50%) scale(1.45)}
+  }
+
+  /* Smoke wisps */
+  .lamp-smoke path{
+    animation:smokeRise 2.8s ease-in-out infinite;
+    transform-origin:center bottom;
+    opacity:0;
+  }
+  .lamp-smoke path:nth-child(2){animation-delay:.6s}
+  .lamp-smoke path:nth-child(3){animation-delay:1.2s}
+  @keyframes smokeRise{
+    0%{opacity:0;transform:translateY(2px) scaleX(1)}
+    22%{opacity:.4}
+    100%{opacity:0;transform:translateY(-11px) scaleX(1.5)}
+  }
+
+  /* Speech-bubble popup pointing at the candle */
+  .lamp-tooltip{
+    position:absolute;top:50%;right:calc(100% + 14px);
+    transform:translateY(-50%) translateX(8px) scale(.82);
+    background:linear-gradient(135deg,var(--gold),var(--gold2));
+    color:var(--ink);font-family:'Inter',sans-serif;
+    font-size:12.5px;font-weight:700;letter-spacing:.01em;
+    white-space:nowrap;padding:8px 16px;border-radius:16px;
+    box-shadow:0 6px 22px rgba(201,168,76,.5);
+    opacity:0;pointer-events:none;z-index:5;
+    animation:tooltipPop 8s ease-in-out infinite;
+  }
+  .lamp-tooltip::after{
+    content:'';position:absolute;top:50%;right:-7px;transform:translateY(-50%);
+    width:0;height:0;border-style:solid;border-width:7px 0 7px 8px;
+    border-color:transparent transparent transparent var(--gold2);
+  }
+  @keyframes tooltipPop{
+    0%,60%{opacity:0;transform:translateY(-50%) translateX(8px) scale(.82)}
+    68%{opacity:1;transform:translateY(-50%) translateX(0) scale(1.06)}
+    74%,90%{opacity:1;transform:translateY(-50%) translateX(0) scale(1)}
+    100%{opacity:0;transform:translateY(-50%) translateX(8px) scale(.85)}
+  }
+
+  .btn-nav{
+    font-size:12px;font-weight:600;color:var(--gold2);text-decoration:none;
+    border:1px solid rgba(201,168,76,.3);padding:6px 14px;border-radius:20px;
+    transition:var(--transition);white-space:nowrap;
+  }
+  .btn-nav:hover{background:rgba(201,168,76,.14);border-color:var(--gold)}
+
+  /* Menu button — Floating Action Button */
+  .menu-wrap{
+    position:fixed;top:50%;right:18px;transform:translateY(-50%);
+    z-index:1050;flex-shrink:0;
+  }
+  .menu-btn{
+    position:relative;width:42px;height:42px;border-radius:50%;
+    border:1.5px solid rgba(201,168,76,.6);
+    background:linear-gradient(160deg,rgba(15,23,42,.92),rgba(15,23,42,.98));
+    backdrop-filter:blur(10px);
+    color:var(--gold2);flex-shrink:0;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    font-size:7px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    transition:var(--transition);font-family:'Inter',sans-serif;
+    box-shadow:0 8px 24px rgba(15,23,42,.3);
+  }
+  .menu-btn:hover{background:rgba(201,168,76,.18);border-color:var(--gold)}
+  .menu-btn::before{
+    content:'';position:absolute;inset:-6px;border-radius:50%;
+    border:1.5px solid var(--gold);opacity:0;
+    animation:homePulse 2.4s ease-out infinite;
+  }
+  @keyframes homePulse{
+    0%{opacity:.55;transform:scale(.82)}
+    70%{opacity:0;transform:scale(1.28)}
+    100%{opacity:0;transform:scale(1.28)}
+  }
+
+  .menu-panel{
+    position:absolute;top:50%;right:calc(100% + 14px);transform:translateY(-50%) translateX(8px);
+    min-width:200px;
+    background:var(--ink);border:1px solid rgba(201,168,76,.3);border-radius:var(--radius-sm);
+    box-shadow:0 16px 40px rgba(15,23,42,.35);
+    padding:8px;display:flex;flex-direction:column;gap:4px;
+    opacity:0;pointer-events:none;
+    transition:opacity .2s,transform .2s;z-index:1100;
+  }
+  .menu-panel.open{opacity:1;pointer-events:all;transform:translateY(-50%) translateX(0)}
+  .menu-item{
+    display:flex;align-items:center;gap:10px;width:100%;
+    font-family:'Inter',sans-serif;font-size:13.5px;font-weight:600;color:#fff;
+    background:transparent;border:none;text-decoration:none;cursor:pointer;
+    padding:10px 12px;border-radius:7px;transition:var(--transition);text-align:left;
+  }
+  .menu-item:hover{background:rgba(201,168,76,.15);color:var(--gold2)}
+  .menu-item-ico{color:var(--gold);font-size:15px;width:18px;text-align:center;flex-shrink:0}
+
+  /* Menu divider */
+  .menu-divider{height:1px;background:rgba(201,168,76,.15);margin:4px 8px}
+
+  /* Password gate */
+  .pw-overlay{
+    position:fixed;inset:0;background:rgba(15,23,42,.65);backdrop-filter:blur(6px);
+    z-index:2500;display:flex;align-items:center;justify-content:center;
+    padding:20px;opacity:0;pointer-events:none;transition:opacity .25s;
+  }
+  .pw-overlay.open{opacity:1;pointer-events:all}
+  .pw-card{
+    background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-lg);
+    max-width:340px;width:100%;padding:32px 28px;text-align:center;
+    transform:translateY(14px);transition:transform .25s;
+  }
+  .pw-overlay.open .pw-card{transform:translateY(0)}
+  .pw-icon{font-size:30px;margin-bottom:10px}
+  .pw-card h3{font-family:'Playfair Display',serif;font-size:19px;color:var(--ink);margin-bottom:6px}
+  .pw-card p{font-size:13px;color:var(--ink3);line-height:1.5;margin-bottom:18px}
+  .pw-card input{
+    width:100%;padding:12px 14px;font-family:'Inter',sans-serif;font-size:14px;
+    border:1.5px solid var(--border2);border-radius:var(--radius-sm);
+    background:var(--surface2);color:var(--ink);outline:none;text-align:center;
+    transition:var(--transition);margin-bottom:16px;letter-spacing:.05em;
+  }
+  .pw-card input:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-glow)}
+  .pw-card input.error{border-color:#dc2626}
+  .pw-actions{display:flex;gap:10px}
+  .pw-btn{
+    flex:1;padding:11px;border-radius:var(--radius-sm);font-size:13.5px;font-weight:700;
+    cursor:pointer;border:none;transition:var(--transition);font-family:'Inter',sans-serif;
+  }
+  .pw-cancel{background:var(--surface3);color:var(--ink2)}
+  .pw-cancel:hover{background:var(--border2)}
+  .pw-confirm{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--ink)}
+  .pw-confirm:hover{box-shadow:0 6px 18px rgba(201,168,76,.4)}
+
+  /* ── HERO ── */
+  .hero{
+    padding:calc(64px + 56px) clamp(16px,5vw,48px) 48px;
+    text-align:center;max-width:760px;margin:0 auto;
+  }
+  .hero-eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:18px;
+    background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);
+    padding:5px 16px;border-radius:20px;
+  }
+  .hero h1{
+    font-family:'Playfair Display',serif;font-size:clamp(28px,6vw,52px);
+    font-weight:700;line-height:1.15;color:var(--ink);margin-bottom:14px;
+    letter-spacing:-.01em;
+  }
+  .hero h1 em{color:var(--gold);font-style:italic}
+  .hero p{font-size:clamp(14px,2vw,17px);color:var(--ink3);line-height:1.7;max-width:520px;margin:0 auto 32px}
+
+  /* ── TOOLBAR ── */
+  .toolbar{
+    max-width:1100px;margin:0 auto;padding:0 clamp(14px,4vw,48px) 28px;
+    display:flex;flex-wrap:wrap;gap:14px;align-items:center;
+  }
+  .search-box{
+    flex:1;min-width:220px;position:relative;max-width:420px;
+  }
+  .search-box input{
+    width:100%;padding:11px 16px 11px 42px;font-family:'Inter',sans-serif;font-size:14px;
+    background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-sm);
+    color:var(--ink);outline:none;transition:var(--transition);
+  }
+  .search-box input:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-glow)}
+  .search-box input::placeholder{color:var(--ink4)}
+  .search-box .ico{
+    position:absolute;left:13px;top:50%;transform:translateY(-50%);
+    font-size:15px;pointer-events:none;color:var(--ink4);
+  }
+
+  /* Category pills */
+  .cats{display:flex;flex-wrap:wrap;gap:8px;flex:1}
+  .cat-pill{
+    font-size:12px;font-weight:600;padding:6px 16px;border-radius:20px;
+    border:1.5px solid var(--border2);background:var(--surface);color:var(--ink3);
+    cursor:pointer;transition:var(--transition);white-space:nowrap;letter-spacing:.02em;
+  }
+  .cat-pill:hover{border-color:var(--gold2);color:var(--gold)}
+  .cat-pill.active{
+    background:linear-gradient(135deg,var(--gold),var(--gold2));
+    border-color:transparent;color:var(--ink);box-shadow:0 2px 12px rgba(201,168,76,.3);
+  }
+
+  /* ── GRID ── */
+  .grid-wrap{max-width:1100px;margin:0 auto;padding:0 clamp(14px,4vw,48px) 60px}
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));
+    gap:24px;
+  }
+
+  /* Card */
+  .card{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    box-shadow:var(--shadow);overflow:hidden;
+    transition:transform var(--transition),box-shadow var(--transition);
+    cursor:pointer;display:flex;flex-direction:column;
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+  .card-head{
+    height:5px;
+    background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold));
+  }
+  .card-body{padding:22px 24px 18px;flex:1;display:flex;flex-direction:column}
+  .card-meta{
+    display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;
+  }
+  .badge-kat{
+    font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    background:var(--gold3);color:#92400e;padding:3px 9px;border-radius:4px;
+  }
+  .badge-siri{
+    font-size:11px;color:var(--ink4);background:var(--surface3);
+    padding:3px 9px;border-radius:4px;
+  }
+  .card-title{
+    font-family:'Playfair Display',serif;font-size:18px;font-weight:700;
+    color:var(--ink);line-height:1.35;margin-bottom:10px;
+  }
+  .card-excerpt{
+    font-size:13.5px;color:var(--ink3);line-height:1.65;flex:1;
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .card-footer{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-top:16px;padding-top:14px;border-top:1px solid var(--border);
+  }
+  .card-date{font-size:11px;color:var(--ink4);letter-spacing:.02em}
+  .card-read{
+    font-size:11px;font-weight:700;color:var(--gold);letter-spacing:.06em;
+    text-transform:uppercase;display:flex;align-items:center;gap:4px;
+  }
+  .card-read::after{content:'→';transition:transform .2s}
+  .card:hover .card-read::after{transform:translateX(3px)}
+
+  /* Copy button */
+  .copy-btn{
+    position:relative;width:30px;height:30px;border-radius:50%;flex-shrink:0;
+    border:1px solid var(--border2);background:var(--surface2);color:var(--ink3);
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    font-size:13px;transition:var(--transition);z-index:2;
+  }
+  .copy-btn:hover{border-color:var(--gold);color:var(--gold);background:var(--gold3)}
+  .copy-btn.copied{border-color:var(--gold);color:var(--gold);background:var(--gold3)}
+  .card-meta-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+
+  @keyframes cardPing{
+    0%{box-shadow:0 0 0 0 rgba(201,168,76,.55)}
+    70%{box-shadow:0 0 0 14px rgba(201,168,76,0)}
+    100%{box-shadow:0 0 0 0 rgba(201,168,76,0)}
+  }
+  .card.pinged{animation:cardPing 1s ease-out 2}
+
+  .card-count{
+    font-size:11px;color:var(--ink4);display:flex;align-items:center;gap:5px;margin-top:auto;
+  }
+  .card-count b{color:var(--gold);font-weight:700}
+
+  /* ── SKRIN BAB/SIRI ── */
+  #screenSiri{display:none;padding-top:calc(64px + 36px)}
+  .siri-topbar{
+    max-width:1100px;margin:0 auto;padding:0 clamp(14px,4vw,48px) 18px;
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  }
+  .btn-back{
+    font-size:12.5px;font-weight:600;color:var(--ink2);text-decoration:none;
+    border:1.5px solid var(--border2);background:var(--surface);
+    padding:8px 16px;border-radius:20px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;transition:var(--transition);
+  }
+  .btn-back:hover{border-color:var(--gold);color:var(--gold)}
+  .siri-heading{flex:1;min-width:0}
+  .siri-heading .eyebrow{
+    font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:4px;
+  }
+  .siri-heading h2{
+    font-family:'Playfair Display',serif;font-size:clamp(19px,3.5vw,27px);
+    color:var(--ink);font-weight:700;line-height:1.25;
+  }
+
+  .siri-list{max-width:1100px;margin:0 auto;padding:0 clamp(14px,4vw,48px) 60px;display:flex;flex-direction:column;gap:14px}
+  .siri-item{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
+    box-shadow:var(--shadow);padding:18px 20px;
+    display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+    cursor:pointer;transition:var(--transition);
+  }
+  .siri-item:hover{border-color:var(--gold2);transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+  .siri-item-main{flex:1;min-width:0}
+  .siri-item-badge{
+    font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--gold);background:var(--gold3);padding:3px 10px;border-radius:4px;
+    display:inline-block;margin-bottom:8px;
+  }
+  /* Premium fintech-style category chip — sits beneath the bab/siri badge */
+  .siri-item-badge-kat{
+    display:flex;align-items:center;gap:6px;width:fit-content;
+    font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--ink2);
+    background:linear-gradient(135deg,rgba(15,23,42,.03),rgba(201,168,76,.09));
+    border:1px solid rgba(201,168,76,.34);
+    padding:4px 12px 4px 9px;border-radius:6px;margin-bottom:10px;
+    box-shadow:0 1px 4px rgba(15,23,42,.04);
+  }
+  .siri-item-badge-kat::before{
+    content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0;
+    background:linear-gradient(135deg,var(--gold),var(--gold2));
+    box-shadow:0 0 0 2px rgba(201,168,76,.18);
+  }
+  .siri-item-excerpt{font-size:13.5px;color:var(--ink3);line-height:1.6;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:6px;
+  }
+  .siri-item-author{font-size:11.5px;color:var(--ink4);letter-spacing:.02em}
+  .siri-item-author b{color:var(--gold);font-weight:700}
+
+  /* ── READER OVERLAY (Penuh Muka) ── */
+  .reader-overlay{
+    position:fixed;inset:0;background:rgba(15,23,42,.72);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    z-index:2000;display:flex;align-items:stretch;justify-content:center;
+    opacity:0;pointer-events:none;transition:opacity .35s;
+    padding:0;
+  }
+  .reader-overlay.open{opacity:1;pointer-events:all}
+
+  .reader-shell{
+    background:var(--surface);width:100%;max-width:780px;
+    display:flex;flex-direction:column;
+    box-shadow:var(--shadow-lg);
+    transform:translateY(28px);transition:transform .35s;
+    overflow:hidden;
+    margin:clamp(0px,2vh,32px) clamp(0px,3vw,24px);
+    border-radius:var(--radius);
+  }
+  .reader-overlay.open .reader-shell{transform:translateY(0)}
+
+  /* Top bar */
+  .reader-topbar{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    padding:16px 24px 14px;
+    border-bottom:1px solid var(--border);flex-shrink:0;
+    background:var(--surface);
+  }
+  .reader-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;flex:1;min-width:0}
+  .reader-close{
+    background:var(--surface3);border:none;width:36px;height:36px;border-radius:50%;
+    cursor:pointer;font-size:18px;color:var(--ink3);flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;transition:var(--transition);
+  }
+  .reader-close:hover{background:var(--border2);color:var(--ink)}
+  .reader-title{
+    font-family:'Playfair Display',serif;font-size:clamp(16px,2.5vw,22px);
+    font-weight:700;color:var(--ink);line-height:1.25;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;
+  }
+
+  /* Gold divider */
+  .reader-divider{
+    height:3px;flex-shrink:0;
+    background:linear-gradient(90deg,var(--gold),var(--gold2),transparent);
+  }
+
+  /* Dot indicators — atas */
+  .reader-dots{
+    display:flex;justify-content:center;align-items:center;gap:7px;
+    padding:12px 24px 8px;flex-shrink:0;background:var(--surface);
+  }
+  .reader-dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--border2);transition:all .25s;cursor:pointer;flex-shrink:0;
+  }
+  .reader-dot.active{
+    background:var(--gold);transform:scale(1.35);
+    box-shadow:0 0 0 3px rgba(201,168,76,.25);
+  }
+
+  /* Pages viewport — swipe/slide */
+  .reader-viewport{
+    flex:1;overflow:hidden;position:relative;touch-action:pan-y;
+  }
+  .reader-pages{
+    display:flex;height:100%;
+    transition:transform .38s cubic-bezier(.4,0,.2,1);
+    will-change:transform;
+  }
+  .reader-page{
+    min-width:100%;height:100%;
+    overflow-y:auto;
+    padding:24px clamp(20px,5vw,40px) 16px;
+    font-size:15.5px;color:var(--ink2);line-height:1.85;
+    white-space:pre-wrap;word-break:break-word;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  /* Bottom bar: page numbers + author + lanjut */
+  .reader-bottombar{
+    border-top:1px solid var(--border);padding:14px 24px 16px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    flex-shrink:0;background:var(--surface);flex-wrap:wrap;
+  }
+  .reader-author{font-size:12.5px;color:var(--ink4);margin-top:4px}
+  .reader-author b{color:var(--gold);font-weight:700}
+
+  /* Page numbers row */
+  .reader-pagnums{
+    display:flex;align-items:center;gap:4px;justify-content:center;flex:1;
+  }
+  .pg-num{
+    min-width:30px;height:30px;border-radius:var(--radius-xs);
+    border:1.5px solid var(--border2);background:var(--surface2);
+    color:var(--ink3);font-size:12px;font-weight:600;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:var(--transition);padding:0 6px;
+  }
+  .pg-num:hover{border-color:var(--gold2);color:var(--gold)}
+  .pg-num.active{
+    background:linear-gradient(135deg,var(--gold),var(--gold2));
+    border-color:transparent;color:var(--ink);
+    box-shadow:0 2px 10px rgba(201,168,76,.35);
+  }
+  .pg-ellipsis{font-size:12px;color:var(--ink4);padding:0 3px}
+
+  /* Lanjut button */
+  .btn-lanjut{
+    font-size:12px;font-weight:700;color:var(--ink);text-decoration:none;
+    background:linear-gradient(135deg,var(--gold),var(--gold2));
+    padding:8px 18px;border-radius:20px;
+    box-shadow:0 3px 12px rgba(201,168,76,.35);
+    transition:var(--transition);white-space:nowrap;display:inline-flex;align-items:center;gap:5px;
+    border:none;cursor:pointer;letter-spacing:.03em;
+  }
+  .btn-lanjut:hover{box-shadow:0 6px 20px rgba(201,168,76,.5);transform:translateY(-1px)}
+  .btn-lanjut::after{content:'↗';font-size:13px}
+
+  /* Nav arrows inside reader (prev/next page) */
+  .reader-nav-arrows{
+    display:flex;align-items:center;gap:6px;flex-shrink:0;
+  }
+  .reader-arrow{
+    width:34px;height:34px;border-radius:50%;border:1.5px solid var(--border2);
+    background:var(--surface2);color:var(--ink3);font-size:14px;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:var(--transition);
+  }
+  .reader-arrow:hover:not(:disabled){border-color:var(--gold);color:var(--gold)}
+  .reader-arrow:disabled{opacity:.3;cursor:not-allowed}
+
+  /* Modal (legacy — kept for compatibility, hidden) */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(15,23,42,.6);
+    backdrop-filter:blur(6px);z-index:2000;
+    display:flex;align-items:flex-start;justify-content:center;
+    padding:clamp(12px,4vw,48px);overflow-y:auto;
+    opacity:0;pointer-events:none;transition:opacity .3s;
+  }
+  .modal-overlay.open{opacity:1;pointer-events:all}
+  .modal{
+    background:var(--surface);border-radius:var(--radius);
+    box-shadow:var(--shadow-lg);max-width:720px;width:100%;
+    transform:translateY(20px);transition:transform .3s;margin:auto;
+  }
+  .modal-overlay.open .modal{transform:translateY(0)}
+  .modal-header{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+    padding:28px 32px 0;
+  }
+  .modal-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .modal-title{
+    font-family:'Playfair Display',serif;font-size:clamp(20px,3.5vw,28px);
+    font-weight:700;color:var(--ink);line-height:1.25;
+  }
+  .modal-close{
+    background:var(--surface3);border:none;width:36px;height:36px;border-radius:50%;
+    cursor:pointer;font-size:18px;color:var(--ink3);flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;transition:var(--transition);
+  }
+  .modal-close:hover{background:var(--border2);color:var(--ink)}
+  .modal-divider{
+    height:3px;margin:20px 32px 0;
+    background:linear-gradient(90deg,var(--gold),var(--gold2),transparent);border-radius:2px;
+  }
+  .modal-body{
+    padding:24px 32px 32px;
+    font-size:15.5px;color:var(--ink2);line-height:1.85;white-space:pre-wrap;
+    word-break:break-word;
+  }
+  .modal-footer{
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    padding:16px 32px;border-top:1px solid var(--border);
+    font-size:12.5px;color:var(--ink4);
+  }
+  .modal-footer b{color:var(--gold);font-weight:700}
+
+  /* ── EMPTY / LOADING ── */
+  .empty{text-align:center;padding:72px 24px}
+  .empty-icon{font-size:48px;margin-bottom:16px;opacity:.5}
+  .empty h3{font-size:18px;color:var(--ink2);margin-bottom:6px}
+  .empty p{font-size:14px;color:var(--ink4)}
+
+  .loader{
+    display:flex;justify-content:center;gap:8px;padding:64px;
+  }
+  .loader span{
+    width:10px;height:10px;border-radius:50%;background:var(--gold);
+    animation:pulse 1.2s ease-in-out infinite;
+  }
+  .loader span:nth-child(2){animation-delay:.2s}
+  .loader span:nth-child(3){animation-delay:.4s}
+  @keyframes pulse{0%,100%{transform:scale(.6);opacity:.4}50%{transform:scale(1);opacity:1}}
+
+  /* ── SCROLL TOP ── */
+  #scrollTop{
+    position:fixed;bottom:24px;right:24px;width:42px;height:42px;
+    background:linear-gradient(135deg,var(--gold),var(--gold2));
+    border:none;border-radius:50%;cursor:pointer;font-size:18px;
+    color:var(--ink);box-shadow:0 4px 16px rgba(201,168,76,.4);
+    opacity:0;transition:opacity .3s;z-index:900;display:flex;align-items:center;justify-content:center;
+  }
+  #scrollTop.vis{opacity:1}
+
+  /* ── TOAST ── */
+  #toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(14px);
+    padding:12px 22px;border-radius:var(--radius-sm);font-size:13.5px;font-weight:500;
+    opacity:0;pointer-events:none;z-index:3000;transition:all .3s;
+    box-shadow:0 8px 28px rgba(0,0,0,.18);
+  }
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  #toast.success{background:#064e3b;color:#a7f3d0;border:1px solid #065f46}
+  #toast.error-t{background:#450a0a;color:#fca5a5;border:1px solid #7f1d1d}
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:600px){
+    .reader-shell{margin:0;border-radius:0}
+    .reader-overlay{padding:0}
+    .reader-topbar{padding:12px 16px 10px}
+    .reader-page{padding:16px 16px 12px}
+    .reader-bottombar{padding:10px 16px 14px}
+    .reader-dots{padding:10px 16px 6px}
+    .modal-header,.modal-body,.modal-footer{padding-left:20px;padding-right:20px}
+    .modal-divider{margin-left:20px;margin-right:20px}
+  }
+  @media(max-width:480px){
+    .stats{gap:28px}
+    .menu-btn{width:38px;height:38px;font-size:6px}
+    .menu-wrap{right:12px}
+    .pelita-brand-name{font-size:13px}
+    .pelita-brand-sub{font-size:8px}
+    .pg-num{min-width:26px;height:26px;font-size:11px}
+    .lamp-tooltip{font-size:11px;padding:6px 12px;right:calc(100% + 10px)}
+    .siri-item-badge-kat{font-size:9px;padding:3px 10px 3px 8px;gap:5px}
+  }
+
+  /* blink highlight for copy-scroll */
+  @keyframes readerBlink{
+    0%,100%{background:var(--surface)}
+    25%,75%{background:rgba(201,168,76,.18)}
+  }
+  .siri-item.blink-highlight{animation:readerBlink .7s ease 3}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="h-left">
+    <!-- PELITA AGAMA — Premium Brand Badge -->
+    <div class="pelita-badge" id="pelitaBadge">
+      <div class="pelita-brand-icon">
+        <!-- Miniature oil lamp icon inline SVG -->
+        <svg class="pelita-brand-svg" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+          <!-- Flame outer -->
+          <g class="lamp-flame" style="transform-origin:11px 9px">
+            <ellipse cx="11" cy="8" rx="2.8" ry="4" fill="url(#flameGradBrand)" opacity=".95"/>
+          </g>
+          <!-- Flame inner -->
+          <g class="lamp-flame-inner" style="transform-origin:11px 9.5px">
+            <ellipse cx="11" cy="8.5" rx="1.4" ry="2.2" fill="#fff8d6" opacity=".85"/>
+          </g>
+          <!-- Glow under flame -->
+          <ellipse cx="11" cy="11" rx="4" ry="1.5" fill="rgba(201,168,76,.18)"/>
+          <!-- Lamp body -->
+          <path d="M8 11 Q7.2 13.5 7.8 15 H14.2 Q14.8 13.5 14 11 Z" fill="#c9a84c" opacity=".9"/>
+          <!-- Lamp spout left -->
+          <path d="M8 12.5 Q5.5 12 5 13.5 Q5.5 14.5 7.8 14" fill="#b8943e" opacity=".8"/>
+          <!-- Base -->
+          <rect x="7" y="15" width="8" height="2" rx="1" fill="#b8943e"/>
+          <rect x="6.5" y="17" width="9" height="1.5" rx=".75" fill="#c9a84c" opacity=".7"/>
+          <!-- Wick dot -->
+          <circle cx="11" cy="11.2" r=".9" fill="#7a5c1e"/>
+          <defs>
+            <radialGradient id="flameGradBrand" cx="50%" cy="80%" r="60%">
+              <stop offset="0%" stop-color="#fff8d6"/>
+              <stop offset="40%" stop-color="#f5a623"/>
+              <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="pelita-sep"></div>
+      <div class="pelita-brand-text">
+        <span class="pelita-brand-name">Pelita Agama</span>
+        <span class="pelita-brand-sub">Pelita Agama, Cahaya Kehidupan</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="h-right">
+    <!-- OIL LAMP ANIMATION — Tabung Belajar -->
+    <div class="lamp-wrap" title="Tabung Belajar — Klik untuk menyumbang!">
+      <div class="lamp-tooltip" aria-hidden="true">Tabung Belajar</div>
+      <div class="lamp-glow"></div>
+      <a href="https://deen-track.pages.dev/tabung-belajar" target="_blank" rel="noopener">
+        <svg class="lamp-svg" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+
+          <!-- Smoke wisps -->
+          <g class="lamp-smoke">
+            <path d="M17 8 Q15.5 5 17 2.5" stroke="rgba(201,168,76,.32)" stroke-width="1.1" stroke-linecap="round" fill="none"/>
+            <path d="M19 7.5 Q20.5 4.5 19 2" stroke="rgba(201,168,76,.26)" stroke-width="1" stroke-linecap="round" fill="none"/>
+            <path d="M18 8 Q18.8 5.5 18 3" stroke="rgba(201,168,76,.2)" stroke-width=".9" stroke-linecap="round" fill="none"/>
+          </g>
+
+          <!-- Flame outer layer -->
+          <g class="candle-flame-outer" style="transform-origin:18px 13px">
+            <ellipse cx="18" cy="10.5" rx="4" ry="6" fill="url(#cFlameOut)" opacity=".92"/>
+          </g>
+          <!-- Flame mid layer -->
+          <g class="candle-flame-mid" style="transform-origin:18px 13px">
+            <ellipse cx="18" cy="11" rx="2.6" ry="4.2" fill="url(#cFlameMid)" opacity=".88"/>
+          </g>
+          <!-- Flame core — white/cream centre -->
+          <g class="candle-flame-core" style="transform-origin:18px 13.5px">
+            <ellipse cx="18" cy="12" rx="1.2" ry="2.2" fill="#fffef0" opacity=".95"/>
+          </g>
+
+          <!-- Wick -->
+          <line x1="18" y1="14" x2="18" y2="16" stroke="#7a5c1e" stroke-width="1.4" stroke-linecap="round"/>
+          <!-- Wick glow -->
+          <ellipse cx="18" cy="15" rx="4" ry="1.6" fill="url(#cWickGlow)" opacity=".55"/>
+
+          <!-- Candle body — tall pillar -->
+          <rect x="14" y="16" width="8" height="13" rx="1.5" fill="#1e293b" stroke="#c9a84c" stroke-width="1.1"/>
+          <!-- Candle wax drip left -->
+          <path d="M14 18 Q13 19.5 13.5 21 Q14 21.5 14 22" stroke="#c9a84c" stroke-width=".9" fill="none" stroke-linecap="round" opacity=".6"/>
+          <!-- Candle wax drip right -->
+          <path d="M22 20 Q23 21.5 22.5 23" stroke="#c9a84c" stroke-width=".9" fill="none" stroke-linecap="round" opacity=".45"/>
+          <!-- Candle sheen line -->
+          <line x1="16.5" y1="17" x2="16.5" y2="28" stroke="rgba(201,168,76,.12)" stroke-width="1.5" stroke-linecap="round"/>
+
+          <!-- Candle holder / base dish -->
+          <ellipse cx="18" cy="29" rx="7" ry="2" fill="#c9a84c" opacity=".75"/>
+          <rect x="11.5" y="28" width="13" height="2.5" rx="1.25" fill="#c9a84c" opacity=".55"/>
+          <!-- Base foot -->
+          <ellipse cx="18" cy="30.5" rx="6" ry="1.2" fill="#b8943e" opacity=".5"/>
+
+          <defs>
+            <radialGradient id="cFlameOut" cx="50%" cy="82%" r="62%">
+              <stop offset="0%" stop-color="#fffdf0"/>
+              <stop offset="28%" stop-color="#ffb627"/>
+              <stop offset="68%" stop-color="#f0780f" stop-opacity=".7"/>
+              <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="cFlameMid" cx="50%" cy="78%" r="58%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="42%" stop-color="#ffcb3d"/>
+              <stop offset="100%" stop-color="#ffae00" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="cWickGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffcb3d" stop-opacity=".9"/>
+              <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+        </svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- MENU — Floating Action Button -->
+<div class="menu-wrap">
+  <button class="menu-btn" title="Menu" onclick="toggleMenu(event)">Menu</button>
+  <div class="menu-panel" id="menuPanel">
+    <a href="https://deen-track.pages.dev" target="_blank" rel="noopener" class="menu-item">
+      <span class="menu-item-ico">⌂</span> Deen Track
+    </a>
+    <a href="https://deen-track.pages.dev/akses-pantas" target="_blank" rel="noopener" class="menu-item">
+      <span class="menu-item-ico">⚡</span> Akses Pantas
+    </a>
+    <div class="menu-divider"></div>
+    <button class="menu-item" onclick="requestTambahKarya()">
+      <span class="menu-item-ico">✦</span> Tambah Karya
+    </button>
+  </div>
+</div>
+
+<!-- PASSWORD GATE -->
+<div class="pw-overlay" id="pwOverlay" onclick="closePwGate(event)">
+  <div class="pw-card">
+    <div class="pw-icon">🔒</div>
+    <h3>Akses Admin</h3>
+    <p>Masukkan kata laluan untuk menambah karya baharu.</p>
+    <input type="password" id="pwInput" placeholder="Kata laluan…" autocomplete="off" onkeydown="if(event.key==='Enter')verifyPwGate()"/>
+    <div class="pw-actions">
+      <button class="pw-btn pw-cancel" onclick="closePwGate()">Batal</button>
+      <button class="pw-btn pw-confirm" onclick="verifyPwGate()">Sahkan</button>
+    </div>
+  </div>
+</div>
+
+<!-- SKRIN 1 — SENARAI TAJUK -->
+<div id="screenTajuk">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Koleksi Penulisan Islam</div>
+  <h1>Menyuluh Minda, <em>Menyinari</em> Hati</h1>
+  <p>Bacalah! biar untaian kata menjadi pelita, yang menyuluh jalan gelapmu menuju redha-Nya</p>
+</section>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="search-box">
+    <span class="ico">🔍</span>
+    <input type="text" id="searchInput" placeholder="Cari tajuk atau kata kunci…" oninput="handleSearch(this.value)"/>
+  </div>
+</div>
+
+<!-- GRID -->
+<div class="grid-wrap">
+  <div id="loader" class="loader">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div id="empty" class="empty" style="display:none">
+    <div class="empty-icon">📜</div>
+    <h3>Tiada penulisan dijumpai</h3>
+    <p>Cuba ubah kata carian atau pilih kategori lain.</p>
+  </div>
+</div>
+
+</div>
+
+<!-- SKRIN 2 — SENARAI BAB / SIRI BAGI SATU TAJUK -->
+<div id="screenSiri">
+  <div class="siri-topbar">
+    <button class="btn-back" onclick="backToTajuk()">← Kembali</button>
+    <div class="siri-heading">
+      <div class="eyebrow" id="siriKategori"></div>
+      <h2 id="siriTajuk"></h2>
+    </div>
+  </div>
+
+  <!-- TOOLBAR KATEGORI — khusus untuk senarai bab/siri -->
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="ico">🔍</span>
+      <input type="text" id="siriKatSearch" placeholder="Cari kategori…" oninput="handleSiriKatSearch(this.value)"/>
+    </div>
+    <div class="cats" id="siriCatPills"></div>
+  </div>
+
+  <div class="siri-list" id="siriList"></div>
+</div>
+
+<!-- READER OVERLAY — Penuh Muka dengan Pagination -->
+<div class="reader-overlay" id="readerOverlay">
+  <div class="reader-shell" id="readerShell">
+
+    <!-- Top bar -->
+    <div class="reader-topbar">
+      <div style="flex:1;min-width:0">
+        <div class="reader-meta" id="readerMeta"></div>
+        <div class="reader-title" id="readerTitle"></div>
+        <div class="reader-author" id="readerAuthor"></div>
+      </div>
+      <button class="reader-close" onclick="closeReader()">✕</button>
+    </div>
+
+    <!-- Gold line -->
+    <div class="reader-divider"></div>
+
+    <!-- Dot indicators -->
+    <div class="reader-dots" id="readerDots"></div>
+
+    <!-- Pages swipe viewport -->
+    <div class="reader-viewport" id="readerViewport">
+      <div class="reader-pages" id="readerPages"></div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="reader-bottombar">
+      <a class="btn-lanjut" id="readerLanjut" href="#" target="_blank" rel="noopener" style="display:none">Dapatkan Sekarang</a>
+
+      <div class="reader-pagnums" id="readerPagnums"></div>
+
+      <div class="reader-nav-arrows">
+        <button class="reader-arrow" id="readerPrev" onclick="readerGoPage(readerCurPage-1)">‹</button>
+        <button class="reader-arrow" id="readerNext" onclick="readerGoPage(readerCurPage+1)">›</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL (legacy, unused now) -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-meta" id="modalMeta"></div>
+        <div class="modal-title" id="modalTitle"></div>
+      </div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-divider"></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer">
+      <span id="modalAuthor"></span>
+    </div>
+  </div>
+</div>
+
+<!-- SCROLL TOP -->
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div id="toast"></div>
+
+<script>
+// ── CONFIG ─────────────────────────────────────────────────
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7UwfybsQ7psGOZ4Xce5in9wS49ZrPE4266bxqxmGaUJwphBSMFROKHlCG5ZgJCuFicQ/exec";
+const PELITA_AGAMA_BASE_URL = "https://deen-track.pages.dev/pelita-agama";
+
+// ── STATE ──────────────────────────────────────────────────
+let allData = [];
+let searchTimer;
+
+// ── STATE — SKRIN 2 (kategori bab/siri) ─────────────────────
+let currentTajukItems = [];
+let currentTajukSlug  = '';
+let activeSiriKat     = 'Semua';
+let siriKatQuery      = '';
+let siriSearchTimer;
+
+// ── READER STATE ────────────────────────────────────────────
+let readerPages   = [];
+let readerCurPage = 0;
+let readerTouchX  = null;
+const CHARS_PER_PAGE = 900; // aksara per muka (anggaran 1 skrin penuh)
+
+// ── MENU POPUP ───────────────────────────────────────────────
+function toggleMenu(e){
+  e.stopPropagation();
+  document.getElementById('menuPanel').classList.toggle('open');
+}
+document.addEventListener('click', (e)=>{
+  const panel = document.getElementById('menuPanel');
+  const wrap  = document.querySelector('.menu-wrap');
+  if(panel.classList.contains('open') && !wrap.contains(e.target)){
+    panel.classList.remove('open');
+  }
+});
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape'){
+    document.getElementById('menuPanel').classList.remove('open');
+    closeReader();
+  }
+});
+
+// ── PASSWORD GATE ─────────────────────────────────────────────
+const ADMIN_PASSWORD = "wanh4897";
+
+function requestTambahKarya(){
+  document.getElementById('menuPanel').classList.remove('open');
+  document.getElementById('pwOverlay').classList.add('open');
+  document.getElementById('pwInput').value = '';
+  document.getElementById('pwInput').classList.remove('error');
+  setTimeout(()=> document.getElementById('pwInput').focus(), 100);
+}
+
+function closePwGate(e){
+  if(e && e.target !== document.getElementById('pwOverlay')) return;
+  document.getElementById('pwOverlay').classList.remove('open');
+}
+
+function verifyPwGate(){
+  const input = document.getElementById('pwInput');
+  if(input.value === ADMIN_PASSWORD){
+    document.getElementById('pwOverlay').classList.remove('open');
+    toast('✓ Akses admin disahkan!','ok');
+    setTimeout(()=>{ window.location.href = 'form.html'; }, 700);
+  } else {
+    input.classList.add('error');
+    toast('Kata laluan tidak sah.','err');
+  }
+}
+
+// ── FETCH DATA ─────────────────────────────────────────────
+async function loadData(){
+  if(SCRIPT_URL.includes('PASTE_YOUR')){
+    document.getElementById('loader').style.display = 'none';
+    allData = demoData();
+    renderCards(allData);
+    handleDeepLink();
+    return;
+  }
+  try{
+    const res  = await fetch(SCRIPT_URL + '?action=getAll');
+    const json = await res.json();
+    allData = json.data || [];
+    document.getElementById('loader').style.display = 'none';
+    renderCards(allData);
+    handleDeepLink();
+  }catch(e){
+    document.getElementById('loader').style.display = 'none';
+    showEmpty();
+    toast('Gagal memuatkan data. Semak SCRIPT_URL.','err');
+  }
+}
+
+// ── RENDER (Skrin 1 — Senarai Tajuk) ────────────────────────
+function renderCards(data){
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  if(!data || data.length === 0){ grid.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display = 'none';
+
+  const groups = groupByTajuk(data);
+  grid.innerHTML = groups.map(g => cardHTML(g)).join('');
+}
+
+function groupByTajuk(data){
+  const map = new Map();
+  data.forEach(d=>{
+    const key = (d.tajuk||'Tanpa Tajuk').trim();
+    if(!map.has(key)){
+      map.set(key, { tajuk: key, kategori: d.kategori||'Umum', tarikh: d.tarikh||'', items: [] });
+    }
+    map.get(key).items.push(d);
+  });
+  return Array.from(map.values());
+}
+
+function cardHTML(g){
+  const slug = slugify(g.tajuk);
+  const jumlah = g.items.length;
+  return `<div class="card" id="card-${slug}" onclick="openTajuk('${escAttr(g.tajuk)}')">
+    <div class="card-head"></div>
+    <div class="card-body">
+      <div class="card-meta-row">
+        <div class="card-meta"></div>
+        <button class="copy-btn" title="Salin pautan kad ini" onclick="event.stopPropagation();copyTajukLink('${slug}')">⧉</button>
+      </div>
+      <div class="card-title">${esc(g.tajuk)}</div>
+      <div class="card-excerpt">${jumlah} bab/siri tersedia dalam tajuk ini.</div>
+      <div class="card-footer">
+        <span class="card-count"><b>${jumlah}</b> Bab/Siri</span>
+        <span class="card-read">Lihat</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function slugify(s){ return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') || 'tajuk'; }
+function escAttr(s){ return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+
+function pingCard(slug){
+  const el = document.getElementById('card-' + slug);
+  if(!el) return;
+  el.scrollIntoView({ behavior:'smooth', block:'center' });
+  el.classList.remove('pinged');
+  requestAnimationFrame(()=>{ el.classList.add('pinged'); });
+  setTimeout(()=> el.classList.remove('pinged'), 2200);
+}
+
+function copyTajukLink(slug){
+  const link = PELITA_AGAMA_BASE_URL + '#' + slug;
+  copyToClipboard(link).then(()=>{
+    toast('Pautan disalin!','ok');
+    pingCard(slug);
+  }).catch(()=> toast('Gagal menyalin. Cuba lagi.','err'));
+}
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── SKRIN 2 — SENARAI BAB / SIRI BAGI SATU TAJUK ────────────
+function openTajuk(tajuk){
+  const items = allData.filter(d => (d.tajuk||'Tanpa Tajuk').trim() === tajuk);
+  if(items.length === 0) return;
+
+  currentTajukItems = items;
+  currentTajukSlug  = slugify(tajuk);
+  activeSiriKat     = 'Semua';
+  siriKatQuery      = '';
+  const katInput = document.getElementById('siriKatSearch');
+  if(katInput) katInput.value = '';
+
+  document.getElementById('siriKategori').textContent = items[0].kategori || 'Umum';
+  document.getElementById('siriTajuk').textContent = tajuk;
+
+  buildSiriCatPills(items);
+  renderSiriList();
+
+  document.getElementById('screenTajuk').style.display = 'none';
+  document.getElementById('screenSiri').style.display = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function backToTajuk(){
+  document.getElementById('screenSiri').style.display = 'none';
+  document.getElementById('screenTajuk').style.display = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function siriItemHTML(d, idx, tajukSlug){
+  const excerpt = (d.penulisan||'').slice(0,160).replace(/</g,'&lt;') + ((d.penulisan||'').length > 160 ? '…' : '');
+  const safe = JSON.stringify(d).replace(/'/g,"&#39;");
+  const siriSlug = (d.siri && d.siri.trim()) ? slugify(d.siri) : ('bahagian-' + (idx+1));
+  const itemId = 'siri-item-' + tajukSlug + '-' + siriSlug;
+  return `<div class="siri-item" id="${itemId}" onclick='openReader(${safe})'>
+    <div class="siri-item-main">
+      ${d.siri ? `<span class="siri-item-badge">${esc(d.siri)}</span>` : ''}
+      <span class="siri-item-badge-kat">${esc(d.kategori||'Umum')}</span>
+      <div class="siri-item-excerpt">${excerpt}</div>
+      <div class="siri-item-author">Oleh <b>${esc(d.penulis||'Hamba Allah')}</b></div>
+    </div>
+    <button class="copy-btn" title="Salin & tuju ke artikel ini" onclick="event.stopPropagation();copySiriLink('${tajukSlug}','${siriSlug}','${itemId}')">⧉</button>
+  </div>`;
+}
+
+// ── SKRIN 2 — FILTER & CARI KATEGORI BAB/SIRI ───────────────
+function buildSiriCatPills(items){
+  const cats = Array.from(new Set(items.map(d => (d.kategori||'Umum').trim()))).filter(Boolean);
+  const wrap = document.getElementById('siriCatPills');
+  const extra = cats.map(c =>
+    `<button class="cat-pill" onclick="filterSiriCat('${c.replace(/'/g,"\\'")}',this)">${esc(c)}</button>`
+  ).join('');
+  wrap.innerHTML = `<button class="cat-pill active" onclick="filterSiriCat('Semua',this)">Semua</button>` + extra;
+}
+
+function filterSiriCat(kat, btn){
+  activeSiriKat = kat;
+  document.querySelectorAll('#siriCatPills .cat-pill').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderSiriList();
+}
+
+function handleSiriKatSearch(q){
+  clearTimeout(siriSearchTimer);
+  siriSearchTimer = setTimeout(()=>{
+    siriKatQuery = q;
+    renderSiriList();
+  }, 280);
+}
+
+function renderSiriList(){
+  let items = currentTajukItems;
+
+  if(activeSiriKat !== 'Semua'){
+    items = items.filter(d => (d.kategori||'Umum').trim() === activeSiriKat);
+  }
+  if(siriKatQuery && siriKatQuery.trim()){
+    const q = siriKatQuery.toLowerCase().trim();
+    items = items.filter(d => (d.kategori||'Umum').toLowerCase().includes(q));
+  }
+
+  const listEl = document.getElementById('siriList');
+  if(items.length === 0){
+    listEl.innerHTML = `<div class="empty">
+      <div class="empty-icon">📂</div>
+      <h3>Tiada kategori dijumpai</h3>
+      <p>Cuba kata carian kategori lain atau pilih "Semua".</p>
+    </div>`;
+    return;
+  }
+  listEl.innerHTML = items.map((d,i) => siriItemHTML(d,i,currentTajukSlug)).join('');
+}
+
+// ── COPY + SCROLL + BLINK ────────────────────────────────────
+function blinkElement(itemId){
+  const el = document.getElementById(itemId);
+  if(el){
+    el.scrollIntoView({ behavior:'smooth', block:'center' });
+    el.classList.remove('blink-highlight');
+    requestAnimationFrame(()=>{
+      el.classList.add('blink-highlight');
+      setTimeout(()=> el.classList.remove('blink-highlight'), 2200);
+    });
+  }
+}
+
+function copySiriLink(tajukSlug, siriSlug, itemId){
+  const link = PELITA_AGAMA_BASE_URL + '#' + tajukSlug + '/' + siriSlug;
+  copyToClipboard(link).then(()=>{
+    toast('Pautan disalin!','ok');
+    blinkElement(itemId);
+  }).catch(()=> toast('Gagal menyalin. Cuba lagi.','err'));
+}
+
+// Auto-scroll & blink apabila pautan /pelita-agama#{tajuk} atau /pelita-agama#{tajuk}/{bab} dibuka
+function handleDeepLink(){
+  const raw = window.location.hash.replace(/^#\/?/, '').replace(/\/+$/,'');
+  if(!raw) return;
+
+  const parts = raw.split('/').filter(Boolean);
+  const tajukSlug = parts[0];
+  const group = groupByTajuk(allData).find(g => slugify(g.tajuk) === tajukSlug);
+  if(!group) return;
+
+  if(parts.length === 1){
+    setTimeout(()=> pingCard(tajukSlug), 500);
+  } else {
+    const siriSlug = parts[1];
+    openTajuk(group.tajuk);
+    setTimeout(()=> blinkElement('siri-item-' + tajukSlug + '-' + siriSlug), 600);
+  }
+}
+
+window.addEventListener('hashchange', handleDeepLink);
+
+function copyToClipboard(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    return navigator.clipboard.writeText(text).catch(()=> legacyCopy(text));
+  }
+  return legacyCopy(text);
+}
+function legacyCopy(text){
+  return new Promise((resolve, reject)=>{
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      ok ? resolve() : reject();
+    }catch(e){ reject(e); }
+  });
+}
+
+// ── READER — PAGINATION ─────────────────────────────────────
+function splitIntoPages(text, charsPerPage){
+  // Split by paragraph, then group into pages
+  const paragraphs = text.split(/\n\n+/);
+  const pages = [];
+  let current = '';
+
+  for(const para of paragraphs){
+    const candidate = current ? current + '\n\n' + para : para;
+    if(candidate.length > charsPerPage && current.length > 0){
+      pages.push(current.trim());
+      current = para;
+    } else {
+      current = candidate;
+    }
+  }
+  if(current.trim()) pages.push(current.trim());
+  if(pages.length === 0) pages.push('');
+  return pages;
+}
+
+function openReader(d){
+  const text = d.penulisan || '';
+  readerPages   = splitIntoPages(text, CHARS_PER_PAGE);
+  readerCurPage = 0;
+
+  // Header
+  document.getElementById('readerTitle').textContent = d.tajuk || '';
+  document.getElementById('readerMeta').innerHTML =
+    `<span class="badge-kat">${esc(d.kategori||'Umum')}</span>${d.siri?`<span class="badge-siri" style="font-size:11px;color:var(--ink4);background:var(--surface3);padding:3px 9px;border-radius:4px">${esc(d.siri)}</span>`:''}`;
+  document.getElementById('readerAuthor').innerHTML =
+    `Oleh <b>${esc(d.penulis||'Hamba Allah')}</b>`;
+
+  // Lanjut button
+  const lanjutBtn = document.getElementById('readerLanjut');
+  if(d.link && d.link.trim()){
+    lanjutBtn.href = d.link.trim();
+    lanjutBtn.style.display = 'inline-flex';
+  } else {
+    lanjutBtn.href = '#';
+    lanjutBtn.style.display = 'none';
+  }
+
+  buildReaderPages();
+  buildDots();
+  buildPageNums();
+  goToPage(0, false);
+
+  document.getElementById('readerOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Touch/swipe
+  setupSwipe();
+}
+
+function buildReaderPages(){
+  const container = document.getElementById('readerPages');
+  container.innerHTML = readerPages.map((txt, i)=>
+    `<div class="reader-page" id="rp-${i}">${escText(txt)}</div>`
+  ).join('');
+}
+
+function escText(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function buildDots(){
+  const wrap = document.getElementById('readerDots');
+  if(readerPages.length <= 1){ wrap.style.display='none'; return; }
+  wrap.style.display = 'flex';
+  wrap.innerHTML = readerPages.map((_,i)=>
+    `<div class="reader-dot${i===0?' active':''}" onclick="readerGoPage(${i})" title="Muka ${i+1}"></div>`
+  ).join('');
+}
+
+function buildPageNums(){
+  const wrap = document.getElementById('readerPagnums');
+  const total = readerPages.length;
+  if(total <= 1){ wrap.innerHTML=''; return; }
+
+  // Show max 7 page numbers with ellipsis
+  function getVisible(cur, tot){
+    if(tot <= 7) return Array.from({length:tot},(_,i)=>i);
+    const pages = new Set([0, tot-1, cur]);
+    if(cur > 1) pages.add(cur-1);
+    if(cur < tot-2) pages.add(cur+1);
+    if(cur > 2) pages.add(cur-2);
+    if(cur < tot-3) pages.add(cur+2);
+    return Array.from(pages).sort((a,b)=>a-b);
+  }
+
+  const visible = getVisible(readerCurPage, total);
+  let html = '';
+  let prev = -1;
+  for(const pg of visible){
+    if(prev !== -1 && pg - prev > 1) html += `<span class="pg-ellipsis">…</span>`;
+    html += `<button class="pg-num${pg===readerCurPage?' active':''}" onclick="readerGoPage(${pg})">${pg+1}</button>`;
+    prev = pg;
+  }
+  wrap.innerHTML = html;
+}
+
+function goToPage(idx, animate=true){
+  const pages = document.getElementById('readerPages');
+  if(!animate) pages.style.transition = 'none';
+  pages.style.transform = `translateX(-${idx * 100}%)`;
+  if(!animate) requestAnimationFrame(()=>{ pages.style.transition=''; });
+
+  readerCurPage = idx;
+
+  // Scroll current page to top
+  const pg = document.getElementById('rp-' + idx);
+  if(pg) pg.scrollTop = 0;
+
+  // Update dots
+  document.querySelectorAll('.reader-dot').forEach((d,i)=>{
+    d.classList.toggle('active', i === idx);
+  });
+
+  // Update arrows
+  document.getElementById('readerPrev').disabled = idx === 0;
+  document.getElementById('readerNext').disabled = idx === readerPages.length - 1;
+
+  buildPageNums();
+}
+
+function readerGoPage(idx){
+  if(idx < 0 || idx >= readerPages.length) return;
+  goToPage(idx);
+}
+
+function closeReader(){
+  document.getElementById('readerOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── SWIPE SUPPORT ────────────────────────────────────────────
+function setupSwipe(){
+  const vp = document.getElementById('readerViewport');
+  vp.removeEventListener('touchstart', onTouchStart, {passive:true});
+  vp.removeEventListener('touchend', onTouchEnd);
+  vp.addEventListener('touchstart', onTouchStart, {passive:true});
+  vp.addEventListener('touchend', onTouchEnd);
+
+  // Mouse drag
+  vp.removeEventListener('mousedown', onMouseDown);
+  vp.addEventListener('mousedown', onMouseDown);
+}
+
+function onTouchStart(e){ readerTouchX = e.touches[0].clientX; }
+function onTouchEnd(e){
+  if(readerTouchX === null) return;
+  const dx = e.changedTouches[0].clientX - readerTouchX;
+  readerTouchX = null;
+  if(Math.abs(dx) > 48){
+    dx < 0 ? readerGoPage(readerCurPage+1) : readerGoPage(readerCurPage-1);
+  }
+}
+
+let _mxStart = null;
+function onMouseDown(e){
+  _mxStart = e.clientX;
+  const onUp = (eu)=>{
+    if(_mxStart === null) return;
+    const dx = eu.clientX - _mxStart;
+    _mxStart = null;
+    document.removeEventListener('mouseup', onUp);
+    if(Math.abs(dx) > 48){
+      dx < 0 ? readerGoPage(readerCurPage+1) : readerGoPage(readerCurPage-1);
+    }
+  };
+  document.addEventListener('mouseup', onUp);
+}
+
+// Keyboard left/right inside reader
+document.addEventListener('keydown', e=>{
+  if(!document.getElementById('readerOverlay').classList.contains('open')) return;
+  if(e.key === 'ArrowRight') readerGoPage(readerCurPage+1);
+  if(e.key === 'ArrowLeft')  readerGoPage(readerCurPage-1);
+});
+
+// ── FILTER & SEARCH (Skrin 1) ───────────────────────────────
+function handleSearch(q){
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(()=> applyFilters(), 300);
+}
+
+function applyFilters(){
+  const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+  let res = allData;
+  if(q) res = res.filter(d =>
+    (d.tajuk||'').toLowerCase().includes(q) ||
+    (d.siri||'').toLowerCase().includes(q)  ||
+    (d.penulisan||'').toLowerCase().includes(q)
+  );
+  renderCards(res);
+}
+
+// ── MODAL (legacy) ──────────────────────────────────────────
+function openModal(d){
+  document.getElementById('modalTitle').textContent  = d.tajuk  || '';
+  document.getElementById('modalBody').textContent   = d.penulisan || '';
+  document.getElementById('modalAuthor').innerHTML   = `Oleh <b>${esc(d.penulis||'Hamba Allah')}</b>`;
+  document.getElementById('modalMeta').innerHTML =
+    `<span class="badge-kat">${esc(d.kategori||'Umum')}</span>${d.siri?`<span class="badge-siri">${esc(d.siri)}</span>`:''}`;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(e){ if(e.target===document.getElementById('modalOverlay')) closeModalDirect(); }
+function closeModalDirect(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── SCROLL TOP ─────────────────────────────────────────────
+window.addEventListener('scroll',()=>{
+  document.getElementById('scrollTop').classList.toggle('vis', window.scrollY > 300);
+});
+
+// ── TOAST ──────────────────────────────────────────────────
+function toast(msg,type='ok'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show ' + (type==='ok'?'success':'error-t');
+  setTimeout(()=>{ t.className=''; }, 4000);
+}
+
+// ── DEMO DATA ──────────────────────────────────────────────
+function demoData(){
+  return [
+    {id:'DEMO-1',tajuk:'Keutamaan Menuntut Ilmu dalam Islam',siri:'Siri 1',kategori:'Ilmu & Pendidikan',penulis:'Ustaz Ahmad Fadzli',tarikh:'01/01/2025 08:00',link:'',penulisan:'Sesungguhnya menuntut ilmu adalah satu kewajipan ke atas setiap Muslim. Rasulullah SAW bersabda: "Tuntutlah ilmu dari buaian hingga ke liang lahad."\n\nIlmu bukan sekadar bacaan di atas kertas, tetapi satu bentuk ibadat yang mendekatkan diri kita kepada Allah SWT. Dengan ilmu, hati menjadi terang dan langkah menjadi jelas.\n\nMaka janganlah kita berasa puas dengan apa yang kita ada. Teruslah mencari, teruslah belajar, kerana setiap ilmu yang bermanfaat adalah sedekah jariah buat diri dan umat.\n\nPara ulama dahulu kala sanggup menempuh perjalanan jauh hanya untuk mendapatkan satu hadith sahaja. Mereka memahami betapa berharganya setiap ilmu yang diperoleh.\n\nSemoga Allah SWT mengurniakan kita ilmu yang bermanfaat, amal yang diterima, dan rezeki yang berkat. Ameen.'},
+    {id:'DEMO-1b',tajuk:'Keutamaan Menuntut Ilmu dalam Islam',siri:'Siri 2',kategori:'Ilmu & Pendidikan',penulis:'Ustaz Ahmad Fadzli',tarikh:'03/01/2025 08:00',link:'https://example.com',penulisan:'Sambungan daripada siri sebelumnya — ilmu yang tidak diamalkan umpama pohon tanpa buah. Para ulama sentiasa menekankan kepentingan mengikat ilmu dengan amal.\n\nSetiap pelajaran yang kita perolehi sewajarnya dipraktikkan dalam kehidupan seharian, agar ia menjadi cahaya bukan sekadar maklumat di dalam minda.\n\nIbn al-Qayyim berkata: "Ilmu adalah imam bagi amal, dan amal adalah pengikut bagi ilmu." Maka tiadalah manfaat ilmu tanpa amal, dan tiadalah amal tanpa ilmu.'},
+    {id:'DEMO-2',tajuk:'Zikir Sebagai Penenang Jiwa',siri:'Bab 1',kategori:'Tasawwuf',penulis:'Ustazah Nur Aisyah',tarikh:'05/01/2025 10:30',link:'',penulisan:'Allah SWT berfirman: "Ketahuilah, hanya dengan mengingati Allah hati akan menjadi tenang." — Ar-Ra\'d: 28\n\nZikir bukan hanya pergerakan lidah, tetapi kehadiran hati bersama-sama lafaz yang dilantunkan. Apabila kita menyebut nama Allah dengan penuh kesedaran, jiwa kita dipenuhi ketenangan yang tiada tandingannya.\n\nMulailah hari anda dengan membaca Subhanallah, Alhamdulillah, dan Allahu Akbar. Rasakan getaran ketenangan yang mengalir ke dalam setiap sudut jiwa.\n\nUlama tasawwuf menggariskan bahawa zikir yang paling tinggi adalah ketika hati sentiasa terpaut kepada Allah walau di tengah kesibukan dunia.'},
+    {id:'DEMO-3',tajuk:'Kisah Hijrah: Pengajaran untuk Kita',siri:'Sirah Nabi',kategori:'Sirah',penulis:'Ustaz Hafiz Rahman',tarikh:'10/01/2025 09:00',link:'',penulisan:'Peristiwa hijrah Rasulullah SAW dari Makkah ke Madinah bukan sekadar perpindahan fizikal. Ia adalah simbol pengorbanan, keberanian, dan tawakal kepada Allah SWT.\n\nBaginda meninggalkan tanah kelahiran, keluarga, dan segala yang dicintai semata-mata untuk menegakkan kalimah Allah di muka bumi ini.\n\nPengajaran buat kita: Apabila kita berhijrah dari kejahatan kepada kebaikan, dari kelalaian kepada ketaatan, itulah hijrah yang paling bermakna dalam kehidupan kita hari ini.'},
+  ];
+}
+
+// ── INIT ───────────────────────────────────────────────────
+loadData();
+</script>
+</body>
+</html>
