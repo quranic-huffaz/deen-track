@@ -746,6 +746,36 @@
             color: #78530a;
             line-height: 1.3;
         }
+
+        /* ── MAJMA' AL-MULAHAZAT mp-item — premium slate/steel accent ── */
+        .mp-item-majma {
+            border-color: rgba(71,85,105,0.22);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        .mp-item-majma:hover, .mp-item-majma:active {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        }
+        .mp-icon-majma {
+            background: linear-gradient(135deg, #334155, #1e293b);
+            color: #e2e8f0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(30,41,59,0.25);
+        }
+        .mp-icon-majma::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 11px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .mp-label-majma {
+            font-size: 12px;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.3;
+        }
     </style>
 </head>
 <body class="pb-24">
@@ -979,16 +1009,7 @@
                     </div>
                 </a>
 
-                <a href="tabung-belajar.html" class="mp-item" onclick="closeMenuPopup()">
-                    <div class="mp-icon" style="background:linear-gradient(135deg,#fff1f2,#ffe4e6);color:#f43f5e;">
-                        <i class="fa-solid fa-hand-holding-dollar"></i>
-                    </div>
-                    <div class="mp-text">
-                        <div class="mp-label">Sokong Tabung</div>
-                    </div>
-                </a>
-
-                <!-- ── Pelita Agama — kad baharu ── -->
+                <!-- ── Pelita Agama ── -->
                 <a href="https://deen-track.pages.dev/pelita-agama" class="mp-item mp-item-pelita" onclick="closeMenuPopup()">
                     <div class="mp-icon mp-icon-pelita">
                         <!-- Inline candle SVG -->
@@ -1027,6 +1048,16 @@
                     </div>
                     <div class="mp-text">
                         <div class="mp-label mp-label-pelita">Pelita Agama</div>
+                    </div>
+                </a>
+
+                <!-- ── Majma' al-Mulahazat ── -->
+                <a href="https://deen-track.pages.dev/majma%27-almulahazat/" class="mp-item mp-item-majma" onclick="closeMenuPopup()">
+                    <div class="mp-icon mp-icon-majma">
+                        <i class="fa-solid fa-scroll"></i>
+                    </div>
+                    <div class="mp-text">
+                        <div class="mp-label mp-label-majma">Majma' al-Mulahazat</div>
                     </div>
                 </a>
 
@@ -1072,6 +1103,17 @@
                     <div>
                         <div class="sheet-label">Pasang Aplikasi Ini</div>
                         <div class="sheet-sublabel">Akses pantas di skrin utama</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right sheet-arrow"></i>
+                </a>
+
+                <a href="tabung-belajar.html" class="sheet-item">
+                    <div class="sheet-icon" style="background:linear-gradient(135deg,#fff1f2,#ffe4e6);color:#f43f5e;">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                    </div>
+                    <div>
+                        <div class="sheet-label">Sokong Tabung</div>
+                        <div class="sheet-sublabel">Bantu perjalanan ilmu ini</div>
                     </div>
                     <i class="fa-solid fa-chevron-right sheet-arrow"></i>
                 </a>
