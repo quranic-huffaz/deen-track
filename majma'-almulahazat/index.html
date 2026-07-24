@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Majma' al-Mulahazat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0D12;
+    --bg-elevated:#0D1117;
+    --surface:#141922;
+    --surface-hover:#1A212C;
+    --border:rgba(201,164,92,.14);
+    --border-strong:rgba(201,164,92,.36);
+    --gold:#C9A45C;
+    --gold-bright:#E4C583;
+    --teal:#4FB8AC;
+    --text-primary:#EDEFF3;
+    --text-secondary:#9AA3B5;
+    --text-tertiary:#5B6376;
+    --radius:14px;
+    --radius-sm:9px;
+    --shadow-card: 0 1px 0 rgba(255,255,255,.02) inset, 0 20px 40px -24px rgba(0,0,0,.6);
+    --ease: cubic-bezier(.22,1,.36,1);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1100px 480px at 12% -10%, rgba(201,164,92,.08), transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, rgba(79,184,172,.06), transparent 55%),
+      var(--bg);
+    color:var(--text-primary);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  ::selection{ background:rgba(201,164,92,.28); color:#fff; }
+
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit;}
+
+  .mono{ font-family:'JetBrains Mono', monospace; letter-spacing:.02em; }
+
+  /* ---------- Layout shell ---------- */
+  .shell{
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 24px 96px;
+  }
+
+  header.topbar{
+    position:sticky; top:0; z-index:40;
+    backdrop-filter:blur(14px) saturate(140%);
+    background:rgba(10,13,18,.72);
+    border-bottom:1px solid var(--border);
+  }
+  .topbar-inner{
+    max-width:1120px; margin:0 auto;
+    padding:18px 24px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px;
+  }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand-mark{
+    width:38px; height:38px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(155deg, #1c2330, #0d1117);
+    border:1px solid var(--border-strong);
+    font-family:'Fraunces', serif; font-weight:600; font-size:17px;
+    color:var(--gold-bright);
+    flex-shrink:0;
+  }
+  .brand-text h1{
+    margin:0; font-family:'Fraunces', serif; font-weight:600;
+    font-size:17px; letter-spacing:.01em; color:var(--text-primary);
+  }
+  .brand-text p{
+    margin:1px 0 0; font-size:11.5px; color:var(--text-tertiary);
+    letter-spacing:.04em; text-transform:uppercase;
+  }
+  .topbar-status{
+    display:flex; align-items:center; gap:8px;
+    font-size:12px; color:var(--text-tertiary);
+  }
+  .status-dot{
+    width:6px; height:6px; border-radius:50%;
+    background:var(--teal);
+    box-shadow:0 0 0 3px rgba(79,184,172,.15);
+  }
+
+  /* ---------- Support Button: cawan kopi beranimasi + bubble tooltip ---------- */
+  .support-wrap{
+    display:flex; flex-direction:row-reverse; align-items:center; gap:10px;
+    position:relative;
+  }
+  .support-btn{
+    position:relative;
+    width:40px; height:40px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(201,164,92,.15);
+    border:1px solid rgba(201,164,92,.4);
+    transition:background .22s var(--ease), border-color .22s var(--ease), transform .22s var(--ease), box-shadow .22s var(--ease);
+  }
+  .support-btn:hover{
+    background:rgba(201,164,92,.28);
+    border-color:var(--gold-bright);
+    transform:scale(1.08);
+    box-shadow:0 0 0 6px rgba(201,164,92,.1), 0 6px 18px -6px rgba(201,164,92,.55);
+  }
+  .support-btn svg{ width:22px; height:22px; overflow:visible; }
+  .support-btn .cup-body{ fill:var(--gold-bright); stroke:none; }
+  .support-btn .cup-handle{ fill:none; stroke:var(--gold-bright); stroke-width:1.4; stroke-linecap:round; }
+  .support-btn .steam-line{
+    fill:none; stroke:var(--gold-bright); stroke-width:1.3; stroke-linecap:round;
+    opacity:.7; transform-origin:center bottom;
+    animation:steamWave 2.6s ease-in-out infinite;
+  }
+  .support-btn .steam-line.s2{ animation-delay:.55s; }
+  @keyframes steamWave{
+    0%{ transform:translateY(1px) scaleX(1); opacity:.15; }
+    35%{ opacity:.75; }
+    50%{ transform:translateY(-2px) scaleX(1.08); opacity:.6; }
+    100%{ transform:translateY(-5px) scaleX(.94); opacity:.05; }
+  }
+
+  .support-bubble{
+    position:absolute; right:52px; top:50%; transform:translateY(-50%);
+    display:flex; align-items:center;
+    padding:8px 14px; border-radius:999px;
+    background:linear-gradient(135deg, var(--gold-bright), var(--gold));
+    color:#141110; font-size:11.5px; font-weight:700; white-space:nowrap;
+    box-shadow:0 10px 24px -8px rgba(0,0,0,.5);
+    opacity:0; pointer-events:none;
+    transition:opacity .5s ease;
+    z-index:45;
+  }
+  .support-bubble.show{ opacity:1; }
+  .support-bubble::after{
+    content:"";
+    position:absolute; right:-5px; top:50%; transform:translateY(-50%) rotate(45deg);
+    width:9px; height:9px;
+    background:var(--gold);
+  }
+  @media (max-width:640px){
+    .support-btn{ width:36px; height:36px; }
+    .support-btn svg{ width:19px; height:19px; }
+    .support-bubble{ font-size:10.5px; padding:7px 11px; right:46px; }
+  }
+
+  /* ---------- Chip button (butang pada kad/baris) ---------- */
+  .chip-btn{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:11.5px; font-weight:600;
+    padding:7px 13px; border-radius:999px;
+    border:1px solid var(--border-strong);
+    color:var(--gold-bright);
+    background:rgba(201,164,92,.06);
+    transition:background .2s var(--ease), color .2s var(--ease), transform .2s var(--ease), border-color .2s var(--ease);
+    white-space:nowrap;
+  }
+  .chip-btn svg{ width:12px; height:12px; }
+  .card:hover .chip-btn, .row:hover .chip-btn{
+    background:linear-gradient(155deg, var(--gold-bright), var(--gold));
+    color:#141110; border-color:transparent; transform:translateX(2px);
+  }
+
+  /* ---------- Icon button (salin pautan) ---------- */
+  .icon-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:30px; height:30px; border-radius:50%; flex-shrink:0;
+    border:1px solid var(--border-strong);
+    background:rgba(201,164,92,.06);
+    color:var(--text-secondary);
+    cursor:pointer;
+    transition:background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease), transform .15s var(--ease);
+  }
+  .icon-btn svg{ width:14px; height:14px; }
+  .icon-btn:hover{ background:var(--surface-hover); border-color:var(--gold); color:var(--gold-bright); }
+  .icon-btn:active{ transform:scale(.9); }
+  .icon-btn.copied{ color:var(--teal); border-color:rgba(79,184,172,.5); background:rgba(79,184,172,.1); }
+  .card-foot-actions, .row-actions{ display:flex; align-items:center; gap:8px; }
+
+  /* ---------- Butang bulat MENU (ala iPhone, tepi kanan skrin) ---------- */
+  .fab-wrap{
+    position:fixed; right:16px; top:50%; transform:translateY(-50%);
+    z-index:70;
+  }
+  .fab-btn{
+    position:relative;
+    width:46px; height:46px; border-radius:50%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:2px;
+    background:radial-gradient(circle at 35% 30%, #2a2013, #0a0806 72%);
+    border:1px solid rgba(201,164,92,.55);
+    box-shadow:
+      0 0 0 1px rgba(201,164,92,.12) inset,
+      0 0 14px rgba(201,164,92,.28),
+      0 8px 20px -8px rgba(0,0,0,.65);
+    cursor:pointer;
+    transition:transform .25s var(--ease), box-shadow .25s var(--ease);
+  }
+  .fab-btn:hover{
+    transform:scale(1.06);
+    box-shadow:
+      0 0 0 1px rgba(201,164,92,.2) inset,
+      0 0 26px rgba(201,164,92,.45),
+      0 12px 30px -8px rgba(0,0,0,.7);
+  }
+  .fab-wrap.open .fab-btn{ transform:rotate(90deg); }
+  .fab-wrap.open .fab-btn:hover{ transform:rotate(90deg) scale(1.06); }
+  .fab-ring{
+    position:absolute; inset:0; border-radius:50%;
+    border:1px solid var(--gold-bright);
+    opacity:0; pointer-events:none;
+    animation:fabPulse 2.6s ease-out infinite;
+  }
+  .fab-ring.r2{ animation-delay:1.3s; }
+  @keyframes fabPulse{
+    0%{ transform:scale(1); opacity:.55; }
+    100%{ transform:scale(1.55); opacity:0; }
+  }
+  .fab-dot{
+    width:5px; height:5px; border-radius:50%;
+    background:var(--gold-bright);
+    animation:fabBlink 1.8s ease-in-out infinite;
+  }
+  @keyframes fabBlink{
+    0%, 100%{ opacity:1; } 50%{ opacity:.25; }
+  }
+  .fab-label{
+    font-size:7.5px; font-weight:700; letter-spacing:.12em;
+    color:var(--gold-bright); text-transform:uppercase;
+  }
+
+  .fab-popup{
+    position:absolute; right:62px; top:50%; transform:translateY(-50%) scale(.85);
+    width:230px;
+    background:linear-gradient(160deg, #171310, #0b0908);
+    border:1px solid rgba(201,164,92,.4);
+    border-radius:18px;
+    padding:16px;
+    box-shadow:0 20px 44px -14px rgba(0,0,0,.7), 0 0 0 1px rgba(201,164,92,.08) inset;
+    opacity:0; pointer-events:none;
+    transform-origin:right center;
+    transition:opacity .22s var(--ease), transform .22s var(--ease);
+  }
+  .fab-wrap.open .fab-popup{ opacity:1; pointer-events:auto; transform:translateY(-50%) scale(1); }
+  .fab-popup::after{
+    content:"";
+    position:absolute; right:-7px; top:50%; transform:translateY(-50%) rotate(45deg);
+    width:14px; height:14px;
+    background:#171310;
+    border-right:1px solid rgba(201,164,92,.4);
+    border-top:1px solid rgba(201,164,92,.4);
+  }
+  .fab-eyebrow{
+    font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--text-tertiary); margin:0 0 10px 4px;
+  }
+  .fab-list{ display:flex; flex-direction:column; gap:4px; }
+  .fab-list-item{
+    display:flex; align-items:center; gap:10px;
+    padding:9px 8px; border-radius:11px;
+    color:var(--text-primary); cursor:pointer;
+    transition:background .18s var(--ease), transform .18s var(--ease);
+  }
+  .fab-list-item:hover{ background:rgba(201,164,92,.12); transform:translateX(-3px); }
+  .fab-list-item .ico{
+    width:30px; height:30px; border-radius:9px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px;
+    background:linear-gradient(155deg, rgba(201,164,92,.35), rgba(201,164,92,.08));
+  }
+  .fab-list-item .txt{ flex-grow:1; font-size:13px; font-weight:500; }
+  .fab-list-item .chev{ font-size:14px; color:var(--text-tertiary); }
+  @media (max-width:640px){
+    .fab-wrap{ right:12px; }
+    .fab-btn{ width:40px; height:40px; }
+    .fab-label{ font-size:6.5px; }
+    .fab-popup{ width:200px; right:54px; padding:13px; }
+  }
+
+  /* ---------- Breadcrumb ---------- */
+  .crumb{
+    display:flex; align-items:center; flex-wrap:wrap; gap:6px;
+    margin:28px 0 8px;
+    font-size:13px;
+    color:var(--text-tertiary);
+  }
+  .crumb a{ color:var(--text-secondary); transition:color .15s var(--ease); }
+  .crumb a:hover{ color:var(--gold-bright); }
+  .crumb .sep{ color:var(--text-tertiary); opacity:.5; }
+  .crumb .current{ color:var(--text-primary); }
+
+  /* ---------- Hero / page head ---------- */
+  .page-head{
+    margin:6px 0 36px;
+    display:flex; align-items:flex-end; justify-content:space-between;
+    gap:24px; flex-wrap:wrap;
+  }
+  .page-head h2{
+    font-family:'Fraunces', serif; font-weight:500;
+    font-size:clamp(28px, 4vw, 40px);
+    margin:0 0 8px; letter-spacing:-.01em;
+  }
+  .page-head .lede{
+    margin:0; color:var(--text-secondary); font-size:15px; max-width:52ch; line-height:1.6;
+  }
+  .page-stats{
+    display:flex; gap:28px;
+  }
+  .stat{ text-align:right; }
+  .stat .num{
+    font-family:'Fraunces', serif; font-weight:600; font-size:26px; color:var(--gold-bright);
+    display:block; line-height:1;
+  }
+  .stat .lbl{
+    font-size:10.5px; color:var(--text-tertiary); text-transform:uppercase;
+    letter-spacing:.08em; margin-top:6px; display:block;
+  }
+
+  /* ---------- Search ---------- */
+  .search-wrap{ position:relative; margin-bottom:32px; }
+  .search-wrap input{
+    width:100%; background:var(--surface); border:1px solid var(--border);
+    color:var(--text-primary); border-radius:var(--radius-sm);
+    padding:13px 16px 13px 42px; font-size:14px; font-family:inherit;
+    transition:border-color .15s var(--ease), background .15s var(--ease);
+  }
+  .search-wrap input::placeholder{ color:var(--text-tertiary); }
+  .search-wrap input:focus{
+    outline:none; border-color:var(--border-strong); background:var(--surface-hover);
+  }
+  .search-wrap svg{
+    position:absolute; left:15px; top:50%; transform:translateY(-50%);
+    color:var(--text-tertiary); pointer-events:none;
+  }
+
+  /* ---------- Card grid (Subjek = folders) ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+    gap:16px;
+  }
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:22px;
+    box-shadow:var(--shadow-card);
+    cursor:pointer;
+    transition:transform .22s var(--ease), border-color .22s var(--ease), background .22s var(--ease);
+    display:flex; flex-direction:column; gap:16px;
+    position:relative;
+    overflow:hidden;
+  }
+  .card::after{
+    content:"";
+    position:absolute; inset:0;
+    background:linear-gradient(140deg, rgba(201,164,92,.07), transparent 45%);
+    opacity:0; transition:opacity .22s var(--ease);
+    pointer-events:none;
+  }
+  .card:hover{
+    transform:translateY(-3px);
+    border-color:var(--border-strong);
+    background:var(--surface-hover);
+  }
+  .card:hover::after{ opacity:1; }
+  .card-top{ display:flex; align-items:flex-start; justify-content:flex-end; }
+  .card-kod{
+    font-size:11px; color:var(--gold-bright);
+    background:rgba(201,164,92,.1);
+    border:1px solid var(--border-strong);
+    padding:3px 8px; border-radius:6px;
+    letter-spacing:.06em;
+  }
+  .card-icon{
+    width:34px; height:34px; border-radius:9px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--bg-elevated); border:1px solid var(--border);
+    color:var(--text-tertiary);
+    transition:color .2s var(--ease), border-color .2s var(--ease);
+  }
+  .card:hover .card-icon{ color:var(--gold-bright); border-color:var(--border-strong); }
+  .card h3{
+    margin:0; font-family:'Fraunces', serif; font-weight:500; font-size:19px;
+    color:var(--text-primary);
+  }
+  .card p.desc{
+    margin:0; font-size:13.5px; color:var(--text-secondary); line-height:1.55;
+    flex-grow:1;
+  }
+  .card-foot{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-top:14px; margin-top:auto;
+    border-top:1px solid var(--border);
+    font-size:12px; color:var(--text-tertiary);
+  }
+  .card-foot .count{ color:var(--text-secondary); }
+  .card-foot .arrow{ color:var(--text-tertiary); transition:transform .22s var(--ease), color .22s var(--ease); }
+  .card:hover .card-foot .arrow{ transform:translateX(3px); color:var(--gold-bright); }
+
+  /* ---------- Topic list (rows, ledger style) ---------- */
+  .row-list{ display:flex; flex-direction:column; gap:1px; background:var(--border); border-radius:var(--radius); overflow:hidden; border:1px solid var(--border); }
+  .row{
+    background:var(--surface);
+    padding:18px 22px;
+    display:flex; align-items:center; gap:18px;
+    cursor:pointer;
+    transition:background .18s var(--ease);
+  }
+  .row:hover{ background:var(--surface-hover); }
+  .row-kod{
+    font-size:11.5px; color:var(--gold-bright);
+    width:56px; flex-shrink:0;
+  }
+  .row-main{ flex-grow:1; min-width:0; }
+  .row-main h4{
+    margin:0 0 3px; font-family:'Fraunces', serif; font-weight:500; font-size:16.5px;
+  }
+  .row-main p{ margin:0; font-size:13px; color:var(--text-secondary); }
+  .row-meta{
+    display:flex; align-items:center; gap:14px; flex-shrink:0;
+  }
+  .badge{
+    font-size:10.5px; padding:4px 9px; border-radius:20px;
+    text-transform:uppercase; letter-spacing:.05em;
+    border:1px solid var(--border-strong);
+    white-space:nowrap;
+  }
+  .badge.ready{ color:var(--teal); border-color:rgba(79,184,172,.4); background:rgba(79,184,172,.08); }
+  .badge.pending{ color:var(--text-tertiary); border-color:var(--border); background:transparent; }
+  .row-arrow{ color:var(--text-tertiary); transition:transform .18s var(--ease), color .18s var(--ease); }
+  .row:hover .row-arrow{ transform:translateX(3px); color:var(--gold-bright); }
+
+  /* ---------- Viewer (embedded notion page) ---------- */
+  .viewer-head{
+    display:flex; align-items:flex-start; justify-content:space-between;
+    gap:20px; flex-wrap:wrap; margin-bottom:20px;
+  }
+  .viewer-title h2{ margin:0 0 6px; }
+  .viewer-title .meta{
+    display:flex; gap:14px; flex-wrap:wrap;
+    font-size:12px; color:var(--text-tertiary);
+  }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:10px 16px; border-radius:var(--radius-sm);
+    font-size:13px; font-weight:500; cursor:pointer;
+    border:1px solid var(--border-strong);
+    background:var(--surface); color:var(--text-primary);
+    transition:background .15s var(--ease), border-color .15s var(--ease), transform .15s var(--ease);
+    white-space:nowrap;
+  }
+  .btn:hover{ background:var(--surface-hover); border-color:var(--gold); transform:translateY(-1px); }
+  .btn.primary{
+    background:linear-gradient(155deg, var(--gold-bright), var(--gold));
+    color:#141110; border-color:transparent; font-weight:600;
+  }
+  .btn.primary:hover{ filter:brightness(1.06); }
+
+  .frame-wrap{
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    overflow:hidden;
+    background:var(--surface);
+    box-shadow:var(--shadow-card);
+  }
+  .frame-chrome{
+    display:flex; align-items:center; gap:8px;
+    padding:12px 16px;
+    border-bottom:1px solid var(--border);
+    background:var(--bg-elevated);
+  }
+  .frame-chrome .dot{ width:9px; height:9px; border-radius:50%; background:var(--border-strong); }
+  .frame-chrome span{ margin-left:6px; font-size:11.5px; color:var(--text-tertiary); }
+  iframe{
+    width:100%; height:74vh; min-height:520px; border:none; display:block; background:#0d1117;
+  }
+
+  /* ---------- Page nav (swipe / prev-next macam muka surat) ---------- */
+  .page-nav{
+    position:relative;
+  }
+  .page-arrow{
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:44px; height:44px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(13,17,23,.82); backdrop-filter:blur(6px);
+    border:1px solid var(--border-strong);
+    color:var(--text-primary);
+    cursor:pointer; z-index:20;
+    transition:background .18s var(--ease), transform .18s var(--ease), opacity .18s var(--ease), border-color .18s var(--ease);
+    box-shadow:0 8px 20px -8px rgba(0,0,0,.6);
+  }
+  .page-arrow:hover{ background:var(--surface-hover); border-color:var(--gold); }
+  .page-arrow:active{ transform:translateY(-50%) scale(.92); }
+  .page-arrow.left{ left:-18px; }
+  .page-arrow.right{ right:-18px; }
+  .page-arrow[disabled]{ opacity:.28; pointer-events:none; }
+  .page-arrow svg{ width:18px; height:18px; }
+  @media (max-width:640px){
+    .page-arrow{ width:38px; height:38px; }
+    .page-arrow.left{ left:4px; }
+    .page-arrow.right{ right:4px; }
+  }
+
+  .page-indicator{
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    margin-top:14px;
+  }
+  .page-indicator .dot{
+    width:6px; height:6px; border-radius:50%;
+    background:var(--border-strong);
+    transition:background .18s var(--ease), transform .18s var(--ease);
+  }
+  .page-indicator .dot.active{ background:var(--gold-bright); transform:scale(1.35); }
+  .page-indicator .lbl{
+    margin-left:8px; font-size:11.5px; color:var(--text-tertiary);
+  }
+
+  .frame-wrap.sliding-left{ animation:slideOutLeft .22s var(--ease); }
+  .frame-wrap.sliding-right{ animation:slideOutRight .22s var(--ease); }
+  .frame-wrap.entering{ animation:slideIn .28s var(--ease); }
+  @keyframes slideOutLeft{ to{ opacity:.4; transform:translateX(-14px); } }
+  @keyframes slideOutRight{ to{ opacity:.4; transform:translateX(14px); } }
+  @keyframes slideIn{ from{ opacity:0; transform:translateX(0); } to{ opacity:1; transform:translateX(0); } }
+
+  /* ---------- Empty state ---------- */
+  .empty{
+    padding:64px 24px;
+    text-align:center;
+    border:1px dashed var(--border-strong);
+    border-radius:var(--radius);
+    background:var(--surface);
+  }
+  .empty .glyph{
+    width:52px; height:52px; margin:0 auto 20px;
+    border-radius:12px; display:flex; align-items:center; justify-content:center;
+    background:var(--bg-elevated); border:1px solid var(--border);
+    color:var(--gold-bright);
+  }
+  .empty h3{ font-family:'Fraunces', serif; font-weight:500; margin:0 0 8px; font-size:19px; }
+  .empty p{ margin:0 auto; max-width:44ch; color:var(--text-secondary); font-size:13.5px; line-height:1.6; }
+  .empty code{
+    display:inline-block; margin-top:16px; font-family:'JetBrains Mono', monospace;
+    font-size:11.5px; color:var(--gold-bright); background:rgba(201,164,92,.08);
+    border:1px solid var(--border); padding:6px 10px; border-radius:6px;
+  }
+
+  /* ---------- View transition ---------- */
+  #view{ animation:rise .38s var(--ease); }
+  @keyframes rise{
+    from{ opacity:0; transform:translateY(10px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  footer{
+    max-width:1120px; margin:64px auto 0; padding:24px;
+    border-top:1px solid var(--border);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+    font-size:11.5px; color:var(--text-tertiary);
+  }
+
+  @media (max-width:640px){
+    .shell{ padding:0 16px 72px; }
+    .topbar-inner{ padding:14px 16px; }
+    .page-stats{ display:none; }
+    .row{ padding:16px; gap:12px; }
+    .row-kod{ width:auto; }
+    .badge{ display:none; }
+    .viewer-head{ flex-direction:column; align-items:stretch; }
+    .btn{ justify-content:center; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    #view, .card, .row, .btn{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="#/" class="brand">
+      <div class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+      </div>
+      <div class="brand-text">
+        <h1>Majma' al-Mulahazat</h1>
+        <p>Himpunan Nota</p>
+      </div>
+    </a>
+
+    <!-- Support Button: cawan kopi beranimasi + bubble tooltip -->
+    <div class="support-wrap">
+      <a class="support-btn" id="supportBtn" href="https://deen-track.pages.dev/tabung-belajar" target="_blank" rel="noopener" title="Sokong Tabung Belajar" aria-label="Sokong Tabung Belajar">
+        <svg viewBox="0 0 24 24">
+          <path class="cup-body" d="M5 9h11v6.5A3.5 3.5 0 0 1 12.5 19h-4A3.5 3.5 0 0 1 5 15.5V9Z"/>
+          <path class="cup-handle" d="M16 10.5h1.6a2.2 2.2 0 0 1 0 4.4H16"/>
+          <path class="steam-line s1" d="M8.5 2.5c1.4 1.2-1.4 2.3 0 3.5"/>
+          <path class="steam-line s2" d="M12 2.5c1.4 1.2-1.4 2.3 0 3.5"/>
+        </svg>
+      </a>
+      <div class="support-bubble" id="supportBubble">Sokong Tabung Belajar 🎓</div>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+  <nav class="crumb" id="crumb"></nav>
+  <div id="view"></div>
+</main>
+
+<footer>
+  <span>Majma' al-Mulahazat &mdash; Himpunan Nota</span>
+</footer>
+
+<!-- Butang bulat MENU (ala iPhone), tepi kanan skrin -->
+<div class="fab-wrap" id="fabWrap">
+  <div class="fab-popup" id="fabPopup">
+    <p class="fab-eyebrow">Pautan Pantas</p>
+    <div class="fab-list">
+      <a class="fab-list-item" href="https://deen-track.pages.dev/" id="fabHome" target="_blank" rel="noopener">
+        <span class="ico">🏠</span>
+        <span class="txt">Deen Track</span>
+        <span class="chev">›</span>
+      </a>
+      <a class="fab-list-item" href="https://deen-track.pages.dev/akses-pantas" id="fabTop" target="_blank" rel="noopener">
+        <span class="ico">⚡</span>
+        <span class="txt">Akses Pantas</span>
+        <span class="chev">›</span>
+      </a>
+    </div>
+  </div>
+  <button class="fab-btn" id="fabToggle" aria-label="Menu">
+    <span class="fab-ring"></span>
+    <span class="fab-ring r2"></span>
+    <span class="fab-dot"></span>
+    <span class="fab-label">Menu</span>
+  </button>
+</div>
+
+<script src="nota-data.js"></script>
+<script>
+(function(){
+
+  const view = document.getElementById('view');
+  const crumbEl = document.getElementById('crumb');
+
+  /* ---------------- Ikon (inline SVG, ringan tanpa dependency) ---------------- */
+  const ICONS = {
+    folder: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>',
+    arrow: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+    search:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>',
+    doc: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"/><path d="M14 3v5h5"/></svg>',
+    ext: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>',
+    back: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>',
+    chevLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 18-6-6 6-6"/></svg>',
+    chevRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m9 18 6-6-6-6"/></svg>',
+    copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>',
+  };
+
+  /* ---------------- Utiliti ---------------- */
+  function slug(str){
+    return String(str).toLowerCase().trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-');
+  }
+  function findSubjek(id){ return SUBJEK.find(s => slug(s.nama) === id); }
+  function findTajuk(subjek, id){ return subjek.tajuk.find(t => slug(t.nama) === id); }
+  function findSiri(tajuk, id){ return tajuk.siri.find(r => String(r.siri) === id); }
+  function totalTajuk(){ return SUBJEK.reduce((n, s) => n + s.tajuk.length, 0); }
+  function totalSiri(){ return SUBJEK.reduce((n, s) => n + s.tajuk.reduce((m, t) => m + t.siri.length, 0), 0); }
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+
+  /* ---------------- Salin pautan (delegasi klik) ---------------- */
+  function fallbackCopy(text, cb){
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta);
+    cb();
+  }
+  function copyToClipboard(text, btn){
+    const done = () => {
+      btn.classList.add('copied');
+      btn.innerHTML = ICONS.check;
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = ICONS.copy;
+      }, 1500);
+    };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+    } else {
+      fallbackCopy(text, done);
+    }
+  }
+  view.addEventListener('click', (e) => {
+    const btn = e.target.closest('.copy-btn');
+    if(!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const url = location.origin + location.pathname + btn.dataset.copy;
+    copyToClipboard(url, btn);
+  });
+
+  /* ---------------- Router ---------------- */
+  function parseHash(){
+    const raw = location.hash.replace(/^#\/?/, '');
+    return raw.split('/').filter(Boolean).map(decodeURIComponent);
+  }
+
+  function render(){
+    const parts = parseHash();
+    // #/s/:subjek/t/:tajuk/r/:siri
+    if(parts[0] === 's' && parts[1] && parts[2] === 't' && parts[3] && parts[4] === 'r' && parts[5]){
+      renderSiri(parts[1], parts[3], parts[5]);
+    // #/s/:subjek/t/:tajuk
+    } else if(parts[0] === 's' && parts[1] && parts[2] === 't' && parts[3]){
+      renderTajuk(parts[1], parts[3]);
+    // #/s/:subjek
+    } else if(parts[0] === 's' && parts[1]){
+      renderSubjek(parts[1]);
+    } else {
+      renderBeranda();
+    }
+    window.scrollTo({ top:0, behavior:'auto' });
+  }
+
+  function setCrumb(items){
+    // items: [{label, href}], last item = current (no href)
+    crumbEl.innerHTML = items.map((it, i) => {
+      const isLast = i === items.length - 1;
+      if(isLast) return `<span class="current">${escapeHtml(it.label)}</span>`;
+      return `<a href="${it.href}">${escapeHtml(it.label)}</a><span class="sep">/</span>`;
+    }).join('');
+  }
+
+  /* ---------------- Paparan: Beranda ---------------- */
+  function renderBeranda(){
+    document.title = "Majma' al-Mulahazat";
+    setCrumb([{ label:'Utama' }]);
+
+    const cards = SUBJEK.map((s, i) => `
+      <a class="card" href="#/s/${slug(s.nama)}" data-search="${escapeHtml(s.nama.toLowerCase())}">
+        <div class="card-top">
+          <span class="card-icon">${ICONS.folder}</span>
+        </div>
+        <h3>${escapeHtml(s.nama)}</h3>
+        <div class="card-foot">
+          <span class="count">${s.tajuk.length} tajuk</span>
+          <div class="card-foot-actions">
+            <button type="button" class="icon-btn copy-btn" data-copy="#/s/${slug(s.nama)}" title="Salin pautan">${ICONS.copy}</button>
+            <span class="chip-btn">Buka ${ICONS.arrow}</span>
+          </div>
+        </div>
+      </a>
+    `).join('');
+
+    view.innerHTML = `
+      <div class="page-head">
+        <div>
+          <h2>Rak Pengajian</h2>
+        </div>
+        <div class="page-stats">
+          <div class="stat"><span class="num mono">${SUBJEK.length}</span><span class="lbl">Subjek</span></div>
+          <div class="stat"><span class="num mono">${totalTajuk()}</span><span class="lbl">Tajuk</span></div>
+          <div class="stat"><span class="num mono">${totalSiri()}</span><span class="lbl">Siri</span></div>
+        </div>
+      </div>
+
+      <div class="search-wrap">
+        ${ICONS.search}
+        <input type="text" id="cari" placeholder="Cari subjek atau tajuk…" autocomplete="off">
+      </div>
+
+      <div class="grid" id="gridSubjek">${cards}</div>
+    `;
+
+    const input = document.getElementById('cari');
+    const grid = document.getElementById('gridSubjek');
+    input.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase();
+      grid.querySelectorAll('.card').forEach(card => {
+        card.style.display = card.dataset.search.includes(q) ? '' : 'none';
+      });
+    });
+  }
+
+  /* ---------------- Paparan: Subjek (senarai tajuk) ---------------- */
+  function renderSubjek(subjekId){
+    const s = findSubjek(subjekId);
+    if(!s){ renderNotFound('Subjek tidak dijumpai.'); return; }
+
+    document.title = `${s.nama} — Majma' al-Mulahazat`;
+    setCrumb([{ label:'Utama', href:'#/' }, { label:s.nama }]);
+
+    const subjKod = String(SUBJEK.indexOf(s) + 1).padStart(2, '0');
+
+    const rows = s.tajuk.map((t, i) => {
+      const adaBil = t.siri.filter(r => r.embed && r.embed.trim()).length;
+      return `
+        <a class="row" href="#/s/${slug(s.nama)}/t/${slug(t.nama)}" data-search="${escapeHtml(t.nama.toLowerCase())}">
+          <span class="row-kod mono">${subjKod}.${i + 1}</span>
+          <span class="row-main">
+            <h4>${escapeHtml(t.nama)}</h4>
+          </span>
+          <span class="row-meta">
+            <span class="badge ${adaBil > 0 ? 'ready' : 'pending'}">${adaBil} / ${t.siri.length} siri tersedia</span>
+            <div class="row-actions">
+              <button type="button" class="icon-btn copy-btn" data-copy="#/s/${slug(s.nama)}/t/${slug(t.nama)}" title="Salin pautan">${ICONS.copy}</button>
+              <span class="chip-btn">Buka ${ICONS.arrow}</span>
+            </div>
+          </span>
+        </a>
+      `;
+    }).join('');
+
+    view.innerHTML = `
+      <div class="page-head">
+        <div>
+          <h2>${escapeHtml(s.nama)}</h2>
+        </div>
+        <div class="page-stats">
+          <div class="stat"><span class="num mono">${s.tajuk.length}</span><span class="lbl">Tajuk</span></div>
+        </div>
+      </div>
+
+      <div class="search-wrap">
+        ${ICONS.search}
+        <input type="text" id="cariTajuk" placeholder="Cari tajuk…" autocomplete="off">
+      </div>
+
+      <div class="row-list" id="senaraiTajuk">${rows || '<div style="padding:32px;color:var(--text-tertiary);font-size:13.5px;">Belum ada tajuk dalam subjek ini.</div>'}</div>
+    `;
+
+    const inputTajuk = document.getElementById('cariTajuk');
+    const senaraiTajuk = document.getElementById('senaraiTajuk');
+    if(inputTajuk){
+      inputTajuk.addEventListener('input', () => {
+        const q = inputTajuk.value.trim().toLowerCase();
+        senaraiTajuk.querySelectorAll('.row').forEach(row => {
+          row.style.display = row.dataset.search.includes(q) ? '' : 'none';
+        });
+      });
+    }
+  }
+
+  /* ---------------- Paparan: Tajuk (senarai siri) ---------------- */
+  function renderTajuk(subjekId, tajukId){
+    const s = findSubjek(subjekId);
+    const t = s && findTajuk(s, tajukId);
+    if(!s || !t){ renderNotFound('Tajuk tidak dijumpai.'); return; }
+
+    document.title = `${t.nama} — Majma' al-Mulahazat`;
+    setCrumb([{ label:'Utama', href:'#/' }, { label:s.nama, href:`#/s/${slug(s.nama)}` }, { label:t.nama }]);
+
+    const subjKod = String(SUBJEK.indexOf(s) + 1).padStart(2, '0');
+    const tajukKod = `${subjKod}.${s.tajuk.indexOf(t) + 1}`;
+
+    const rows = t.siri.map(r => {
+      const ada = Boolean(r.embed && r.embed.trim());
+      return `
+        <a class="row" href="#/s/${slug(s.nama)}/t/${slug(t.nama)}/r/${r.siri}">
+          <span class="row-kod mono">${tajukKod}.${r.siri}</span>
+          <span class="row-main">
+            <h4>Siri ${r.siri}</h4>
+          </span>
+          <span class="row-meta">
+            <span class="badge ${ada ? 'ready' : 'pending'}">${ada ? 'Tersedia' : 'Belum siap'}</span>
+            <span class="chip-btn">Buka ${ICONS.arrow}</span>
+          </span>
+        </a>
+      `;
+    }).join('');
+
+    view.innerHTML = `
+      <div class="page-head">
+        <div>
+          <h2>${escapeHtml(t.nama)}</h2>
+          <p class="lede">Pilih siri untuk membuka nota.</p>
+        </div>
+        <div class="page-stats">
+          <div class="stat"><span class="num mono">${t.siri.length}</span><span class="lbl">Siri</span></div>
+        </div>
+      </div>
+      <div class="row-list">${rows || '<div style="padding:32px;color:var(--text-tertiary);font-size:13.5px;">Belum ada siri dalam tajuk ini.</div>'}</div>
+    `;
+  }
+
+  /* ---------------- Paparan: Siri (nota + embed) ---------------- */
+  function renderSiri(subjekId, tajukId, siriId){
+    const s = findSubjek(subjekId);
+    const t = s && findTajuk(s, tajukId);
+    const r = t && findSiri(t, siriId);
+    if(!s || !t || !r){ renderNotFound('Siri tidak dijumpai.'); return; }
+
+    document.title = `${t.nama} · Siri ${r.siri} — Majma' al-Mulahazat`;
+    setCrumb([
+      { label:'Utama', href:'#/' },
+      { label:s.nama, href:`#/s/${slug(s.nama)}` },
+      { label:t.nama, href:`#/s/${slug(s.nama)}/t/${slug(t.nama)}` },
+      { label:`Siri ${r.siri}` }
+    ]);
+
+    const ada = Boolean(r.embed && r.embed.trim());
+
+    // Kedudukan siri semasa dalam tajuk (untuk navigasi ‹ ›, macam muka surat)
+    const idx = t.siri.indexOf(r);
+    const adaSebelum = idx > 0;
+    const adaSelepas = idx < t.siri.length - 1;
+    const siriSebelum = adaSebelum ? t.siri[idx - 1] : null;
+    const siriSelepas = adaSelepas ? t.siri[idx + 1] : null;
+
+    const gotoSiri = (target) => {
+      if(!target) return;
+      location.hash = `#/s/${slug(s.nama)}/t/${slug(t.nama)}/r/${target.siri}`;
+    };
+
+    const dots = t.siri.map((row, i) => `<span class="dot${i === idx ? ' active' : ''}"></span>`).join('');
+
+    view.innerHTML = `
+      <div class="viewer-head">
+        <div class="viewer-title">
+          <h2>${escapeHtml(t.nama)} — Siri ${r.siri}</h2>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <a class="btn primary" href="#/s/${slug(s.nama)}/t/${slug(t.nama)}">${ICONS.back} Kembali</a>
+        </div>
+      </div>
+
+      <div class="page-nav" id="pageNav">
+        <button class="page-arrow left" id="btnPrev" title="Siri sebelum (←)" ${adaSebelum ? '' : 'disabled'}>${ICONS.chevLeft}</button>
+        <button class="page-arrow right" id="btnNext" title="Siri seterusnya (→)" ${adaSelepas ? '' : 'disabled'}>${ICONS.chevRight}</button>
+
+        ${ada ? `
+          <div class="frame-wrap entering" id="frameWrap">
+            <div class="frame-chrome">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+              <span class="mono">nota.site/${slug(s.nama)}/${slug(t.nama)}/siri-${r.siri}</span>
+            </div>
+            <iframe src="${r.embed}" loading="lazy" title="${escapeHtml(t.nama)} Siri ${r.siri}"></iframe>
+          </div>
+        ` : `
+          <div class="empty" id="frameWrap">
+            <div class="glyph">${ICONS.doc}</div>
+            <h3>Nota belum tersedia</h3>
+            <p>Siri ini belum mempunyai pautan nota. Tambah pautan "Embed this page" dari Notion pada medan <code>embed</code> bagi siri ini di dalam nota-data.js.</p>
+            <code>siri: ${r.siri} → embed: "https://…notion.site/…"</code>
+          </div>
+        `}
+      </div>
+
+      ${t.siri.length > 1 ? `
+        <div class="page-indicator">
+          ${dots}
+          <span class="lbl mono">Siri ${idx + 1} / ${t.siri.length}</span>
+        </div>
+      ` : ''}
+    `;
+
+    // ---- Navigasi: butang, kekunci panah, swipe ----
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const pageNav = document.getElementById('pageNav');
+    const frameWrap = document.getElementById('frameWrap');
+
+    const navigate = (dir) => {
+      const target = dir === 'prev' ? siriSebelum : siriSelepas;
+      if(!target || !frameWrap) return;
+      frameWrap.classList.add(dir === 'prev' ? 'sliding-right' : 'sliding-left');
+      setTimeout(() => gotoSiri(target), 140);
+    };
+
+    btnPrev.addEventListener('click', () => navigate('prev'));
+    btnNext.addEventListener('click', () => navigate('next'));
+
+    function onKey(e){
+      if(e.key === 'ArrowLeft') navigate('prev');
+      else if(e.key === 'ArrowRight') navigate('next');
+    }
+    document.addEventListener('keydown', onKey);
+    // Bersihkan listener bila pandangan bertukar
+    const cleanup = () => document.removeEventListener('keydown', onKey);
+    window.addEventListener('hashchange', cleanup, { once:true });
+
+    // Swipe (sentuh) — berfungsi di kawasan chrome/luar iframe.
+    // Nota: sentuhan di ATAS iframe Notion sendiri tidak boleh dikesan
+    // oleh halaman induk disebabkan sekatan cross-origin browser.
+    let touchStartX = null;
+    pageNav.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    }, { passive:true });
+    pageNav.addEventListener('touchend', (e) => {
+      if(touchStartX === null) return;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      touchStartX = null;
+      if(Math.abs(dx) < 60) return;
+      if(dx > 0) navigate('prev'); else navigate('next');
+    }, { passive:true });
+  }
+
+  function renderNotFound(mesej){
+    setCrumb([{ label:'Utama', href:'#/' }, { label:'Tidak dijumpai' }]);
+    view.innerHTML = `
+      <div class="empty">
+        <div class="glyph">${ICONS.folder}</div>
+        <h3>${escapeHtml(mesej)}</h3>
+        <p>Pautan ini mungkin telah dialih keluar atau ditukar. Kembali ke utama untuk mencari semula.</p>
+        <a class="btn primary" href="#/" style="margin-top:18px;">Kembali ke Utama</a>
+      </div>
+    `;
+  }
+
+  /* ---------------- Butang bulat MENU (ala iPhone) ---------------- */
+  const fabWrap = document.getElementById('fabWrap');
+  const fabToggle = document.getElementById('fabToggle');
+  const fabTop = document.getElementById('fabTop');
+  const fabHome = document.getElementById('fabHome');
+
+  fabToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    fabWrap.classList.toggle('open');
+  });
+  fabTop.addEventListener('click', () => {
+    fabWrap.classList.remove('open');
+  });
+  fabHome.addEventListener('click', () => {
+    fabWrap.classList.remove('open');
+  });
+  document.addEventListener('click', (e) => {
+    if(!fabWrap.contains(e.target)) fabWrap.classList.remove('open');
+  });
+
+  /* ---------------- Support Button: bubble tooltip berulang ---------------- */
+  const supportBubble = document.getElementById('supportBubble');
+  function cycleBubble(){
+    supportBubble.classList.add('show');
+    setTimeout(() => {
+      supportBubble.classList.remove('show');
+      setTimeout(cycleBubble, 10000);
+    }, 5000);
+  }
+  setTimeout(cycleBubble, 1500);
+
+  window.addEventListener('hashchange', render);
+  window.addEventListener('DOMContentLoaded', render);
+  render();
+})();
+</script>
+</body>
+</html>
