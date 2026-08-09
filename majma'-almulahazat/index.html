@@ -596,7 +596,7 @@
       </div>
       <div class="brand-text">
         <h1>Majma' al-Mulahazat</h1>
-        <p>Himpunan Nota</p>
+        <p>Himpunan Notagrafik</p>
       </div>
     </a>
 
@@ -723,6 +723,36 @@
   function parseHash(){
     const raw = location.hash.replace(/^#\/?/, '');
     return raw.split('/').filter(Boolean).map(decodeURIComponent);
+  }
+
+  /* ---------------- Bina semula susunan history untuk pautan dalam (deep link) ----------------
+   * Jika laman dibuka terus melalui pautan dalam (cth: #/s/subjek/t/tajuk atau .../r/siri)
+   * tanpa melalui navigasi biasa, browser tidak mempunyai rekod peringkat atasnya
+   * (Utama, Subjek). Akibatnya butang "Back" akan terus keluar dari laman.
+   * Fungsi ini membina rekod history secara senyap (tanpa memaparkan semula/flicker)
+   * supaya "Back" sentiasa berperingkat seperti biasa: Siri/Tajuk → Subjek (folder kitab) → Utama.
+   */
+  function primeHistoryForDeepLink(){
+    const parts = parseHash();
+    if(parts[0] !== 's' || !parts[1]) return; // bukan pautan dalam (deep link), tiada apa perlu dibina
+
+    const ancestors = ['#/'];
+    ancestors.push(`#/s/${parts[1]}`);
+    if(parts[2] === 't' && parts[3]){
+      ancestors.push(`#/s/${parts[1]}/t/${parts[3]}`);
+    }
+
+    const currentFullHash = location.hash || '#/';
+    const chain = ancestors.filter(h => h !== currentFullHash);
+    if(chain.length === 0) return; // sudah di peringkat Utama, tiada apa perlu dibina
+
+    try{
+      history.replaceState(null, '', chain[0]);
+      for(let i = 1; i < chain.length; i++){
+        history.pushState(null, '', chain[i]);
+      }
+      history.pushState(null, '', currentFullHash);
+    } catch(e){ /* senyap jika sekatan persekitaran (mis. sandboxed iframe) */ }
   }
 
   function render(){
@@ -1060,6 +1090,7 @@
 
   window.addEventListener('hashchange', render);
   window.addEventListener('DOMContentLoaded', render);
+  primeHistoryForDeepLink();
   render();
 })();
 </script>
