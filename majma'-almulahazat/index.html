@@ -989,13 +989,12 @@
             ${dots}
             <span class="lbl mono">Siri ${idx + 1} / ${t.siri.length}</span>
           </div>
-          <span class="hint">${ICONS.swipe} Leret atau seret bar atas untuk tukar siri — kekunci ← → juga berfungsi</span>
+          <span class="hint">${ICONS.swipe} Leret di mana-mana skrin atau seret bar atas untuk tukar siri — kekunci ← → juga berfungsi</span>
         </div>
       ` : ''}
     `;
 
-    // ---- Navigasi: leret (mobile), seret tetikus (desktop), kekunci panah ----
-    const pageNav = document.getElementById('pageNav');
+    // ---- Navigasi: leret (mobile, seluruh skrin), seret tetikus (desktop), kekunci panah ----
     const frameWrap = document.getElementById('frameWrap');
     const frameChrome = document.getElementById('frameChrome');
 
@@ -1011,25 +1010,36 @@
       else if(e.key === 'ArrowRight') navigate('next');
     }
     document.addEventListener('keydown', onKey);
-    // Bersihkan listener bila pandangan bertukar
-    const cleanup = () => document.removeEventListener('keydown', onKey);
-    window.addEventListener('hashchange', cleanup, { once:true });
 
-    // Leret sentuhan (mobile) — berfungsi pada keseluruhan kad nota.
+    // Leret sentuhan (mobile) — dipasang pada seluruh dokumen supaya
+    // sentuhan di mana-mana bahagian skrin (bukan setakat kad nota) boleh
+    // menukar siri, lebih mudah dan selesa digunakan sebelah tangan.
     // Nota: sentuhan di ATAS iframe Notion sendiri tidak boleh dikesan
     // oleh halaman induk disebabkan sekatan cross-origin browser; oleh itu
-    // bar judul (frame-chrome) turut disediakan sebagai kawasan leret/seret khas.
+    // bar judul (frame-chrome) turut disediakan sebagai kawasan seret khas (desktop).
     let touchStartX = null;
-    pageNav.addEventListener('touchstart', (e) => {
+    let touchStartY = null;
+    function onTouchStart(e){
       touchStartX = e.touches[0].clientX;
-    }, { passive:true });
-    pageNav.addEventListener('touchend', (e) => {
+      touchStartY = e.touches[0].clientY;
+    }
+    function onTouchEnd(e){
       if(touchStartX === null) return;
       const dx = e.changedTouches[0].clientX - touchStartX;
-      touchStartX = null;
-      if(Math.abs(dx) < 60) return;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      touchStartX = null; touchStartY = null;
+      if(Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy)) return; // pastikan leret mendatar, elak konflik dgn scroll menegak
       if(dx > 0) navigate('prev'); else navigate('next');
-    }, { passive:true });
+    }
+    document.addEventListener('touchstart', onTouchStart, { passive:true });
+    document.addEventListener('touchend', onTouchEnd, { passive:true });
+
+    // Bersihkan semua listener bila pandangan bertukar
+    window.addEventListener('hashchange', () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('touchstart', onTouchStart);
+      document.removeEventListener('touchend', onTouchEnd);
+    }, { once:true });
 
     // Seret tetikus (desktop) — pada bar judul kad nota, sebab kandungan
     // iframe sendiri tidak boleh dikesan gerakan tetikusnya (cross-origin).
