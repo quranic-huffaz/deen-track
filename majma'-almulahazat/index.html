@@ -186,9 +186,9 @@
   .icon-btn.copied{ color:var(--teal); border-color:rgba(79,184,172,.5); background:rgba(79,184,172,.1); }
   .card-foot-actions, .row-actions{ display:flex; align-items:center; gap:8px; }
 
-  /* ---------- Butang bulat MENU (ala iPhone, tepi kanan skrin) ---------- */
+  /* ---------- Butang bulat MENU (ala iPhone, bawah kanan skrin) ---------- */
   .fab-wrap{
-    position:fixed; right:16px; top:50%; transform:translateY(-50%);
+    position:fixed; right:20px; bottom:28px;
     z-index:70;
   }
   .fab-btn{
@@ -239,7 +239,7 @@
   }
 
   .fab-popup{
-    position:absolute; right:62px; top:50%; transform:translateY(-50%) scale(.85);
+    position:absolute; right:0; bottom:62px;
     width:230px;
     background:linear-gradient(160deg, #171310, #0b0908);
     border:1px solid rgba(201,164,92,.4);
@@ -247,17 +247,18 @@
     padding:16px;
     box-shadow:0 20px 44px -14px rgba(0,0,0,.7), 0 0 0 1px rgba(201,164,92,.08) inset;
     opacity:0; pointer-events:none;
-    transform-origin:right center;
+    transform:translateY(8px) scale(.9);
+    transform-origin:bottom right;
     transition:opacity .22s var(--ease), transform .22s var(--ease);
   }
-  .fab-wrap.open .fab-popup{ opacity:1; pointer-events:auto; transform:translateY(-50%) scale(1); }
+  .fab-wrap.open .fab-popup{ opacity:1; pointer-events:auto; transform:translateY(0) scale(1); }
   .fab-popup::after{
     content:"";
-    position:absolute; right:-7px; top:50%; transform:translateY(-50%) rotate(45deg);
+    position:absolute; right:20px; bottom:-7px; transform:rotate(45deg);
     width:14px; height:14px;
     background:#171310;
     border-right:1px solid rgba(201,164,92,.4);
-    border-top:1px solid rgba(201,164,92,.4);
+    border-bottom:1px solid rgba(201,164,92,.4);
   }
   .fab-eyebrow{
     font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
@@ -280,10 +281,10 @@
   .fab-list-item .txt{ flex-grow:1; font-size:13px; font-weight:500; }
   .fab-list-item .chev{ font-size:14px; color:var(--text-tertiary); }
   @media (max-width:640px){
-    .fab-wrap{ right:12px; }
+    .fab-wrap{ right:16px; bottom:20px; }
     .fab-btn{ width:40px; height:40px; }
     .fab-label{ font-size:6.5px; }
-    .fab-popup{ width:200px; right:54px; padding:13px; }
+    .fab-popup{ width:200px; bottom:54px; padding:13px; }
   }
 
   /* ---------- Breadcrumb ---------- */
@@ -472,49 +473,33 @@
     overflow:hidden;
     background:var(--surface);
     box-shadow:var(--shadow-card);
+    user-select:none;
   }
   .frame-chrome{
     display:flex; align-items:center; gap:8px;
     padding:12px 16px;
     border-bottom:1px solid var(--border);
     background:var(--bg-elevated);
+    cursor:grab;
   }
+  .frame-chrome:active{ cursor:grabbing; }
   .frame-chrome .dot{ width:9px; height:9px; border-radius:50%; background:var(--border-strong); }
   .frame-chrome span{ margin-left:6px; font-size:11.5px; color:var(--text-tertiary); }
   iframe{
     width:100%; height:74vh; min-height:520px; border:none; display:block; background:#0d1117;
   }
 
-  /* ---------- Page nav (swipe / prev-next macam muka surat) ---------- */
+  /* ---------- Page nav (swipe / drag prev-next macam muka surat) ---------- */
   .page-nav{
     position:relative;
   }
-  .page-arrow{
-    position:absolute; top:50%; transform:translateY(-50%);
-    width:44px; height:44px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    background:rgba(13,17,23,.82); backdrop-filter:blur(6px);
-    border:1px solid var(--border-strong);
-    color:var(--text-primary);
-    cursor:pointer; z-index:20;
-    transition:background .18s var(--ease), transform .18s var(--ease), opacity .18s var(--ease), border-color .18s var(--ease);
-    box-shadow:0 8px 20px -8px rgba(0,0,0,.6);
-  }
-  .page-arrow:hover{ background:var(--surface-hover); border-color:var(--gold); }
-  .page-arrow:active{ transform:translateY(-50%) scale(.92); }
-  .page-arrow.left{ left:-18px; }
-  .page-arrow.right{ right:-18px; }
-  .page-arrow[disabled]{ opacity:.28; pointer-events:none; }
-  .page-arrow svg{ width:18px; height:18px; }
-  @media (max-width:640px){
-    .page-arrow{ width:38px; height:38px; }
-    .page-arrow.left{ left:4px; }
-    .page-arrow.right{ right:4px; }
-  }
 
   .page-indicator{
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+    margin-top:16px;
+  }
+  .page-indicator .dots-row{
     display:flex; align-items:center; justify-content:center; gap:6px;
-    margin-top:14px;
   }
   .page-indicator .dot{
     width:6px; height:6px; border-radius:50%;
@@ -525,6 +510,12 @@
   .page-indicator .lbl{
     margin-left:8px; font-size:11.5px; color:var(--text-tertiary);
   }
+  .page-indicator .hint{
+    display:flex; align-items:center; gap:6px;
+    font-size:11px; color:var(--text-tertiary);
+    letter-spacing:.02em;
+  }
+  .page-indicator .hint svg{ width:12px; height:12px; opacity:.7; }
 
   .frame-wrap.sliding-left{ animation:slideOutLeft .22s var(--ease); }
   .frame-wrap.sliding-right{ animation:slideOutRight .22s var(--ease); }
@@ -596,7 +587,7 @@
       </div>
       <div class="brand-text">
         <h1>Majma' al-Mulahazat</h1>
-        <p>Himpunan Notagrafik</p>
+        <p>Himpunan Nota</p>
       </div>
     </a>
 
@@ -624,7 +615,7 @@
   <span>Majma' al-Mulahazat &mdash; Himpunan Notagrafik</span>
 </footer>
 
-<!-- Butang bulat MENU (ala iPhone), tepi kanan skrin -->
+<!-- Butang bulat MENU (ala iPhone), bawah kanan skrin -->
 <div class="fab-wrap" id="fabWrap">
   <div class="fab-popup" id="fabPopup">
     <p class="fab-eyebrow">Pautan Pantas</p>
@@ -664,8 +655,7 @@
     doc: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"/><path d="M14 3v5h5"/></svg>',
     ext: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>',
     back: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>',
-    chevLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 18-6-6 6-6"/></svg>',
-    chevRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m9 18 6-6-6-6"/></svg>',
+    swipe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 9l-4 3 4 3"/><path d="M16 9l4 3-4 3"/><path d="M4 12h16"/></svg>',
     copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>',
   };
@@ -950,7 +940,7 @@
 
     const ada = Boolean(r.embed && r.embed.trim());
 
-    // Kedudukan siri semasa dalam tajuk (untuk navigasi ‹ ›, macam muka surat)
+    // Kedudukan siri semasa dalam tajuk (untuk navigasi leret/drag, macam muka surat)
     const idx = t.siri.indexOf(r);
     const adaSebelum = idx > 0;
     const adaSelepas = idx < t.siri.length - 1;
@@ -975,12 +965,9 @@
       </div>
 
       <div class="page-nav" id="pageNav">
-        <button class="page-arrow left" id="btnPrev" title="Siri sebelum (←)" ${adaSebelum ? '' : 'disabled'}>${ICONS.chevLeft}</button>
-        <button class="page-arrow right" id="btnNext" title="Siri seterusnya (→)" ${adaSelepas ? '' : 'disabled'}>${ICONS.chevRight}</button>
-
         ${ada ? `
           <div class="frame-wrap entering" id="frameWrap">
-            <div class="frame-chrome">
+            <div class="frame-chrome" id="frameChrome">
               <span class="dot"></span><span class="dot"></span><span class="dot"></span>
               <span class="mono">nota.site/${slug(s.nama)}/${slug(t.nama)}/siri-${r.siri}</span>
             </div>
@@ -998,17 +985,19 @@
 
       ${t.siri.length > 1 ? `
         <div class="page-indicator">
-          ${dots}
-          <span class="lbl mono">Siri ${idx + 1} / ${t.siri.length}</span>
+          <div class="dots-row">
+            ${dots}
+            <span class="lbl mono">Siri ${idx + 1} / ${t.siri.length}</span>
+          </div>
+          <span class="hint">${ICONS.swipe} Leret atau seret bar atas untuk tukar siri — kekunci ← → juga berfungsi</span>
         </div>
       ` : ''}
     `;
 
-    // ---- Navigasi: butang, kekunci panah, swipe ----
-    const btnPrev = document.getElementById('btnPrev');
-    const btnNext = document.getElementById('btnNext');
+    // ---- Navigasi: leret (mobile), seret tetikus (desktop), kekunci panah ----
     const pageNav = document.getElementById('pageNav');
     const frameWrap = document.getElementById('frameWrap');
+    const frameChrome = document.getElementById('frameChrome');
 
     const navigate = (dir) => {
       const target = dir === 'prev' ? siriSebelum : siriSelepas;
@@ -1016,9 +1005,6 @@
       frameWrap.classList.add(dir === 'prev' ? 'sliding-right' : 'sliding-left');
       setTimeout(() => gotoSiri(target), 140);
     };
-
-    btnPrev.addEventListener('click', () => navigate('prev'));
-    btnNext.addEventListener('click', () => navigate('next'));
 
     function onKey(e){
       if(e.key === 'ArrowLeft') navigate('prev');
@@ -1029,9 +1015,10 @@
     const cleanup = () => document.removeEventListener('keydown', onKey);
     window.addEventListener('hashchange', cleanup, { once:true });
 
-    // Swipe (sentuh) — berfungsi di kawasan chrome/luar iframe.
+    // Leret sentuhan (mobile) — berfungsi pada keseluruhan kad nota.
     // Nota: sentuhan di ATAS iframe Notion sendiri tidak boleh dikesan
-    // oleh halaman induk disebabkan sekatan cross-origin browser.
+    // oleh halaman induk disebabkan sekatan cross-origin browser; oleh itu
+    // bar judul (frame-chrome) turut disediakan sebagai kawasan leret/seret khas.
     let touchStartX = null;
     pageNav.addEventListener('touchstart', (e) => {
       touchStartX = e.touches[0].clientX;
@@ -1043,6 +1030,29 @@
       if(Math.abs(dx) < 60) return;
       if(dx > 0) navigate('prev'); else navigate('next');
     }, { passive:true });
+
+    // Seret tetikus (desktop) — pada bar judul kad nota, sebab kandungan
+    // iframe sendiri tidak boleh dikesan gerakan tetikusnya (cross-origin).
+    if(frameChrome){
+      let isDragging = false;
+      let dragStartX = 0;
+
+      frameChrome.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        dragStartX = e.clientX;
+      });
+      window.addEventListener('mousemove', (e) => {
+        if(!isDragging) return;
+        e.preventDefault();
+      });
+      window.addEventListener('mouseup', (e) => {
+        if(!isDragging) return;
+        isDragging = false;
+        const dx = e.clientX - dragStartX;
+        if(Math.abs(dx) < 60) return;
+        if(dx > 0) navigate('prev'); else navigate('next');
+      });
+    }
   }
 
   function renderNotFound(mesej){
