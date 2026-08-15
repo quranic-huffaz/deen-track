@@ -6,26 +6,27 @@
  * index.html langsung.
  *
  * STRUKTUR:
- *   Subjek (nama)
- *     └── Tajuk (nama)
- *           └── Siri (nombor + pautan embed Notion)
+ * Subjek (nama)
+ *  └── Tajuk (nama)
+ *        └── Siri (nombor + pautan embed Notion)
  *
  * SETIAP SIRI HANYA ADA 2 MEDAN:
  *   siri  → nombor siri (1, 2, 3, ...)
  *   embed → PAUTAN SAHAJA dari Notion (bukan kod <iframe> penuh)
  *
  * PENTING — cara ambil pautan yang betul:
- *   Notion beri kod macam ini bila anda klik "Embed this page":
- *     <iframe src="https://xxxx.notion.site/ebd/xxxxxxxx" width="100%" height="600" ...></iframe>
- *   Ambil BAHAGIAN DALAM src="..." SAHAJA, contoh:
- *     https://xxxx.notion.site/ebd/xxxxxxxx
- *   index.html akan bina semula tag <iframe> secara automatik dengan
- *   saiz dan bingkai yang sepadan dengan reka bentuk laman.
+ * Notion beri kod macam ini bila anda klik "Embed this page":
+ *   <iframe src="https://xxxx.notion.site/ebd/xxxxxxxx" width="100%" height="600" ...></iframe>
+ * Ambil BAHAGIAN DALAM src="..." SAHAJA, contoh:
+ *   https://xxxx.notion.site/ebd/xxxxxxxx
  *
- * Nak tambah subjek baharu   → tambah objek baharu dalam SUBJEK.
- * Nak tambah tajuk baharu    → tambah objek baharu dalam array `tajuk`.
- * Nak tambah siri baharu     → tambah objek baharu dalam array `siri`.
- * Nak buang mana-mana        → padam objek berkenaan sahaja.
+ * index.html akan bina semula tag <iframe> secara automatik dengan
+ * saiz dan bingkai yang sepadan dengan reka bentuk laman.
+ *
+ * Nak tambah subjek baharu → tambah objek baharu dalam SUBJEK.
+ * Nak tambah tajuk baharu  → tambah objek baharu dalam array `tajuk`.
+ * Nak tambah siri baharu   → tambah objek baharu dalam array `siri`.
+ * Nak buang mana-mana      → padam objek berkenaan sahaja.
  *
  * Jika satu siri belum ada nota lagi, biarkan `embed: ""`.
  * ------------------------------------------------------------------
@@ -56,6 +57,22 @@ const SUBJEK = [
           { siri: 5, embed: "https://purring-talos-7f4.notion.site/ebd/3b64b078389f809581e5ffaa71442f42" },
           // Siri 6 : 10 Syarat Sah Tayammum
           { siri: 6, embed: "https://purring-talos-7f4.notion.site/ebd/3b64b078389f80eeb868d0fe26b26454" }
+        ]
+      }
+    ]
+  },
+  {
+    nama: "Al-Jurumiyyah",
+    tajuk: [
+      {
+        nama: "Al-Jurumiyyah",
+        siri: [
+          // Siri 1 : Bab al-Kalam
+          { siri: 1, embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80d1ad10c2ff42fe29f2" },
+          // Siri 2 : Bahagian Kalam
+          { siri: 2, embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80b88acff51ffefe04ce" },
+          // Siri 3 : Alamat Isim
+          { siri: 3, embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80e28df1c9a90d50149c" }
         ]
       }
     ]
