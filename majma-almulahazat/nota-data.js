@@ -10,8 +10,13 @@
  *  └── Tajuk (nama)
  *        └── Siri (nombor + pautan embed Notion)
  *
- * SETIAP SIRI HANYA ADA 2 MEDAN:
+ * SETIAP SIRI ADA 3 MEDAN (1 opsyenal):
  *   siri  → nombor siri (1, 2, 3, ...)
+ *   nama  → (OPSYENAL) nama/tajuk bab bagi siri ini, cth: "3 Faktor Tayammum".
+ *           Jika diisi, interface akan papar NAMA ini sebagai tajuk utama
+ *           (dengan "Siri N" sebagai sari kata kecil di bawahnya).
+ *           Jika dibiarkan kosong ("" atau dibuang terus), interface akan
+ *           papar "Siri N" sahaja seperti biasa.
  *   embed → PAUTAN SAHAJA dari Notion (bukan kod <iframe> penuh)
  *
  * PENTING — cara ambil pautan yang betul:
@@ -45,18 +50,12 @@ const SUBJEK = [
       {
         nama: "Tayammum",
         siri: [
-          // Siri 1 : 3 Faktor Tayammum
-          { siri: 1, embed: "https://purring-talos-7f4.notion.site/ebd/3b34b078389f80189f8fcce4019ab093" },
-          // Siri 2 : Faktor #1 - Hilang Sumber Air
-          { siri: 2, embed: "https://purring-talos-7f4.notion.site/ebd/3b34b078389f8014b949eb0c98a005d3" },
-          // Siri 3 : Faktor #2 - Orang Sakit
-          { siri: 3, embed: "https://purring-talos-7f4.notion.site/ebd/3b44b078389f80999aa7d68aa90a2144" },
-          // Siri 4 : Faktor #3 - Cuaca Sejuk
-          { siri: 4, embed: "https://purring-talos-7f4.notion.site/ebd/3b44b078389f8008aa1ec9f405b5281f" },
-          // Siri 5 : Keadaan Yang Mewajibkan & Tidak Mewajibkan Qada' Solat
-          { siri: 5, embed: "https://purring-talos-7f4.notion.site/ebd/3b64b078389f809581e5ffaa71442f42" },
-          // Siri 6 : 10 Syarat Sah Tayammum
-          { siri: 6, embed: "https://purring-talos-7f4.notion.site/ebd/3b64b078389f80eeb868d0fe26b26454" }
+          { siri: 1, nama: "3 Faktor Tayammum", embed: "https://purring-talos-7f4.notion.site/ebd/3b34b078389f80189f8fcce4019ab093" },
+          { siri: 2, nama: "Faktor #1 - Hilang Sumber Air", embed: "https://purring-talos-7f4.notion.site/ebd/3b34b078389f8014b949eb0c98a005d3" },
+          { siri: 3, nama: "Faktor #2 - Orang Sakit", embed: "https://purring-talos-7f4.notion.site/ebd/3b44b078389f80999aa7d68aa90a2144" },
+          { siri: 4, nama: "Faktor #3 - Cuaca Sejuk", embed: "https://purring-talos-7f4.notion.site/ebd/3b44b078389f8008aa1ec9f405b5281f" },
+          { siri: 5, nama: "Keadaan Yang Mewajibkan & Tidak Mewajibkan Qada' Solat", embed: "https://purring-talos-7f4.notion.site/ebd/3b64b078389f809581e5ffaa71442f42" },
+          { siri: 6, nama: "10 Syarat Sah Tayammum", embed: "https://purring-talos-7f4.notion.site/ebd/3b64b078389f80eeb868d0fe26b26454" }
         ]
       }
     ]
