@@ -186,6 +186,38 @@
   .icon-btn.copied{ color:var(--teal); border-color:rgba(79,184,172,.5); background:rgba(79,184,172,.1); }
   .card-foot-actions, .row-actions{ display:flex; align-items:center; gap:8px; }
 
+  /* ---------- Page actions (Kembali + Share) ---------- */
+  .page-actions{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    margin-bottom:18px;
+  }
+  .share-wrap{ position:relative; }
+  .share-popup{
+    position:absolute; left:0; top:calc(100% + 8px);
+    min-width:190px; z-index:50;
+    background:linear-gradient(160deg, #171310, #0b0908);
+    border:1px solid rgba(201,164,92,.4);
+    border-radius:16px;
+    padding:6px;
+    box-shadow:0 20px 44px -14px rgba(0,0,0,.7), 0 0 0 1px rgba(201,164,92,.08) inset;
+    opacity:0; pointer-events:none;
+    transform:translateY(6px);
+    transition:opacity .2s var(--ease), transform .2s var(--ease);
+  }
+  .share-wrap.open .share-popup{ opacity:1; pointer-events:auto; transform:translateY(0); }
+  .share-option{
+    display:flex; align-items:center; gap:10px; width:100%;
+    padding:10px 12px; border-radius:11px;
+    background:transparent; border:none;
+    color:var(--text-primary); font-size:13px; font-weight:500;
+    cursor:pointer; text-align:left;
+    transition:background .16s var(--ease), color .16s var(--ease);
+  }
+  .share-option svg{ width:16px; height:16px; flex-shrink:0; color:var(--gold-bright); }
+  .share-option:hover{ background:rgba(201,164,92,.12); }
+  .share-option.copied{ color:var(--teal); }
+  .share-option.copied svg{ color:var(--teal); }
+
   /* ---------- Butang bulat MENU (ala iPhone, bawah kanan skrin) ---------- */
   .fab-wrap{
     position:fixed; right:20px; bottom:28px;
@@ -569,6 +601,7 @@
     .badge{ display:none; }
     .viewer-head{ flex-direction:column; align-items:stretch; }
     .btn{ justify-content:center; }
+    .page-actions{ margin-bottom:14px; }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -658,6 +691,8 @@
     swipe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 9l-4 3 4 3"/><path d="M16 9l4 3-4 3"/><path d="M4 12h16"/></svg>',
     copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>',
+    share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.4 10.6l7.2-4.2M8.4 13.4l7.2 4.2"/></svg>',
+    whatsapp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 0 1-12.9 7.3L4 20l1.2-4.1A8.5 8.5 0 1 1 21 11.5Z"/><path d="M8.8 10.3c.4 2.2 2.3 4.1 4.5 4.5"/></svg>',
   };
 
   /* ---------------- Utiliti ---------------- */
@@ -675,6 +710,25 @@
   function escapeHtml(str){
     return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   }
+  // Label paparan bagi satu siri: guna `nama` (bab) jika diisi dalam nota-data.js,
+  // jika tidak, kembali kepada "Siri N" seperti biasa.
+  function siriLabel(r){
+    return (r && r.nama && String(r.nama).trim()) ? String(r.nama).trim() : `Siri ${r.siri}`;
+  }
+  // Bina blok butang "Share" (dengan popup Salin / WhatsApp) untuk sesuatu ruang.
+  function shareBlock(hash, titleText){
+    const fullUrl = location.origin + location.pathname + hash;
+    const waMsg = encodeURIComponent(`${titleText} — ${fullUrl}`);
+    return `
+      <div class="share-wrap">
+        <button type="button" class="btn share-toggle">${ICONS.share} Share</button>
+        <div class="share-popup">
+          <button type="button" class="share-option share-copy" data-copy-url="${escapeHtml(fullUrl)}">${ICONS.copy}<span>Salin</span></button>
+          <a class="share-option share-wa" href="https://wa.me/?text=${waMsg}" target="_blank" rel="noopener">${ICONS.whatsapp}<span>WhatsApp</span></a>
+        </div>
+      </div>
+    `;
+  }
 
   /* ---------------- Salin pautan (delegasi klik) ---------------- */
   function fallbackCopy(text, cb){
@@ -685,28 +739,74 @@
     document.body.removeChild(ta);
     cb();
   }
+  function performCopy(text, onDone){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(onDone).catch(() => fallbackCopy(text, onDone));
+    } else {
+      fallbackCopy(text, onDone);
+    }
+  }
   function copyToClipboard(text, btn){
-    const done = () => {
+    performCopy(text, () => {
       btn.classList.add('copied');
       btn.innerHTML = ICONS.check;
       setTimeout(() => {
         btn.classList.remove('copied');
         btn.innerHTML = ICONS.copy;
       }, 1500);
-    };
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
-    } else {
-      fallbackCopy(text, done);
-    }
+    });
   }
   view.addEventListener('click', (e) => {
-    const btn = e.target.closest('.copy-btn');
-    if(!btn) return;
-    e.preventDefault();
-    e.stopPropagation();
-    const url = location.origin + location.pathname + btn.dataset.copy;
-    copyToClipboard(url, btn);
+    // Salin pautan (butang bulat pada baris/kad)
+    const copyBtn = e.target.closest('.copy-btn');
+    if(copyBtn){
+      e.preventDefault();
+      e.stopPropagation();
+      const url = location.origin + location.pathname + copyBtn.dataset.copy;
+      copyToClipboard(url, copyBtn);
+      return;
+    }
+    // Togol popup Share (Salin / WhatsApp)
+    const shareToggle = e.target.closest('.share-toggle');
+    if(shareToggle){
+      e.preventDefault();
+      e.stopPropagation();
+      const wrap = shareToggle.closest('.share-wrap');
+      const willOpen = !wrap.classList.contains('open');
+      document.querySelectorAll('.share-wrap.open').forEach(w => w.classList.remove('open'));
+      if(willOpen) wrap.classList.add('open');
+      return;
+    }
+    // Pilihan "Salin" dalam popup Share
+    const shareCopy = e.target.closest('.share-copy');
+    if(shareCopy){
+      e.preventDefault();
+      e.stopPropagation();
+      const url = shareCopy.dataset.copyUrl;
+      const original = shareCopy.innerHTML;
+      performCopy(url, () => {
+        shareCopy.classList.add('copied');
+        shareCopy.innerHTML = `${ICONS.check}<span>Disalin!</span>`;
+        setTimeout(() => {
+          shareCopy.classList.remove('copied');
+          shareCopy.innerHTML = original;
+        }, 1500);
+      });
+      return;
+    }
+    // Pilihan "WhatsApp" dalam popup Share — tutup popup selepas dibuka
+    const shareWa = e.target.closest('.share-wa');
+    if(shareWa){
+      e.stopPropagation();
+      const wrap = shareWa.closest('.share-wrap');
+      setTimeout(() => { if(wrap) wrap.classList.remove('open'); }, 150);
+    }
+  });
+  // Tutup mana-mana popup Share bila klik di luar
+  document.addEventListener('click', (e) => {
+    if(!e.target.closest('.share-wrap')){
+      document.querySelectorAll('.share-wrap.open').forEach(w => w.classList.remove('open'));
+    }
   });
 
   /* ---------------- Router ---------------- */
@@ -852,6 +952,10 @@
     }).join('');
 
     view.innerHTML = `
+      <div class="page-actions">
+        <a class="btn" href="#/">${ICONS.back} Kembali</a>
+        ${shareBlock(`#/s/${slug(s.nama)}`, s.nama)}
+      </div>
       <div class="page-head">
         <div>
           <h2>${escapeHtml(s.nama)}</h2>
@@ -895,21 +999,32 @@
 
     const rows = t.siri.map(r => {
       const ada = Boolean(r.embed && r.embed.trim());
+      const label = siriLabel(r);
+      const adaNama = Boolean(r.nama && String(r.nama).trim());
+      const rowHash = `#/s/${slug(s.nama)}/t/${slug(t.nama)}/r/${r.siri}`;
       return `
-        <a class="row" href="#/s/${slug(s.nama)}/t/${slug(t.nama)}/r/${r.siri}">
+        <a class="row" href="${rowHash}" data-search="${escapeHtml((label + ' siri ' + r.siri).toLowerCase())}">
           <span class="row-kod mono">${tajukKod}.${r.siri}</span>
           <span class="row-main">
-            <h4>Siri ${r.siri}</h4>
+            <h4>${escapeHtml(label)}</h4>
+            ${adaNama ? `<p>Siri ${r.siri}</p>` : ''}
           </span>
           <span class="row-meta">
             <span class="badge ${ada ? 'ready' : 'pending'}">${ada ? 'Tersedia' : 'Belum siap'}</span>
-            <span class="chip-btn">Buka ${ICONS.arrow}</span>
+            <div class="row-actions">
+              <button type="button" class="icon-btn copy-btn" data-copy="${rowHash}" title="Salin pautan">${ICONS.copy}</button>
+              <span class="chip-btn">Buka ${ICONS.arrow}</span>
+            </div>
           </span>
         </a>
       `;
     }).join('');
 
     view.innerHTML = `
+      <div class="page-actions">
+        <a class="btn" href="#/s/${slug(s.nama)}">${ICONS.back} Kembali</a>
+        ${shareBlock(`#/s/${slug(s.nama)}/t/${slug(t.nama)}`, t.nama)}
+      </div>
       <div class="page-head">
         <div>
           <h2>${escapeHtml(t.nama)}</h2>
@@ -919,8 +1034,25 @@
           <div class="stat"><span class="num mono">${t.siri.length}</span><span class="lbl">Siri</span></div>
         </div>
       </div>
-      <div class="row-list">${rows || '<div style="padding:32px;color:var(--text-tertiary);font-size:13.5px;">Belum ada siri dalam tajuk ini.</div>'}</div>
+
+      <div class="search-wrap">
+        ${ICONS.search}
+        <input type="text" id="cariSiri" placeholder="Cari siri…" autocomplete="off">
+      </div>
+
+      <div class="row-list" id="senaraiSiri">${rows || '<div style="padding:32px;color:var(--text-tertiary);font-size:13.5px;">Belum ada siri dalam tajuk ini.</div>'}</div>
     `;
+
+    const inputSiri = document.getElementById('cariSiri');
+    const senaraiSiri = document.getElementById('senaraiSiri');
+    if(inputSiri){
+      inputSiri.addEventListener('input', () => {
+        const q = inputSiri.value.trim().toLowerCase();
+        senaraiSiri.querySelectorAll('.row').forEach(row => {
+          row.style.display = row.dataset.search.includes(q) ? '' : 'none';
+        });
+      });
+    }
   }
 
   /* ---------------- Paparan: Siri (nota + embed) ---------------- */
@@ -930,12 +1062,14 @@
     const r = t && findSiri(t, siriId);
     if(!s || !t || !r){ renderNotFound('Siri tidak dijumpai.'); return; }
 
-    document.title = `${t.nama} · Siri ${r.siri} — Majma' al-Mulahazat`;
+    const label = siriLabel(r);
+    const adaNamaSiri = Boolean(r.nama && String(r.nama).trim());
+    document.title = `${t.nama} · ${label} — Majma' al-Mulahazat`;
     setCrumb([
       { label:'Utama', href:'#/' },
       { label:s.nama, href:`#/s/${slug(s.nama)}` },
       { label:t.nama, href:`#/s/${slug(s.nama)}/t/${slug(t.nama)}` },
-      { label:`Siri ${r.siri}` }
+      { label: label }
     ]);
 
     const ada = Boolean(r.embed && r.embed.trim());
@@ -957,10 +1091,12 @@
     view.innerHTML = `
       <div class="viewer-head">
         <div class="viewer-title">
-          <h2>${escapeHtml(t.nama)} — Siri ${r.siri}</h2>
+          <h2>${escapeHtml(t.nama)} — ${escapeHtml(label)}</h2>
+          ${adaNamaSiri ? `<div class="meta"><span class="mono">Siri ${r.siri}</span></div>` : ''}
         </div>
-        <div style="display:flex; gap:10px;">
+        <div class="page-actions">
           <a class="btn primary" href="#/s/${slug(s.nama)}/t/${slug(t.nama)}">${ICONS.back} Kembali</a>
+          ${shareBlock(`#/s/${slug(s.nama)}/t/${slug(t.nama)}/r/${r.siri}`, `${t.nama} — ${label}`)}
         </div>
       </div>
 
@@ -978,7 +1114,7 @@
             <div class="glyph">${ICONS.doc}</div>
             <h3>Nota belum tersedia</h3>
             <p>Siri ini belum mempunyai pautan nota. Tambah pautan "Embed this page" dari Notion pada medan <code>embed</code> bagi siri ini di dalam nota-data.js.</p>
-            <code>siri: ${r.siri} → embed: "https://…notion.site/…"</code>
+            <code>siri: ${r.siri}, nama: "…" → embed: "https://…notion.site/…"</code>
           </div>
         `}
       </div>
