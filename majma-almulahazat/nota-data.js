@@ -65,13 +65,20 @@ const SUBJEK = [
     nama: "Al-Jurumiyyah",
     tajuk: [
       {
-        nama: "Al-Jurumiyyah",
+        nama: "Al-Kalam",
         siri: [
-          // Siri 1 : Bab al-Kalam
-          { siri: 1, embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80d1ad10c2ff42fe29f2" },
-          // Siri 1 : Bahagian Kalam
-          { siri: 1, embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80b88acff51ffefe04ce" },
-          // Siri 1 : Alamat Isim
+          { siri: 1, embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80d1ad10c2ff42fe29f2" }
+        ]
+      },
+      {
+        nama: "Bahagian Kalam",
+        siri: [
+          { siri: 1, embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80b88acff51ffefe04ce" }
+        ]
+      },
+      {
+        nama: "Alamat Isim",
+        siri: [
           { siri: 1, embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80e28df1c9a90d50149c" }
         ]
       }
