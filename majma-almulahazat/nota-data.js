@@ -69,10 +69,10 @@ const SUBJEK = [
         siri: [
           // Siri 1 : Bab al-Kalam
           { siri: 1, embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80d1ad10c2ff42fe29f2" },
-          // Siri 2 : Bahagian Kalam
-          { siri: 2, embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80b88acff51ffefe04ce" },
-          // Siri 3 : Alamat Isim
-          { siri: 3, embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80e28df1c9a90d50149c" }
+          // Siri 1 : Bahagian Kalam
+          { siri: 1, embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80b88acff51ffefe04ce" },
+          // Siri 1 : Alamat Isim
+          { siri: 1, embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80e28df1c9a90d50149c" }
         ]
       }
     ]
