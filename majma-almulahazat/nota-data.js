@@ -29,11 +29,11 @@
  * saiz dan bingkai yang sepadan dengan reka bentuk laman.
  *
  * Nak tambah subjek baharu → tambah objek baharu dalam SUBJEK.
- * Nak tambah tajuk baharu  → tambah objek baharu dalam array `tajuk`.
- * Nak tambah siri baharu   → tambah objek baharu dalam array `siri`.
+ * Nak tambah tajuk baharu  → tambah objek baharu dalam array tajuk.
+ * Nak tambah siri baharu   → tambah objek baharu dalam array siri.
  * Nak buang mana-mana      → padam objek berkenaan sahaja.
  *
- * Jika satu siri belum ada nota lagi, biarkan `embed: ""`.
+ * Jika satu siri belum ada nota lagi, biarkan embed: "".
  * ------------------------------------------------------------------
  */
 const SUBJEK = [
@@ -66,19 +66,9 @@ const SUBJEK = [
       {
         nama: "Al-Kalam",
         siri: [
-          { siri: 1, embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80d1ad10c2ff42fe29f2" }
-        ]
-      },
-      {
-        nama: "Bahagian Kalam",
-        siri: [
-          { siri: 1, embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80b88acff51ffefe04ce" }
-        ]
-      },
-      {
-        nama: "Alamat Isim",
-        siri: [
-          { siri: 1, embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80e28df1c9a90d50149c" }
+          { siri: 1, nama: "Ta'rif Al-Kalam", embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80d1ad10c2ff42fe29f2" },
+          { siri: 2, nama: "Bahagian Kalam", embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80b88acff51ffefe04ce" },
+          { siri: 3, nama: "Alamat Isim", embed: "https://purring-talos-7f4.notion.site/ebd/3bd4b078389f80e28df1c9a90d50149c" }
         ]
       }
     ]
