@@ -26,6 +26,7 @@
     --shadow-card: 0 1px 0 rgba(255,255,255,.02) inset, 0 20px 40px -24px rgba(0,0,0,.6);
     --ease: cubic-bezier(.22,1,.36,1);
     --topbar-bg: rgba(10,13,18,.72);
+    --bottombar-h: 84px;
   }
 
   *{box-sizing:border-box;}
@@ -55,7 +56,7 @@
   .shell{
     max-width:1120px;
     margin:0 auto;
-    padding:0 24px 96px;
+    padding:0 24px calc(var(--bottombar-h) + 28px);
   }
 
   header.topbar{
@@ -190,14 +191,14 @@
   .icon-btn.copied{ color:var(--teal); border-color:rgba(79,184,172,.5); background:rgba(79,184,172,.1); }
   .card-foot-actions, .row-actions{ display:flex; align-items:center; gap:8px; }
 
-  /* ---------- Page actions (Kembali + Share) ---------- */
+  /* ---------- Page actions (legasi — kekal jika digunakan di tempat lain) ---------- */
   .page-actions{
     display:flex; align-items:center; gap:10px; flex-wrap:wrap;
     margin-bottom:18px;
   }
   .share-wrap{ position:relative; }
   .share-popup{
-    position:absolute; left:0; top:calc(100% + 8px);
+    position:absolute; right:0; bottom:calc(100% + 8px);
     min-width:190px; z-index:50;
     background:linear-gradient(160deg, #171310, #0b0908);
     border:1px solid rgba(201,164,92,.4);
@@ -222,14 +223,14 @@
   .share-option.copied{ color:var(--teal); }
   .share-option.copied svg{ color:var(--teal); }
 
-  /* ---------- Butang bulat MENU (ala iPhone, bawah kanan skrin) ---------- */
+  /* ---------- Butang bulat MENU (ala iPhone) — kini di tengah bar bawah ---------- */
   .fab-wrap{
-    position:fixed; right:20px; bottom:28px;
-    z-index:70;
+    position:relative;
+    margin-top:-24px;
   }
   .fab-btn{
     position:relative;
-    width:46px; height:46px; border-radius:50%;
+    width:56px; height:56px; border-radius:50%;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     gap:2px;
     background:radial-gradient(circle at 35% 30%, #2a2013, #0a0806 72%);
@@ -275,7 +276,8 @@
   }
 
   .fab-popup{
-    position:absolute; right:0; bottom:62px;
+    position:absolute; left:50%; bottom:calc(100% + 16px);
+    transform:translateX(-50%) translateY(8px) scale(.9);
     width:230px;
     background:linear-gradient(160deg, #171310, #0b0908);
     border:1px solid rgba(201,164,92,.4);
@@ -283,14 +285,13 @@
     padding:16px;
     box-shadow:0 20px 44px -14px rgba(0,0,0,.7), 0 0 0 1px rgba(201,164,92,.08) inset;
     opacity:0; pointer-events:none;
-    transform:translateY(8px) scale(.9);
-    transform-origin:bottom right;
+    transform-origin:bottom center;
     transition:opacity .22s var(--ease), transform .22s var(--ease);
   }
-  .fab-wrap.open .fab-popup{ opacity:1; pointer-events:auto; transform:translateY(0) scale(1); }
+  .fab-wrap.open .fab-popup{ opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0) scale(1); }
   .fab-popup::after{
     content:"";
-    position:absolute; right:20px; bottom:-7px; transform:rotate(45deg);
+    position:absolute; left:50%; bottom:-7px; transform:translateX(-50%) rotate(45deg);
     width:14px; height:14px;
     background:#171310;
     border-right:1px solid rgba(201,164,92,.4);
@@ -319,10 +320,40 @@
   .fab-list-item.as-button{ background:transparent; border:none; font:inherit; text-align:left; width:100%; }
   .fab-list-item.as-button .ico svg{ width:16px; height:16px; }
   @media (max-width:640px){
-    .fab-wrap{ right:16px; bottom:20px; }
-    .fab-btn{ width:40px; height:40px; }
+    .fab-wrap{ margin-top:-18px; }
+    .fab-btn{ width:46px; height:46px; }
     .fab-label{ font-size:6.5px; }
-    .fab-popup{ width:200px; bottom:54px; padding:13px; }
+    .fab-popup{ width:200px; padding:13px; }
+  }
+
+  /* ---------- Bar Bawah Tetap: Kembali (kiri) · Menu (tengah) · Share (kanan) ---------- */
+  .bottom-bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:70;
+    background:var(--topbar-bg);
+    backdrop-filter:blur(16px) saturate(150%);
+    border-top:1px solid var(--border);
+    box-shadow:0 -14px 34px -18px rgba(0,0,0,.55);
+    padding:12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+  .bottom-bar-inner{
+    max-width:1120px; margin:0 auto;
+    display:grid; grid-template-columns:1fr auto 1fr;
+    align-items:center; gap:14px;
+  }
+  .bb-side{ display:flex; align-items:center; min-width:0; }
+  .bb-side.bb-left{ justify-content:flex-start; }
+  .bb-side.bb-right{ justify-content:flex-end; }
+
+  @media (max-width:640px){
+    .bottom-bar{ padding:10px 14px calc(10px + env(safe-area-inset-bottom, 0px)); }
+    .bottom-bar-inner{ gap:8px; }
+  }
+  @media (max-width:480px){
+    .bb-side .btn{
+      width:44px; height:44px; padding:0; border-radius:50%;
+      justify-content:center;
+    }
+    .bb-side .btn .btn-label{ display:none; }
   }
 
   /* ---------- Breadcrumb ---------- */
@@ -729,13 +760,14 @@
 
   footer{
     max-width:1120px; margin:64px auto 0; padding:24px;
+    padding-bottom:calc(24px + var(--bottombar-h));
     border-top:1px solid var(--border);
     display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
     font-size:11.5px; color:var(--text-tertiary);
   }
 
   @media (max-width:640px){
-    .shell{ padding:0 16px 72px; }
+    .shell{ padding:0 16px calc(var(--bottombar-h) + 20px); }
     .topbar-inner{ padding:14px 16px; }
     .page-stats{ display:none; }
     .row{ padding:16px; gap:12px; }
@@ -809,34 +841,42 @@
   <span>Majma' al-Mulahazat &mdash; Himpunan Notagrafik</span>
 </footer>
 
-<!-- Butang bulat MENU (ala iPhone), bawah kanan skrin -->
-<div class="fab-wrap" id="fabWrap">
-  <div class="fab-popup" id="fabPopup">
-    <p class="fab-eyebrow">Pautan Pantas</p>
-    <div class="fab-list">
-      <a class="fab-list-item" href="https://deen-track.pages.dev/" id="fabHome" target="_blank" rel="noopener">
-        <span class="ico">🏠</span>
-        <span class="txt">Deen Track</span>
-        <span class="chev">›</span>
-      </a>
-      <a class="fab-list-item" href="https://deen-track.pages.dev/akses-pantas" id="fabTop" target="_blank" rel="noopener">
-        <span class="ico">⚡</span>
-        <span class="txt">Akses Pantas</span>
-        <span class="chev">›</span>
-      </a>
-      <button type="button" class="fab-list-item as-button" id="themeToggle">
-        <span class="ico" id="themeIcon"></span>
-        <span class="txt" id="themeLabel">Mod Cerah</span>
-        <span class="chev">›</span>
+<!-- Bar bawah tetap: Kembali (kiri) · Menu (tengah) · Share (kanan) -->
+<div class="bottom-bar" id="bottomBar">
+  <div class="bottom-bar-inner">
+    <div class="bb-side bb-left" id="bbLeft"></div>
+
+    <div class="fab-wrap" id="fabWrap">
+      <div class="fab-popup" id="fabPopup">
+        <p class="fab-eyebrow">Pautan Pantas</p>
+        <div class="fab-list">
+          <a class="fab-list-item" href="https://deen-track.pages.dev/" id="fabHome" target="_blank" rel="noopener">
+            <span class="ico">🏠</span>
+            <span class="txt">Deen Track</span>
+            <span class="chev">›</span>
+          </a>
+          <a class="fab-list-item" href="https://deen-track.pages.dev/akses-pantas" id="fabTop" target="_blank" rel="noopener">
+            <span class="ico">⚡</span>
+            <span class="txt">Akses Pantas</span>
+            <span class="chev">›</span>
+          </a>
+          <button type="button" class="fab-list-item as-button" id="themeToggle">
+            <span class="ico" id="themeIcon"></span>
+            <span class="txt" id="themeLabel">Mod Cerah</span>
+            <span class="chev">›</span>
+          </button>
+        </div>
+      </div>
+      <button class="fab-btn" id="fabToggle" aria-label="Menu">
+        <span class="fab-ring"></span>
+        <span class="fab-ring r2"></span>
+        <span class="fab-dot"></span>
+        <span class="fab-label">Menu</span>
       </button>
     </div>
+
+    <div class="bb-side bb-right" id="bbRight"></div>
   </div>
-  <button class="fab-btn" id="fabToggle" aria-label="Menu">
-    <span class="fab-ring"></span>
-    <span class="fab-ring r2"></span>
-    <span class="fab-dot"></span>
-    <span class="fab-label">Menu</span>
-  </button>
 </div>
 
 <script src="nota-data.js"></script>
@@ -845,6 +885,8 @@
 
   const view = document.getElementById('view');
   const crumbEl = document.getElementById('crumb');
+  const bbLeft = document.getElementById('bbLeft');
+  const bbRight = document.getElementById('bbRight');
 
   // Bidang (kategori) yang sedang dipilih pada paparan Utama.
   // 'semua' = tiada penapisan kategori.
@@ -901,13 +943,22 @@
     const waMsg = encodeURIComponent(`${titleText} — ${fullUrl}`);
     return `
       <div class="share-wrap">
-        <button type="button" class="btn share-toggle">${ICONS.share} Share</button>
+        <button type="button" class="btn share-toggle">${ICONS.share}<span class="btn-label">Share</span></button>
         <div class="share-popup">
           <button type="button" class="share-option share-copy" data-copy-url="${escapeHtml(fullUrl)}">${ICONS.copy}<span>Salin</span></button>
           <a class="share-option share-wa" href="https://wa.me/?text=${waMsg}" target="_blank" rel="noopener">${ICONS.whatsapp}<span>WhatsApp</span></a>
         </div>
       </div>
     `;
+  }
+  // Bina butang "Kembali" untuk slot kiri bar bawah.
+  function kembaliBlock(hash, primary){
+    return `<a class="btn${primary ? ' primary' : ''}" href="${hash}">${ICONS.back}<span class="btn-label">Kembali</span></a>`;
+  }
+  // Kemaskini slot kiri (Kembali) & kanan (Share) pada bar bawah tetap.
+  function setBottomBar(kembaliHtml, shareHtml){
+    if(bbLeft) bbLeft.innerHTML = kembaliHtml || '';
+    if(bbRight) bbRight.innerHTML = shareHtml || '';
   }
 
   /* ---------------- Salin pautan (delegasi klik) ---------------- */
@@ -949,7 +1000,7 @@
     });
   }
 
-  view.addEventListener('click', (e) => {
+  document.addEventListener('click', (e) => {
     // Salin pautan (butang bulat pada baris/kad)
     const copyBtn = e.target.closest('.copy-btn');
     if(copyBtn){
@@ -1104,6 +1155,9 @@
     // Reset penapis bidang setiap kali kembali ke Utama (paparan baharu)
     selectedBidangFilter = 'semua';
 
+    // Di ruang Utama: tiada butang Kembali/Share pada bar bawah — hanya Menu di tengah.
+    setBottomBar('', '');
+
     // Senarai bidang unik, diambil terus daripada nota-data.js (tiada perlu daftar berasingan)
     const bidangList = Array.from(new Set(SUBJEK.map(s => bidangLabel(s))))
       .sort((a, b) => a.localeCompare(b, 'ms'));
@@ -1181,6 +1235,12 @@
     document.title = `${s.nama} — Majma' al-Mulahazat`;
     setCrumb([{ label:'Utama', href:'#/' }, { label:s.nama }]);
 
+    // Bar bawah: Kembali (kiri) ke Utama, Share (kanan) untuk subjek ini.
+    setBottomBar(
+      kembaliBlock('#/', false),
+      shareBlock(`#/s/${slug(s.nama)}`, s.nama)
+    );
+
     const subjKod = String(SUBJEK.indexOf(s) + 1).padStart(2, '0');
 
     const rows = s.tajuk.map((t, i) => {
@@ -1203,10 +1263,6 @@
     }).join('');
 
     view.innerHTML = `
-      <div class="page-actions">
-        <a class="btn" href="#/">${ICONS.back} Kembali</a>
-        ${shareBlock(`#/s/${slug(s.nama)}`, s.nama)}
-      </div>
       <div class="page-head">
         <div>
           <h2>${escapeHtml(s.nama)}</h2>
@@ -1245,6 +1301,12 @@
     document.title = `${t.nama} — Majma' al-Mulahazat`;
     setCrumb([{ label:'Utama', href:'#/' }, { label:s.nama, href:`#/s/${slug(s.nama)}` }, { label:t.nama }]);
 
+    // Bar bawah: Kembali (kiri) ke Subjek, Share (kanan) untuk tajuk ini.
+    setBottomBar(
+      kembaliBlock(`#/s/${slug(s.nama)}`, false),
+      shareBlock(`#/s/${slug(s.nama)}/t/${slug(t.nama)}`, t.nama)
+    );
+
     const subjKod = String(SUBJEK.indexOf(s) + 1).padStart(2, '0');
     const tajukKod = `${subjKod}.${s.tajuk.indexOf(t) + 1}`;
 
@@ -1272,10 +1334,6 @@
     }).join('');
 
     view.innerHTML = `
-      <div class="page-actions">
-        <a class="btn" href="#/s/${slug(s.nama)}">${ICONS.back} Kembali</a>
-        ${shareBlock(`#/s/${slug(s.nama)}/t/${slug(t.nama)}`, t.nama)}
-      </div>
       <div class="page-head">
         <div>
           <h2>${escapeHtml(t.nama)}</h2>
@@ -1323,6 +1381,12 @@
       { label: label }
     ]);
 
+    // Bar bawah: Kembali (kiri, gaya utama/gold) ke Tajuk, Share (kanan) untuk siri ini.
+    setBottomBar(
+      kembaliBlock(`#/s/${slug(s.nama)}/t/${slug(t.nama)}`, true),
+      shareBlock(`#/s/${slug(s.nama)}/t/${slug(t.nama)}/r/${r.siri}`, `${t.nama} — ${label}`)
+    );
+
     const ada = Boolean(r.embed && r.embed.trim());
 
     // Kedudukan siri semasa dalam tajuk (untuk navigasi leret/drag, macam muka surat)
@@ -1344,10 +1408,6 @@
         <div class="viewer-title">
           <h2>${escapeHtml(t.nama)} — ${escapeHtml(label)}</h2>
           ${adaNamaSiri ? `<div class="meta"><span class="mono">Siri ${r.siri}</span></div>` : ''}
-        </div>
-        <div class="page-actions">
-          <a class="btn primary" href="#/s/${slug(s.nama)}/t/${slug(t.nama)}">${ICONS.back} Kembali</a>
-          ${shareBlock(`#/s/${slug(s.nama)}/t/${slug(t.nama)}/r/${r.siri}`, `${t.nama} — ${label}`)}
         </div>
       </div>
 
@@ -1454,6 +1514,7 @@
 
   function renderNotFound(mesej){
     setCrumb([{ label:'Utama', href:'#/' }, { label:'Tidak dijumpai' }]);
+    setBottomBar('', '');
     view.innerHTML = `
       <div class="empty">
         <div class="glyph">${ICONS.folder}</div>
