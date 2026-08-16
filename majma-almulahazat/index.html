@@ -25,9 +25,13 @@
     --radius-sm:9px;
     --shadow-card: 0 1px 0 rgba(255,255,255,.02) inset, 0 20px 40px -24px rgba(0,0,0,.6);
     --ease: cubic-bezier(.22,1,.36,1);
+    --topbar-bg: rgba(10,13,18,.72);
   }
 
   *{box-sizing:border-box;}
+  body, .card, .row, .btn, header.topbar, .support-btn, .icon-btn, .search-wrap input{
+    transition: background-color .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease);
+  }
   html{scroll-behavior:smooth;}
   body{
     margin:0;
@@ -57,7 +61,7 @@
   header.topbar{
     position:sticky; top:0; z-index:40;
     backdrop-filter:blur(14px) saturate(140%);
-    background:rgba(10,13,18,.72);
+    background:var(--topbar-bg);
     border-bottom:1px solid var(--border);
   }
   .topbar-inner{
@@ -312,6 +316,8 @@
   }
   .fab-list-item .txt{ flex-grow:1; font-size:13px; font-weight:500; }
   .fab-list-item .chev{ font-size:14px; color:var(--text-tertiary); }
+  .fab-list-item.as-button{ background:transparent; border:none; font:inherit; text-align:left; width:100%; }
+  .fab-list-item.as-button .ico svg{ width:16px; height:16px; }
   @media (max-width:640px){
     .fab-wrap{ right:16px; bottom:20px; }
     .fab-btn{ width:40px; height:40px; }
@@ -494,6 +500,88 @@
   .card-foot .arrow{ color:var(--text-tertiary); transition:transform .22s var(--ease), color .22s var(--ease); }
   .card:hover .card-foot .arrow{ transform:translateX(3px); color:var(--gold-bright); }
 
+  /* ---------- Rak Kitab: persembahan bookshelf untuk kad Subjek di Utama ---------- */
+  .shelf-case{
+    position:relative;
+    padding:26px 24px 4px;
+    border-radius:var(--radius);
+    border:1px solid var(--border);
+    background:
+      radial-gradient(900px 220px at 50% -10%, rgba(201,164,92,.07), transparent 60%),
+      var(--bg-elevated);
+    box-shadow:var(--shadow-card);
+    overflow:hidden;
+  }
+  .shelf-case::before{
+    content:"";
+    position:absolute; inset:0;
+    border-radius:inherit;
+    border-left:11px solid transparent;
+    border-right:11px solid transparent;
+    border-image:linear-gradient(180deg, #4a3620, #241a10 45%, #1c130c) 1;
+    pointer-events:none;
+    opacity:.92;
+  }
+  .shelf-case-head{
+    display:flex; align-items:center; gap:8px;
+    margin-bottom:16px; padding:0 2px;
+    font-size:10.5px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--text-tertiary);
+  }
+  .shelf-case-head svg{ width:13px; height:13px; color:var(--gold-bright); flex-shrink:0; }
+
+  .shelf-grid{
+    --shelf-h:226px;
+    --shelf-gap:30px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(168px, 1fr));
+    grid-auto-rows:var(--shelf-h);
+    gap:var(--shelf-gap);
+    padding-bottom:var(--shelf-gap);
+    background-image:repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent var(--shelf-h),
+      rgba(0,0,0,.5) var(--shelf-h),
+      #1c130c calc(var(--shelf-h) + 4px),
+      #4a3620 calc(var(--shelf-h) + (var(--shelf-gap) * .5)),
+      #1c130c calc(var(--shelf-h) + var(--shelf-gap) - 5px),
+      transparent calc(var(--shelf-h) + var(--shelf-gap))
+    );
+  }
+
+  .book-card{
+    --spine:var(--gold-bright);
+    box-shadow:inset 0 5px 0 0 var(--spine), var(--shadow-card);
+    border-radius:7px 7px 3px 3px;
+    padding-top:24px;
+    padding-right:26px;
+  }
+  .book-card::before{
+    content:"";
+    position:absolute; top:14px; right:9px; bottom:14px; width:4px;
+    background-image:repeating-linear-gradient(to bottom, rgba(255,255,255,.1) 0 2px, transparent 2px 5px);
+    border-radius:2px;
+    pointer-events:none;
+    opacity:.55;
+  }
+  .book-card h3{
+    display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .shelf-grid .book-card:nth-child(4n+1){ --spine:var(--gold-bright); }
+  .shelf-grid .book-card:nth-child(4n+2){ --spine:var(--teal); }
+  .shelf-grid .book-card:nth-child(4n+3){ --spine:#C98F5C; }
+  .shelf-grid .book-card:nth-child(4n+4){ --spine:#B9A4D8; }
+  .book-card:hover{ transform:translateY(-10px) rotate(-.6deg); }
+
+  @media (max-width:640px){
+    .shelf-case{ padding:18px 16px 4px; }
+    .shelf-case-head{ margin-bottom:12px; }
+    .shelf-grid{ --shelf-h:182px; --shelf-gap:22px; grid-template-columns:repeat(auto-fill, minmax(126px, 1fr)); }
+    .book-card{ padding:16px 20px 12px 14px; }
+  }
+
   /* ---------- Topic list (rows, ledger style) ---------- */
   .row-list{ display:flex; flex-direction:column; gap:1px; background:var(--border); border-radius:var(--radius); overflow:hidden; border:1px solid var(--border); }
   .row{
@@ -662,6 +750,25 @@
     html{ scroll-behavior:auto; }
     #view, .card, .row, .btn{ animation:none !important; transition:none !important; }
   }
+
+  /* ---------- Mod Cerah (Light Theme) — nuansa kertas manuskrip ---------- */
+  body.theme-light{
+    --bg:#F6F1E6;
+    --bg-elevated:#FFFFFF;
+    --surface:#FFFFFF;
+    --surface-hover:#FAF4E7;
+    --border:rgba(120,88,40,.16);
+    --border-strong:rgba(120,88,40,.38);
+    --gold:#B0833F;
+    --gold-bright:#8A5F22;
+    --teal:#1F8577;
+    --text-primary:#241C10;
+    --text-secondary:#5B4E39;
+    --text-tertiary:#8C7C61;
+    --topbar-bg:rgba(255,255,255,.8);
+    --shadow-card: 0 1px 0 rgba(255,255,255,.6) inset, 0 20px 40px -26px rgba(90,66,26,.28);
+  }
+  body.theme-light ::selection{ background:rgba(176,131,63,.28); color:#241C10; }
 </style>
 </head>
 <body>
@@ -717,6 +824,11 @@
         <span class="txt">Akses Pantas</span>
         <span class="chev">›</span>
       </a>
+      <button type="button" class="fab-list-item as-button" id="themeToggle">
+        <span class="ico" id="themeIcon"></span>
+        <span class="txt" id="themeLabel">Mod Cerah</span>
+        <span class="chev">›</span>
+      </button>
     </div>
   </div>
   <button class="fab-btn" id="fabToggle" aria-label="Menu">
@@ -753,6 +865,10 @@
     whatsapp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 0 1-12.9 7.3L4 20l1.2-4.1A8.5 8.5 0 1 1 21 11.5Z"/><path d="M8.8 10.3c.4 2.2 2.3 4.1 4.5 4.5"/></svg>',
     filter: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M7 12h10M10 18h4"/></svg>',
     chevDown: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>',
+    book: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5c-.8 0-1.5-.7-1.5-1.5v-13Z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5c.8 0 1.5-.7 1.5-1.5v-13Z"/><path d="M12 4v16"/></svg>',
+    shelf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4v16M20 4v16M4 9h16M4 15h16"/></svg>',
+    candle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--gold-bright)"><rect x="9" y="10" width="6" height="10" rx="1.3"/><path d="M12 10V6.4"/><path d="M12 6.4c1.1-.9 1.4-2 .5-3.3-.5.9-1.5.9-2 0-.9 1.3-.6 2.4.5 3.3Z" fill="currentColor"/></svg>',
+    moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--gold-bright)"><path d="M20 14.2A8.3 8.3 0 1 1 9.8 4a6.8 6.8 0 0 0 10.2 10.2Z"/></svg>',
   };
 
   /* ---------------- Utiliti ---------------- */
@@ -993,10 +1109,10 @@
       .sort((a, b) => a.localeCompare(b, 'ms'));
 
     const cards = SUBJEK.map((s, i) => `
-      <a class="card" href="#/s/${slug(s.nama)}" data-search="${escapeHtml(s.nama.toLowerCase())}" data-bidang="${escapeHtml(bidangLabel(s).toLowerCase())}">
+      <a class="card book-card" href="#/s/${slug(s.nama)}" data-search="${escapeHtml(s.nama.toLowerCase())}" data-bidang="${escapeHtml(bidangLabel(s).toLowerCase())}">
         <div class="card-top">
           <span class="card-kod">${escapeHtml(bidangLabel(s))}</span>
-          <span class="card-icon">${ICONS.folder}</span>
+          <span class="card-icon">${ICONS.book}</span>
         </div>
         <h3>${escapeHtml(s.nama)}</h3>
         <div class="card-foot">
@@ -1047,7 +1163,10 @@
         </div>
       </div>
 
-      <div class="grid" id="gridSubjek">${cards}</div>
+      <div class="shelf-case">
+        <div class="shelf-case-head">${ICONS.shelf} Rak Kitab &middot; ${SUBJEK.length} subjek tersusun</div>
+        <div class="grid shelf-grid" id="gridSubjek">${cards}</div>
+      </div>
     `;
 
     const input = document.getElementById('cari');
@@ -1364,6 +1483,32 @@
   document.addEventListener('click', (e) => {
     if(!fabWrap.contains(e.target)) fabWrap.classList.remove('open');
   });
+
+  /* ---------------- Togol Mod Cerah / Gelap ----------------
+   * Nota: state disimpan dalam memori JS sahaja (bukan localStorage),
+   * jadi ia akan reset kepada Mod Gelap (asal) bila laman dimuat semula.
+   * Jika laman ini dihoskan di luar (bukan dalam pratonton artifact),
+   * anda boleh tambah localStorage.setItem/getItem di sini untuk
+   * mengekalkan pilihan pengguna merentasi lawatan.
+   */
+  let isLightTheme = false;
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+  const themeLabel = document.getElementById('themeLabel');
+  function applyTheme(){
+    document.body.classList.toggle('theme-light', isLightTheme);
+    if(themeIcon) themeIcon.innerHTML = isLightTheme ? ICONS.moon : ICONS.candle;
+    if(themeLabel) themeLabel.textContent = isLightTheme ? 'Mod Gelap' : 'Mod Cerah';
+  }
+  if(themeToggle){
+    themeToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isLightTheme = !isLightTheme;
+      applyTheme();
+      fabWrap.classList.remove('open');
+    });
+  }
+  applyTheme();
 
   /* ---------------- Support Button: bubble tooltip berulang ---------------- */
   const supportBubble = document.getElementById('supportBubble');
