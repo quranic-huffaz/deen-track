@@ -375,6 +375,59 @@
     color:var(--text-tertiary); pointer-events:none;
   }
 
+  /* ---------- Search row (kotak carian + butang Bidang) ---------- */
+  .search-row{
+    display:flex; align-items:stretch; gap:10px;
+    margin-bottom:32px;
+  }
+  .search-row .search-wrap{ flex:1 1 auto; margin-bottom:0; min-width:0; }
+
+  .filter-wrap{ position:relative; flex-shrink:0; }
+  .filter-toggle{
+    height:100%; gap:8px; padding:0 16px;
+  }
+  .filter-toggle svg{ width:14px; height:14px; flex-shrink:0; }
+  .filter-toggle .chev{ display:flex; transition:transform .2s var(--ease); }
+  .filter-wrap.open .filter-toggle .chev{ transform:rotate(180deg); }
+  .filter-toggle .filter-label-text{ white-space:nowrap; }
+  .filter-toggle.active-filter{
+    border-color:var(--gold); color:var(--gold-bright);
+    background:rgba(201,164,92,.1);
+  }
+
+  .filter-popup{
+    position:absolute; right:0; top:calc(100% + 8px);
+    min-width:210px; max-height:280px; overflow-y:auto;
+    z-index:50;
+    background:linear-gradient(160deg, #171310, #0b0908);
+    border:1px solid rgba(201,164,92,.4);
+    border-radius:16px;
+    padding:6px;
+    box-shadow:0 20px 44px -14px rgba(0,0,0,.7), 0 0 0 1px rgba(201,164,92,.08) inset;
+    opacity:0; pointer-events:none;
+    transform:translateY(6px);
+    transition:opacity .2s var(--ease), transform .2s var(--ease);
+  }
+  .filter-wrap.open .filter-popup{ opacity:1; pointer-events:auto; transform:translateY(0); }
+  .filter-option{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%;
+    padding:10px 12px; border-radius:11px;
+    background:transparent; border:none;
+    color:var(--text-primary); font-size:13px; font-weight:500;
+    cursor:pointer; text-align:left;
+    transition:background .16s var(--ease), color .16s var(--ease);
+  }
+  .filter-option:hover{ background:rgba(201,164,92,.12); }
+  .filter-option.active{ color:var(--gold-bright); }
+  .filter-option .tick{ opacity:0; font-size:12px; transition:opacity .15s var(--ease); }
+  .filter-option.active .tick{ opacity:1; }
+
+  @media (max-width:640px){
+    .filter-toggle .filter-label-text{ display:none; }
+    .filter-toggle{ padding:0 13px; }
+    .filter-popup{ min-width:180px; }
+  }
+
   /* ---------- Card grid (Subjek = folders) ---------- */
   .grid{
     display:grid;
@@ -406,7 +459,7 @@
     background:var(--surface-hover);
   }
   .card:hover::after{ opacity:1; }
-  .card-top{ display:flex; align-items:flex-start; justify-content:flex-end; }
+  .card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
   .card-kod{
     font-size:11px; color:var(--gold-bright);
     background:rgba(201,164,92,.1);
@@ -419,6 +472,7 @@
     display:flex; align-items:center; justify-content:center;
     background:var(--bg-elevated); border:1px solid var(--border);
     color:var(--text-tertiary);
+    flex-shrink:0;
     transition:color .2s var(--ease), border-color .2s var(--ease);
   }
   .card:hover .card-icon{ color:var(--gold-bright); border-color:var(--border-strong); }
@@ -680,6 +734,10 @@
   const view = document.getElementById('view');
   const crumbEl = document.getElementById('crumb');
 
+  // Bidang (kategori) yang sedang dipilih pada paparan Utama.
+  // 'semua' = tiada penapisan kategori.
+  let selectedBidangFilter = 'semua';
+
   /* ---------------- Ikon (inline SVG, ringan tanpa dependency) ---------------- */
   const ICONS = {
     folder: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>',
@@ -693,6 +751,8 @@
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>',
     share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.4 10.6l7.2-4.2M8.4 13.4l7.2 4.2"/></svg>',
     whatsapp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 0 1-12.9 7.3L4 20l1.2-4.1A8.5 8.5 0 1 1 21 11.5Z"/><path d="M8.8 10.3c.4 2.2 2.3 4.1 4.5 4.5"/></svg>',
+    filter: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M7 12h10M10 18h4"/></svg>',
+    chevDown: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>',
   };
 
   /* ---------------- Utiliti ---------------- */
@@ -714,6 +774,10 @@
   // jika tidak, kembali kepada "Siri N" seperti biasa.
   function siriLabel(r){
     return (r && r.nama && String(r.nama).trim()) ? String(r.nama).trim() : `Siri ${r.siri}`;
+  }
+  // Label bidang bagi satu subjek: guna `bidang` jika diisi, jika tidak "Umum".
+  function bidangLabel(s){
+    return (s && s.bidang && String(s.bidang).trim()) ? String(s.bidang).trim() : 'Umum';
   }
   // Bina blok butang "Share" (dengan popup Salin / WhatsApp) untuk sesuatu ruang.
   function shareBlock(hash, titleText){
@@ -756,6 +820,19 @@
       }, 1500);
     });
   }
+  // Terapkan carian teks + penapis bidang serentak pada grid Subjek (Utama).
+  function applyBerandaFilters(){
+    const input = document.getElementById('cari');
+    const grid = document.getElementById('gridSubjek');
+    if(!input || !grid) return;
+    const q = input.value.trim().toLowerCase();
+    grid.querySelectorAll('.card').forEach(card => {
+      const matchSearch = card.dataset.search.includes(q);
+      const matchBidang = selectedBidangFilter === 'semua' || card.dataset.bidang === selectedBidangFilter;
+      card.style.display = (matchSearch && matchBidang) ? '' : 'none';
+    });
+  }
+
   view.addEventListener('click', (e) => {
     // Salin pautan (butang bulat pada baris/kad)
     const copyBtn = e.target.closest('.copy-btn');
@@ -773,7 +850,7 @@
       e.stopPropagation();
       const wrap = shareToggle.closest('.share-wrap');
       const willOpen = !wrap.classList.contains('open');
-      document.querySelectorAll('.share-wrap.open').forEach(w => w.classList.remove('open'));
+      document.querySelectorAll('.share-wrap.open, .filter-wrap.open').forEach(w => w.classList.remove('open'));
       if(willOpen) wrap.classList.add('open');
       return;
     }
@@ -801,11 +878,43 @@
       const wrap = shareWa.closest('.share-wrap');
       setTimeout(() => { if(wrap) wrap.classList.remove('open'); }, 150);
     }
+    // Togol popup Bidang (dropdown kategori pada Utama)
+    const filterToggle = e.target.closest('.filter-toggle');
+    if(filterToggle){
+      e.preventDefault();
+      e.stopPropagation();
+      const wrap = filterToggle.closest('.filter-wrap');
+      const willOpen = !wrap.classList.contains('open');
+      document.querySelectorAll('.share-wrap.open, .filter-wrap.open').forEach(w => w.classList.remove('open'));
+      if(willOpen) wrap.classList.add('open');
+      return;
+    }
+    // Pilihan bidang dalam popup
+    const filterOption = e.target.closest('.filter-option');
+    if(filterOption){
+      e.preventDefault();
+      e.stopPropagation();
+      const wrap = filterOption.closest('.filter-wrap');
+      wrap.querySelectorAll('.filter-option').forEach(o => o.classList.remove('active'));
+      filterOption.classList.add('active');
+      selectedBidangFilter = filterOption.dataset.val;
+      const toggleBtn = wrap.querySelector('.filter-toggle');
+      const labelEl = toggleBtn.querySelector('.filter-label-text');
+      const isSemua = selectedBidangFilter === 'semua';
+      if(labelEl) labelEl.textContent = isSemua ? 'Bidang' : filterOption.textContent.trim();
+      toggleBtn.classList.toggle('active-filter', !isSemua);
+      wrap.classList.remove('open');
+      applyBerandaFilters();
+      return;
+    }
   });
-  // Tutup mana-mana popup Share bila klik di luar
+  // Tutup mana-mana popup (Share / Bidang) bila klik di luar
   document.addEventListener('click', (e) => {
     if(!e.target.closest('.share-wrap')){
       document.querySelectorAll('.share-wrap.open').forEach(w => w.classList.remove('open'));
+    }
+    if(!e.target.closest('.filter-wrap')){
+      document.querySelectorAll('.filter-wrap.open').forEach(w => w.classList.remove('open'));
     }
   });
 
@@ -876,9 +985,17 @@
     document.title = "Majma' al-Mulahazat";
     setCrumb([{ label:'Utama' }]);
 
+    // Reset penapis bidang setiap kali kembali ke Utama (paparan baharu)
+    selectedBidangFilter = 'semua';
+
+    // Senarai bidang unik, diambil terus daripada nota-data.js (tiada perlu daftar berasingan)
+    const bidangList = Array.from(new Set(SUBJEK.map(s => bidangLabel(s))))
+      .sort((a, b) => a.localeCompare(b, 'ms'));
+
     const cards = SUBJEK.map((s, i) => `
-      <a class="card" href="#/s/${slug(s.nama)}" data-search="${escapeHtml(s.nama.toLowerCase())}">
+      <a class="card" href="#/s/${slug(s.nama)}" data-search="${escapeHtml(s.nama.toLowerCase())}" data-bidang="${escapeHtml(bidangLabel(s).toLowerCase())}">
         <div class="card-top">
+          <span class="card-kod">${escapeHtml(bidangLabel(s))}</span>
           <span class="card-icon">${ICONS.folder}</span>
         </div>
         <h3>${escapeHtml(s.nama)}</h3>
@@ -892,10 +1009,21 @@
       </a>
     `).join('');
 
+    const filterOptions = `
+      <button type="button" class="filter-option active" data-val="semua">
+        <span>Semua Bidang</span><span class="tick">${ICONS.check}</span>
+      </button>
+      ${bidangList.map(b => `
+        <button type="button" class="filter-option" data-val="${escapeHtml(b.toLowerCase())}">
+          <span>${escapeHtml(b)}</span><span class="tick">${ICONS.check}</span>
+        </button>
+      `).join('')}
+    `;
+
     view.innerHTML = `
       <div class="page-head">
         <div>
-          <h2>Rak Pengajian Notagrafik</h2>
+          <h2>Rak Kitab - Notagrafik</h2>
         </div>
         <div class="page-stats">
           <div class="stat"><span class="num mono">${SUBJEK.length}</span><span class="lbl">Subjek</span></div>
@@ -904,22 +1032,26 @@
         </div>
       </div>
 
-      <div class="search-wrap">
-        ${ICONS.search}
-        <input type="text" id="cari" placeholder="Cari subjek atau tajuk…" autocomplete="off">
+      <div class="search-row">
+        <div class="search-wrap">
+          ${ICONS.search}
+          <input type="text" id="cari" placeholder="Cari subjek atau tajuk…" autocomplete="off">
+        </div>
+        <div class="filter-wrap" id="filterWrap">
+          <button type="button" class="btn filter-toggle">
+            ${ICONS.filter}
+            <span class="filter-label-text">Bidang</span>
+            <span class="chev">${ICONS.chevDown}</span>
+          </button>
+          <div class="filter-popup">${filterOptions}</div>
+        </div>
       </div>
 
       <div class="grid" id="gridSubjek">${cards}</div>
     `;
 
     const input = document.getElementById('cari');
-    const grid = document.getElementById('gridSubjek');
-    input.addEventListener('input', () => {
-      const q = input.value.trim().toLowerCase();
-      grid.querySelectorAll('.card').forEach(card => {
-        card.style.display = card.dataset.search.includes(q) ? '' : 'none';
-      });
-    });
+    input.addEventListener('input', applyBerandaFilters);
   }
 
   /* ---------------- Paparan: Subjek (senarai tajuk) ---------------- */
