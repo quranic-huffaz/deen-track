@@ -350,10 +350,32 @@
   }
   @media (max-width:480px){
     .bb-side .btn{
-      width:44px; height:44px; padding:0; border-radius:50%;
+      width:46px; height:46px; padding:0; border-radius:50%;
       justify-content:center;
+      position:relative;
+      box-shadow:0 6px 16px -8px rgba(0,0,0,.5);
+      transition:transform .18s var(--ease), box-shadow .18s var(--ease), background .18s var(--ease), border-color .18s var(--ease), filter .18s var(--ease);
     }
     .bb-side .btn .btn-label{ display:none; }
+    .bb-side .btn svg{ width:16px; height:16px; flex-shrink:0; }
+    .bb-side .btn:active{ transform:scale(.9); }
+
+    /* Kembali — bulatan sempadan emas halus, neutral & senyap */
+    .bb-left .btn{
+      background:var(--surface);
+      border:1px solid var(--border-strong);
+      color:var(--text-secondary);
+    }
+    .bb-left .btn:hover{ border-color:var(--gold); color:var(--gold-bright); }
+
+    /* Share — bulatan emas pekat, aksi utama & eksklusif */
+    .bb-right .btn{
+      background:linear-gradient(155deg, var(--gold-bright), var(--gold));
+      border-color:transparent;
+      color:#141110;
+      box-shadow:0 8px 20px -8px rgba(201,164,92,.55), 0 0 0 1px rgba(201,164,92,.28) inset;
+    }
+    .bb-right .btn:hover{ filter:brightness(1.06); }
   }
 
   /* ---------- Breadcrumb ---------- */
