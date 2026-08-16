@@ -6,9 +6,17 @@
  * index.html langsung.
  *
  * STRUKTUR:
- * Subjek (nama)
+ * Subjek (nama + bidang)
  *  └── Tajuk (nama)
  *        └── Siri (nombor + pautan embed Notion)
+ *
+ * SETIAP SUBJEK ADA MEDAN `bidang` (OPSYENAL):
+ *   bidang → kategori umum bagi subjek ini, cth: "Fiqh", "Nahu", "Aqidah".
+ *            Ia akan dipaparkan sebagai label kecil pada kad subjek di
+ *            Utama, dan juga akan muncul secara automatik dalam dropdown
+ *            butang "Bidang" di sebelah kotak carian — TIDAK perlu
+ *            didaftarkan di mana-mana tempat lain, cukup taip di sini.
+ *            Jika dibiarkan kosong, ia akan dipaparkan sebagai "Umum".
  *
  * SETIAP SIRI ADA 3 MEDAN (1 opsyenal):
  *   siri  → nombor siri (1, 2, 3, ...)
@@ -39,6 +47,7 @@
 const SUBJEK = [
   {
     nama: "Muqaddimah al-Hadramiyyah",
+    bidang: "Fiqh",
     tajuk: [
       {
         nama: "Doa Keluar Tandas",
@@ -62,6 +71,7 @@ const SUBJEK = [
   },
   {
     nama: "Al-Jurumiyyah",
+    bidang: "Nahu",
     tajuk: [
       {
         nama: "Al-Kalam",
