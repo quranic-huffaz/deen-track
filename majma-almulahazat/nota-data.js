@@ -82,5 +82,17 @@ const SUBJEK = [
         ]
       }
     ]
+  },
+  {
+    nama: "Aqidatul Awwam",
+    bidang: "Aqidah",
+    tajuk: [
+      {
+        nama: "Muqaddimah",
+        siri: [
+          { siri: 1, embed: "https://purring-talos-7f4.notion.site/ebd/3c24b078389f807ca0b2d633cccb9f97" }
+        ]
+      }
+    ]
   }
 ];
