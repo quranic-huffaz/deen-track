@@ -1101,32 +1101,6 @@
 
 <div class="bg-grid"></div>
 
-<!-- MENU FAB — butang bulat premium melekat di kanan, buka popup 2 pilihan -->
-<div class="menu-fab-wrap" id="menuFabWrap">
-  <button class="menu-fab" id="menuFabBtn" onclick="toggleMenuFab(event)" aria-label="Buka menu" aria-haspopup="true">
-    <span class="menu-fab-ring"></span>
-    <span class="menu-fab-dot"></span>
-    <span class="menu-fab-label">MENU</span>
-  </button>
-  <div class="menu-popup" id="menuFabPopup">
-    <div class="menu-popup-eyebrow">Pautan Pantas</div>
-    <a href="https://deen-track.pages.dev/infaq-tahfiz-aqil" target="_blank" class="menu-popup-item">
-      <span class="menu-popup-icon">🕌</span>
-      <span class="menu-popup-text">
-        <span class="menu-popup-title">Infaq Tahfiz</span>
-      </span>
-      <span class="menu-popup-arrow">›</span>
-    </a>
-    <a href="https://deen-track.pages.dev" target="_blank" class="menu-popup-item">
-      <span class="menu-popup-icon">📿</span>
-      <span class="menu-popup-text">
-        <span class="menu-popup-title">Deen Track</span>
-      </span>
-      <span class="menu-popup-arrow">›</span>
-    </a>
-  </div>
-</div>
-
 <!-- HEADER -->
 <header>
   <div class="header-logo">
@@ -1157,24 +1131,6 @@
       <span class="meta-chip" style="direction:ltr;">Makkiyyah</span>
       <span class="meta-chip" style="direction:ltr;">110 Ayat</span>
       <span class="meta-chip" style="direction:ltr;">Surah ke-18</span>
-    </div>
-  </div>
-
-  <!-- MEDIA CARD: VIDEO -->
-  <div class="content-wrapper media-wrapper">
-    <div class="media-grid">
-      <div class="media-card">
-        <div class="media-card-header">
-          <div class="media-icon">🎬</div>
-          <div class="media-text">
-            <div class="media-label">Kelebihan Baca Surah Al-Kahfi</div>
-            <div class="media-title">Ustaz Abdul Somad</div>
-          </div>
-        </div>
-        <div class="media-embed-wrap">
-          <iframe src="https://www.youtube.com/embed/uiwHkaPmkr0?si=fsumvR6QDmkcgdTz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -1292,6 +1248,30 @@
 <nav class="bottom-nav">
   <div class="bottom-nav-inner">
     <button class="tab-btn active" id="tab1" onclick="switchMainTab(1)">✨ 10 Ayat</button>
+    <div class="menu-fab-wrap" id="menuFabWrap">
+      <button class="menu-fab" id="menuFabBtn" onclick="toggleMenuFab(event)" aria-label="Buka menu" aria-haspopup="true">
+        <span class="menu-fab-ring"></span>
+        <span class="menu-fab-dot"></span>
+        <span class="menu-fab-label">MENU</span>
+      </button>
+      <div class="menu-popup" id="menuFabPopup">
+        <div class="menu-popup-eyebrow">Pautan Pantas</div>
+        <a href="https://deen-track.pages.dev/infaq-tahfiz-aqil" target="_blank" class="menu-popup-item">
+          <span class="menu-popup-icon">🕌</span>
+          <span class="menu-popup-text">
+            <span class="menu-popup-title">Infaq Tahfiz</span>
+          </span>
+          <span class="menu-popup-arrow">›</span>
+        </a>
+        <a href="https://deen-track.pages.dev" target="_blank" class="menu-popup-item">
+          <span class="menu-popup-icon">📿</span>
+          <span class="menu-popup-text">
+            <span class="menu-popup-title">Deen Track</span>
+          </span>
+          <span class="menu-popup-arrow">›</span>
+        </a>
+      </div>
+    </div>
     <button class="tab-btn" id="tab0" onclick="switchMainTab(0)">📖 Surah Penuh</button>
   </div>
 </nav>
@@ -1573,6 +1553,21 @@ audioRange.addEventListener('change', () => {
 });
 // Selamatkan kes klik/keyboard tanpa event 'change' berturutan (contoh: arrow keys)
 audioRange.addEventListener('blur', () => { isScrubbing = false; });
+
+// ═══ SKIP ±5s BUTTONS — undur / maju 5 saat, dikawal selia dalam sempadan 0..duration ═══
+function skipAudio(deltaSeconds) {
+  if (!isFinite(audioEl.duration) || audioEl.duration <= 0) return;
+  let target = audioEl.currentTime + deltaSeconds;
+  if (target < 0) target = 0;
+  if (target > audioEl.duration) target = audioEl.duration;
+  audioEl.currentTime = target;
+  syncProgressUI(target, audioEl.duration);
+}
+
+const skipBackBtn = document.getElementById('audioSkipBack');
+const skipFwdBtn = document.getElementById('audioSkipForward');
+if (skipBackBtn) skipBackBtn.addEventListener('click', () => skipAudio(-5));
+if (skipFwdBtn) skipFwdBtn.addEventListener('click', () => skipAudio(5));
 
 // ═══ BISMILLAH CLEANUP — ayat 1 setiap surah (kecuali At-Taubah) datang dengan
 // Bismillah terselit di hadapan teks dari API. Kita buang di sini kerana Bismillah
