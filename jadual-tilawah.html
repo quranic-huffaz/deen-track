@@ -1565,6 +1565,7 @@ const DEFAULT_STATE = {
   lastSession: { pages: null, time: null, date: null },
   bookmarks: [],
   recentPages: [],
+  unmarkedPages: [],
 };
 
 function loadState() {
@@ -1582,6 +1583,7 @@ function saveState() {
 let state = loadState();
 if (!state.bookmarks)   state.bookmarks   = [];
 if (!state.recentPages) state.recentPages = [];
+if (!state.unmarkedPages) state.unmarkedPages = [];
 
 const PAGE_CACHE = {};
 
@@ -1592,6 +1594,16 @@ const $ = id => document.getElementById(id);
 const clamp    = (v,mn,mx) => Math.min(Math.max(v,mn),mx);
 const todayStr = ()        => new Date().toISOString().slice(0,10);
 const timeStr  = ()        => new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+
+/* Status bacaan satu muka — ambil kira tanda yang dibuang (toggle) */
+function isPageRead(page) {
+  return page <= state.pagesRead && state.unmarkedPages.indexOf(page) === -1;
+}
+
+/* Jumlah sebenar muka yang dibaca (tolak muka yang dibuang tandanya) */
+function getReadCount() {
+  return state.pagesRead - state.unmarkedPages.filter(p => p <= state.pagesRead).length;
+}
 
 function getSurahForPage(page) {
   let idx = 0;
@@ -1746,7 +1758,7 @@ function renderHalGrid(filter) {
   let count = 0;
 
   for (let p = 1; p <= TOTAL; p++) {
-    const isSudah  = p <= pagesRead;
+    const isSudah  = isPageRead(p);
     const isSemasa = p === pagesRead + 1;
     const isSaved  = isBookmarked(p);
 
@@ -1785,7 +1797,7 @@ function renderHalGrid(filter) {
   const countLbl = $('hal-count-lbl');
   const readLbl  = $('hal-read-lbl');
   if (countLbl) countLbl.textContent = count + ' muka';
-  if (readLbl)  readLbl.textContent  = pagesRead + ' / ' + TOTAL + ' dibaca';
+  if (readLbl)  readLbl.textContent  = getReadCount() + ' / ' + TOTAL + ' dibaca';
 }
 
 function initHalTab() {
@@ -1944,7 +1956,7 @@ async function renderQuranPage(page) {
   renderJuzStrip(page);
   renderBerbakiBar();
 
-  const isRead = page <= state.pagesRead;
+  const isRead = isPageRead(page);
   $('mark-btn').classList.toggle('marked', isRead);
   $('mark-icon').textContent = isRead ? '✓' : '○';
   $('mark-txt').textContent  = isRead ? 'Sudah Dibaca ✓' : 'Tandakan Muka Ini Sudah Dibaca';
@@ -2026,20 +2038,35 @@ function buildSurahHeader(s, BASMALAH_TEXT) {
   return html;
 }
 
-/* ── MARK PAGE ──────────────────────────────────────────────── */
+/* ── MARK PAGE (TOGGLE) ─────────────────────────────────────── */
 function markCurrentPage() {
   const p = state.currentQuranPage;
-  if (p <= state.pagesRead) { toast('Muka ini sudah dicatat sebelum ini.'); return; }
-  const toAdd = p - state.pagesRead;
-  state.pagesRead   = p;
-  state.todayPages += toAdd;
-  state.lastDate    = todayStr();
-  state.lastSession = { pages: toAdd, time: timeStr(), date: state.lastDate };
-  saveState();
-  $('mark-btn').classList.add('marked');
-  $('mark-icon').textContent = '✓';
-  $('mark-txt').textContent  = 'Sudah Dibaca ✓';
-  toast(`Muka ${p} ditandakan ✓`);
+
+  if (isPageRead(p)) {
+    // Buang tanda — hanya muka ini terkesan
+    if (state.unmarkedPages.indexOf(p) === -1) state.unmarkedPages.push(p);
+    if (state.todayPages > 0) state.todayPages--;
+    state.lastDate = todayStr();
+    saveState();
+    $('mark-btn').classList.remove('marked');
+    $('mark-icon').textContent = '○';
+    $('mark-txt').textContent  = 'Tandakan Muka Ini Sudah Dibaca';
+    toast(`Tanda muka ${p} dibuang.`);
+  } else {
+    // Tandakan sudah dibaca
+    const toAdd = p > state.pagesRead ? p - state.pagesRead : 1;
+    if (p > state.pagesRead) state.pagesRead = p;
+    state.unmarkedPages = state.unmarkedPages.filter(x => x !== p);
+    state.todayPages += toAdd;
+    state.lastDate    = todayStr();
+    state.lastSession = { pages: toAdd, time: timeStr(), date: state.lastDate };
+    saveState();
+    $('mark-btn').classList.add('marked');
+    $('mark-icon').textContent = '✓';
+    $('mark-txt').textContent  = 'Sudah Dibaca ✓';
+    toast(`Muka ${p} ditandakan ✓`);
+  }
+
   if (navigator.vibrate) navigator.vibrate(40);
 }
 
@@ -2155,7 +2182,7 @@ $('jump-inp').addEventListener('keydown', e => {
 // Reset
 $('reset-cancel').addEventListener('click',  () => closeModal($('modal-reset')));
 $('reset-confirm').addEventListener('click', () => {
-  state = { ...DEFAULT_STATE, lastDate: todayStr(), bookmarks: [], recentPages: [] };
+  state = { ...DEFAULT_STATE, lastDate: todayStr(), bookmarks: [], recentPages: [], unmarkedPages: [] };
   saveState(); renderQuranPage(1); closeModal($('modal-reset'));
   toast('Diset semula. Bismillah! 🤲');
 });
