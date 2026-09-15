@@ -1092,6 +1092,10 @@ body::before {
       <div class="hal-legend-item"><span class="hal-legend-dot"></span> Belum Dibaca</div>
     </div>
 
+    <div class="modal-actions" style="margin-top:6px">
+      <button class="btn-danger" id="hal-reset-btn">Reset — Jadikan Semua Belum Dibaca</button>
+    </div>
+
     <div class="page-bot"></div>
   </div>
 
@@ -1827,6 +1831,9 @@ function initHalTab() {
     });
   }
 
+  const halResetBtn = $('hal-reset-btn');
+  if (halResetBtn) halResetBtn.addEventListener('click', () => openModal($('modal-reset')));
+
   const halTabBtn = document.querySelector('.tab-btn[data-tab="halaman"]');
   if (halTabBtn) halTabBtn.addEventListener('click', () => renderHalGrid(halFilterMode));
 
@@ -2182,9 +2189,17 @@ $('jump-inp').addEventListener('keydown', e => {
 // Reset
 $('reset-cancel').addEventListener('click',  () => closeModal($('modal-reset')));
 $('reset-confirm').addEventListener('click', () => {
-  state = { ...DEFAULT_STATE, lastDate: todayStr(), bookmarks: [], recentPages: [], unmarkedPages: [] };
-  saveState(); renderQuranPage(1); closeModal($('modal-reset'));
-  toast('Diset semula. Bismillah! 🤲');
+  // Jadikan semua muka belum dibaca (penanda & muka terkini dikekalkan)
+  state.pagesRead     = 0;
+  state.todayPages    = 0;
+  state.unmarkedPages = [];
+  state.lastDate      = todayStr();
+  state.lastSession   = { pages: null, time: null, date: null };
+  saveState();
+  closeModal($('modal-reset'));
+  renderHalGrid(halFilterMode);
+  renderQuranPage(state.currentQuranPage);
+  toast('Semua muka ditetapkan belum dibaca. Bismillah! 🤲');
 });
 
 // Close modals on backdrop
