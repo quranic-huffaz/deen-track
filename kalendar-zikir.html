@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Zikir</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#18212f;--muted:#6b7280;--line:#e7eaf0;--gold:#c99a2e;--green:#198754;--red:#dc3545;--blue:#4263eb;--shadow:0 10px 30px rgba(20,30,50,.08)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Segoe UI,Arial,sans-serif}
+header{background:linear-gradient(135deg,#111827,#26354d);color:#fff;padding:28px 18px 70px}
+.wrap{max-width:1100px;margin:auto}.head{display:flex;justify-content:space-between;align-items:center;gap:20px}.brand h1{margin:0;font-size:30px}.brand p{margin:7px 0 0;color:#cbd5e1}.actions{display:flex;gap:8px;flex-wrap:wrap}
+button,.btn{border:0;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:700}.btn-light{background:#fff;color:#18212f}.btn-dark{background:#334155;color:#fff}.btn-gold{background:var(--gold);color:#fff}
+main{margin:-42px auto 40px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-top:18px;padding:20px}.panel-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.panel-title h2{margin:0;font-size:20px}.filters{display:flex;gap:8px;flex-wrap:wrap}.filters input,.filters select{padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.monthbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.monthbar h3{margin:0;text-transform:capitalize}.cal-head,.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}.cal-head div{text-align:center;color:var(--muted);font-size:12px;font-weight:700;padding:5px}.day{min-height:110px;border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;cursor:pointer;transition:border-color .15s}.day:hover{border-color:var(--gold)}.day.empty{background:#fafafa;cursor:default}.day.empty:hover{border-color:var(--line)}.day.today{border:2px solid var(--gold)}.date{font-weight:800;margin-bottom:8px}.zrow{font-size:12px;display:flex;justify-content:space-between;gap:5px;margin:5px 0;background:#f6f7fb;border-radius:8px;padding:4px 7px}.zrow span:first-child{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70px}.zrow span:last-child{font-weight:800}.status{font-size:11px;margin-top:7px;font-weight:700}.ok{color:var(--green)}.less{color:var(--red)}.future{color:var(--muted)}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px 8px;border-bottom:1px solid var(--line);font-size:14px}th{color:var(--muted);font-size:12px}.tag{display:inline-block;padding:5px 8px;border-radius:20px;background:#f0f2f6;font-size:12px;font-weight:700}.edit{background:#eef2ff;color:#3151c8}.del{background:#fff0f0;color:#c62828}
+.empty-state{text-align:center;padding:25px;color:var(--muted)}.fab{position:fixed;right:25px;bottom:25px;width:60px;height:60px;border-radius:50%;background:var(--gold);color:#fff;font-size:30px;box-shadow:0 12px 30px rgba(0,0,0,.2);z-index:10;border:0;cursor:pointer}
+.modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:20;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.modal-box{background:#fff;width:min(480px,100%);border-radius:18px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.25)}.modal-head{display:flex;justify-content:space-between}.close{background:#f1f3f5;color:#555}.field{margin:15px 0}.field label{display:block;font-weight:700;margin-bottom:7px}.field input,.field select,.field textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit}.field textarea{resize:vertical;min-height:70px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
+.notice{background:#fff8e5;border:1px solid #f0d78a;padding:12px;border-radius:12px;color:#745b16;font-size:13px}
+@media(max-width:800px){.calendar,.cal-head{gap:4px}.day{min-height:110px;padding:7px}.zrow{display:block}.zrow span{display:block;max-width:none}.brand h1{font-size:24px}.head{align-items:flex-start;flex-direction:column}}
+@media(max-width:520px){.calendar,.cal-head{grid-template-columns:repeat(7,minmax(70px,1fr))}.calendar-wrap{overflow-x:auto}.calendar,.cal-head{min-width:560px}.panel{padding:14px}.day{min-height:100px}.actions{width:100%}}
+</style>
+</head>
+<body>
+<header><div class="wrap head"><div class="brand"><h1>📿 Dashboard Zikir</h1><p>Rekod, pantau dan lihat perkembangan zikir harian anda.</p></div><div class="actions"><button class="btn-light" id="exportBtn">Export</button><button class="btn-light" id="importBtn">Import</button><input id="fileInput" type="file" accept=".json" hidden></div></div></header>
+
+<main class="wrap">
+
+<section class="panel">
+<div class="panel-title"><h2>Ringkasan</h2></div>
+<div class="notice">Sistem ini menggunakan rekod manual. Klik pada mana-mana tarikh di kalendar (atau butang +) untuk menambah rekod zikir; jumlah harian akan dipaparkan terus pada tarikh berkenaan.</div>
+</section>
+
+<section class="panel">
+<div class="panel-title"><h2>Kalendar Zikir</h2><div class="filters"><button class="btn-dark" id="prevMonth">‹</button><button class="btn-dark" id="todayBtn">Hari Ini</button><button class="btn-dark" id="nextMonth">›</button></div></div>
+<div class="monthbar"><h3 id="monthTitle"></h3><span class="small" id="monthSummary"></span></div>
+<div class="calendar-wrap"><div class="cal-head"><div>Isn</div><div>Sel</div><div>Rab</div><div>Kha</div><div>Jum</div><div>Sab</div><div>Ahd</div></div><div class="calendar" id="calendar"></div></div>
+</section>
+
+<section class="panel">
+<div class="panel-title"><h2>Rekod Manual</h2><div class="filters"><input id="searchInput" placeholder="Cari rekod..."><select id="filterZikir"><option value="">Semua zikir</option></select></div></div>
+<div id="recordsWrap"></div>
+</section>
+</main>
+
+<button class="fab" id="addBtn" title="Tambah rekod">+</button>
+
+<div class="modal" id="modal"><div class="modal-box">
+<div class="modal-head"><h2 id="modalTitle">Tambah Rekod Zikir</h2><button class="close" id="closeModal">✕</button></div>
+<form id="form"><input type="hidden" id="editId">
+<div class="field"><label>Nama Zikir</label><select id="zikir" required><option>Istighfar</option><option>Selawat</option><option>Lain-lain</option></select></div>
+<div class="field" id="zikirLainField" style="display:none"><label>Nyatakan nama zikir</label><textarea id="zikirLain" placeholder="Contoh: Tasbih, Tahmid, dll"></textarea></div>
+<div class="field"><label>Jumlah</label><input id="jumlah" type="number" min="1" step="1" required placeholder="Contoh: 1000"></div>
+<div class="field"><label>Tarikh</label><input id="tarikh" type="date" required></div>
+<div class="modal-actions"><button type="button" class="btn-dark" id="cancelBtn">Batal</button><button class="btn-gold">Simpan Rekod</button></div>
+</form></div></div>
+
+<script>
+const KEY='dashboardZikir_v1';
+let records=JSON.parse(localStorage.getItem(KEY)||'[]');
+let viewDate=new Date();
+viewDate.setDate(1);
+
+const $=id=>document.getElementById(id);
+const fmt=n=>Number(n||0).toLocaleString('ms-MY');
+const iso=d=>{const x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')};
+const today=()=>iso(new Date());
+const icon=z=>z==='Istighfar'?'🤲':z==='Selawat'?'ﷺ':'📿';
+
+function save(){localStorage.setItem(KEY,JSON.stringify(records)); render();}
+function daily(date,zikir){return records.filter(r=>r.zikir===zikir&&r.tarikh===date).reduce((s,r)=>s+Number(r.jumlah),0)}
+function dayZikirList(date){
+ const names=[...new Set(records.filter(r=>r.tarikh===date).map(r=>r.zikir))];
+ // order: Istighfar, Selawat first, then others alphabetically
+ return names.sort((a,b)=>{
+   const order=z=>z==='Istighfar'?0:z==='Selawat'?1:2;
+   const oa=order(a),ob=order(b);
+   if(oa!==ob)return oa-ob;
+   return a.localeCompare(b,'ms');
+ });
+}
+function allZikirNames(){
+ const names=new Set(['Istighfar','Selawat']);
+ records.forEach(r=>names.add(r.zikir));
+ return [...names].sort((a,b)=>{
+   const order=z=>z==='Istighfar'?0:z==='Selawat'?1:2;
+   const oa=order(a),ob=order(b);
+   if(oa!==ob)return oa-ob;
+   return a.localeCompare(b,'ms');
+ });
+}
+function renderCalendar(){
+ const y=viewDate.getFullYear(),m=viewDate.getMonth();
+ $('monthTitle').textContent=new Intl.DateTimeFormat('ms-MY',{month:'long',year:'numeric'}).format(viewDate);
+ const first=new Date(y,m,1), last=new Date(y,m+1,0);
+ let offset=(first.getDay()+6)%7, html='';
+ for(let i=0;i<offset;i++)html+='<div class="day empty"></div>';
+ for(let day=1;day<=last.getDate();day++){
+   const d=new Date(y,m,day), key=iso(d), isToday=key===today(), isFuture=key>today();
+   const names=dayZikirList(key);
+   let body='';
+   names.forEach(z=>{
+     const val=daily(key,z);
+     body+=`<div class="zrow"><span>${icon(z)} ${z}</span><span>${fmt(val)}</span></div>`;
+   });
+   let status=isFuture?'<span class="future">Belum tiba</span>':names.length?'<span class="ok">● Ada rekod</span>':'<span class="less">● Tiada rekod</span>';
+   html+=`<div class="day ${isToday?'today':''}" data-date="${key}"><div class="date">${day} ${isToday?'• Hari Ini':''}</div>${body}<div class="status">${status}</div></div>`;
+ }
+ $('calendar').innerHTML=html;
+ const monthRecs=records.filter(r=>{const d=new Date(r.tarikh+'T00:00:00');return d.getFullYear()===y&&d.getMonth()===m});
+ const sum=monthRecs.reduce((s,r)=>s+Number(r.jumlah),0);
+ $('monthSummary').textContent=fmt(sum)+' kali direkod bulan ini';
+ document.querySelectorAll('.day[data-date]').forEach(el=>el.onclick=()=>openModal(null,el.dataset.date));
+}
+function renderFilterOptions(){
+ const cur=$('filterZikir').value;
+ const names=allZikirNames();
+ $('filterZikir').innerHTML='<option value="">Semua zikir</option>'+names.map(n=>`<option${n===cur?' selected':''}>${n}</option>`).join('');
+}
+function renderRecords(){
+ const q=$('searchInput').value.toLowerCase(), f=$('filterZikir').value;
+ const arr=[...records].sort((a,b)=>b.tarikh.localeCompare(a.tarikh)||b.createdAt-a.createdAt).filter(r=>(!f||r.zikir===f)&&(`${r.zikir} ${r.tarikh} ${r.jumlah}`.toLowerCase().includes(q)));
+ if(!arr.length){$('recordsWrap').innerHTML='<div class="empty-state">Belum ada rekod yang sepadan.</div>';return}
+ let html='<div style="overflow:auto"><table><thead><tr><th>Tarikh</th><th>Zikir</th><th>Jumlah</th><th>Tindakan</th></tr></thead><tbody>';
+ arr.forEach(r=>html+=`<tr><td>${new Date(r.tarikh+'T00:00:00').toLocaleDateString('ms-MY')}</td><td><span class="tag">${r.zikir}</span></td><td><b>${fmt(r.jumlah)}</b> kali</td><td><button class="edit" onclick="editRecord('${r.id}')">Edit</button> <button class="del" onclick="deleteRecord('${r.id}')">Padam</button></td></tr>`);
+ html+='</tbody></table></div>';$('recordsWrap').innerHTML=html;
+}
+function render(){renderFilterOptions();renderCalendar();renderRecords();}
+function toggleZikirLain(){
+ $('zikirLainField').style.display=$('zikir').value==='Lain-lain'?'block':'none';
+}
+function openModal(id=null,date=today()){
+ $('form').reset();$('editId').value=id||'';$('tarikh').value=date;$('modalTitle').textContent=id?'Edit Rekod Zikir':'Tambah Rekod Zikir';
+ toggleZikirLain();
+ if(id){
+  const r=records.find(x=>x.id===id);
+  if(r.zikir==='Istighfar'||r.zikir==='Selawat'){$('zikir').value=r.zikir}
+  else{$('zikir').value='Lain-lain';$('zikirLain').value=r.zikir}
+  $('jumlah').value=r.jumlah;$('tarikh').value=r.tarikh;
+  toggleZikirLain();
+ }
+ $('modal').classList.add('show');
+}
+function closeModal(){$('modal').classList.remove('show')}
+window.editRecord=id=>openModal(id);
+window.deleteRecord=id=>{
+ const r=records.find(x=>x.id===id);
+ if(r&&confirm(`Padam rekod ${r.zikir} (${fmt(r.jumlah)} kali) pada ${new Date(r.tarikh+'T00:00:00').toLocaleDateString('ms-MY')}?`)){records=records.filter(x=>x.id!==id);save()}
+};
+$('zikir').onchange=toggleZikirLain;
+$('form').onsubmit=e=>{
+ e.preventDefault();
+ const id=$('editId').value;
+ let zikirName=$('zikir').value;
+ if(zikirName==='Lain-lain'){
+  zikirName=$('zikirLain').value.trim();
+  if(!zikirName){alert('Sila nyatakan nama zikir.');return}
+ }
+ const data={zikir:zikirName,jumlah:Math.round(Number($('jumlah').value)),tarikh:$('tarikh').value};
+ if(id){const i=records.findIndex(r=>r.id===id);records[i]={...records[i],...data}}
+ else records.push({...data,id:crypto.randomUUID(),createdAt:Date.now()});
+ save();closeModal();
+};
+$('addBtn').onclick=()=>openModal();
+$('closeModal').onclick=closeModal;$('cancelBtn').onclick=closeModal;
+$('modal').onclick=e=>{if(e.target===$('modal'))closeModal()};
+$('prevMonth').onclick=()=>{viewDate.setMonth(viewDate.getMonth()-1);renderCalendar()};
+$('nextMonth').onclick=()=>{viewDate.setMonth(viewDate.getMonth()+1);renderCalendar()};
+$('todayBtn').onclick=()=>{viewDate=new Date();viewDate.setDate(1);renderCalendar()};
+$('searchInput').oninput=renderRecords;$('filterZikir').onchange=renderRecords;
+$('exportBtn').onclick=()=>{
+ const blob=new Blob([JSON.stringify(records,null,2)],{type:'application/json'}),a=document.createElement('a');
+ a.href=URL.createObjectURL(blob);a.download='backup-zikir-'+today()+'.json';a.click();URL.revokeObjectURL(a.href);
+};
+$('importBtn').onclick=()=>$('fileInput').click();
+$('fileInput').onchange=e=>{
+ const file=e.target.files[0];if(!file)return;
+ const reader=new FileReader();reader.onload=()=>{
+  try{const data=JSON.parse(reader.result);if(!Array.isArray(data))throw 0;
+   const clean=data.filter(r=>r&&r.zikir&&Number(r.jumlah)>0&&r.tarikh).map(r=>({...r,id:r.id||crypto.randomUUID(),createdAt:r.createdAt||Date.now()}));
+   if(confirm(`Import ${clean.length} rekod? Rekod sedia ada akan digabungkan.`)){records=[...records,...clean];save()}
+  }catch{alert('Fail tidak sah. Sila gunakan fail JSON yang dieksport daripada sistem ini.')}
+ };reader.readAsText(file);e.target.value='';
+};
+render();
+</script>
+</body>
+</html>
