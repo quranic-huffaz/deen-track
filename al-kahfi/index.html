@@ -186,53 +186,51 @@
     letter-spacing: 0.04em; font-weight: 500;
   }
 
-  /* ─── MENU FAB (fixed, melekat di kanan) — premium fintech circular launcher ─── */
+  /* ─── MENU DI BOTTOM NAV — premium fintech, popup membuka ke atas ─── */
   .menu-fab-wrap {
-    position: fixed;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1600;
+    position: relative;
+    flex: 1;
+    height: 100%;
+    min-width: 0;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     direction: ltr;
   }
 
   .menu-fab {
     position: relative;
-    width: 60px; height: 60px;
-    border-radius: 50%;
-    border: none;
+    width: 100%;
+    height: 100%;
+    min-height: 38px;
+    border-radius: 9px;
+    border: 1px solid transparent;
     cursor: pointer;
-    background: radial-gradient(circle at 32% 28%, #2a2210 0%, #12100a 55%, #0a0805 100%);
-    box-shadow:
-      0 10px 30px rgba(0,0,0,0.55),
-      0 0 0 1px rgba(201,168,76,0.35),
-      inset 0 1px 1px rgba(255,255,255,0.12),
-      inset 0 -6px 12px rgba(0,0,0,0.5);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 2px;
-    transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.25s ease;
   }
 
   .menu-fab::before {
-    content: '';
-    position: absolute; inset: -1px;
-    border-radius: 50%;
-    padding: 1px;
-    background: conic-gradient(from 180deg, rgba(201,168,76,0.05), var(--accent-gold-light) 25%, rgba(201,168,76,0.05) 50%, var(--accent-gold) 75%, rgba(201,168,76,0.05) 100%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0.9;
-    pointer-events: none;
+    display: none;
   }
 
   .menu-fab-ring {
-    position: absolute; inset: 0;
+    position: static;
+    width: 6px;
+    height: 6px;
+    flex: 0 0 6px;
     border-radius: 50%;
-    border: 1.5px solid rgba(201,168,76,0.55);
-    animation: menu-fab-pulse 2.6s ease-out infinite;
+    border: none;
+    background: var(--accent-gold-light);
+    box-shadow: 0 0 8px rgba(232,201,106,0.9);
+    animation: menu-fab-blink 2.6s ease-in-out infinite;
     pointer-events: none;
   }
 
@@ -243,10 +241,7 @@
   }
 
   .menu-fab-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--accent-gold-light);
-    box-shadow: 0 0 8px rgba(232,201,106,0.9);
-    animation: menu-fab-blink 2.6s ease-in-out infinite;
+    display: none;
   }
 
   @keyframes menu-fab-blink {
@@ -255,36 +250,41 @@
   }
 
   .menu-fab-label {
-    font-size: 8.5px;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    color: var(--accent-gold-light);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: inherit;
     text-transform: uppercase;
-    margin-top: 3px;
+    margin-top: 0;
   }
 
   .menu-fab:hover {
-    transform: scale(1.07);
-    box-shadow:
-      0 14px 36px rgba(0,0,0,0.6),
-      0 0 0 1px rgba(201,168,76,0.55),
-      0 0 24px rgba(201,168,76,0.25),
-      inset 0 1px 1px rgba(255,255,255,0.15),
-      inset 0 -6px 12px rgba(0,0,0,0.5);
+    background: rgba(201,168,76,0.1);
+    border-color: rgba(201,168,76,0.25);
+    color: var(--accent-gold-light);
+    transform: none;
+    box-shadow: 0 2px 12px rgba(201,168,76,0.1);
   }
 
-  .menu-fab:active { transform: scale(0.96); }
+  .menu-fab:active {
+    transform: scale(0.98);
+  }
 
   .menu-fab-wrap.open .menu-fab {
-    transform: scale(1.05) rotate(90deg);
+    background: linear-gradient(135deg, rgba(201,168,76,0.2), rgba(201,168,76,0.08));
+    border-color: rgba(201,168,76,0.25);
+    color: var(--accent-gold-light);
+    transform: none;
+    box-shadow: 0 2px 12px rgba(201,168,76,0.1);
   }
 
-  /* ─── MENU POPUP — premium fintech card, dua pilihan ─── */
+  /* ─── MENU POPUP — popup dibuka ke atas, tepat di tengah butang MENU ─── */
   .menu-popup {
     position: absolute;
-    right: 76px;
-    top: 50%;
-    transform: translateY(-50%) translateX(8px) scale(0.94);
+    right: 50%;
+    bottom: calc(100% + 10px);
+    top: auto;
+    transform: translateX(50%) translateY(8px) scale(0.94);
     min-width: 240px;
     background: linear-gradient(165deg, #16213a 0%, #0e1626 100%);
     border: 1px solid rgba(201,168,76,0.28);
@@ -294,22 +294,27 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 1700;
   }
 
   .menu-popup::after {
     content: '';
     position: absolute;
-    right: -6px; top: 50%; transform: translateY(-50%) rotate(45deg);
-    width: 12px; height: 12px;
+    right: 50%;
+    bottom: -6px;
+    top: auto;
+    transform: translateX(50%) rotate(45deg);
+    width: 12px;
+    height: 12px;
     background: #101a2e;
     border-right: 1px solid rgba(201,168,76,0.28);
-    border-top: 1px solid rgba(201,168,76,0.28);
+    border-bottom: 1px solid rgba(201,168,76,0.28);
   }
 
   .menu-fab-wrap.open .menu-popup {
     opacity: 1;
     pointer-events: all;
-    transform: translateY(-50%) translateX(0) scale(1);
+    transform: translateX(50%) translateY(0) scale(1);
   }
 
   .menu-popup-eyebrow {
@@ -604,6 +609,51 @@
 
   .vn-time-row #audioTimeLabel { color: var(--text-secondary); }
   .vn-time-row #audioTimeLabel .vn-time-current { color: var(--accent-gold-light); font-weight: 600; }
+
+  /* ─── AUDIO SKIP 5 SAAT ─── */
+  .vn-skip-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    direction: ltr;
+  }
+
+  .vn-skip-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid rgba(201,168,76,0.22);
+    background: rgba(201,168,76,0.08);
+    color: var(--accent-gold-light);
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .vn-skip-btn:hover {
+    background: rgba(201,168,76,0.16);
+    border-color: rgba(201,168,76,0.45);
+    box-shadow: 0 3px 14px rgba(201,168,76,0.16);
+  }
+
+  .vn-skip-btn:active {
+    transform: scale(0.94);
+    background: rgba(201,168,76,0.22);
+  }
+
+  .vn-skip-arrow {
+    font-size: 15px;
+    line-height: 1;
+  }
 
   /* ─── AUDIO BLOCK EMBEDDED INSIDE THE "10 AYAT" READER CARD ─── */
   .tab-audio-block {
@@ -1074,16 +1124,20 @@
     .page-verse-arabic { font-size: 22px; line-height: 2.0; }
     .page-verse-item { padding: 12px 14px 8px; gap: 10px; }
     .quran-page { margin: 8px; }
-    .menu-fab-wrap { right: 10px; }
-    .menu-fab { width: 54px; height: 54px; }
-    .menu-fab-label { font-size: 7.5px; }
-    .menu-popup { right: 68px; min-width: 210px; }
+    .menu-fab-wrap { right: auto; }
+    .menu-fab { min-height: 38px; }
+    .menu-fab-label { font-size: 12px; }
+    .menu-popup { min-width: 210px; }
+    .vn-skip-controls { gap: 5px; }
+    .vn-skip-btn { width: 36px; height: 36px; }
   }
 
   @media (max-width: 380px) {
     .menu-popup { min-width: 188px; }
     .menu-popup-title { font-size: 12px; }
     .menu-popup-sub { font-size: 10px; }
+    .vn-skip-btn { width: 34px; height: 34px; }
+    .vn-skip-arrow { font-size: 14px; }
   }
 
   /* ─── GRID BG ─── */
@@ -1214,6 +1268,14 @@
                 <span id="audioTimeLabel"><span class="vn-time-current">00:00</span> / 00:00</span>
               </div>
             </div>
+            <div class="vn-skip-controls" aria-label="Kawalan lompat audio">
+              <button class="vn-skip-btn" type="button" onclick="seekAudio(-5)" aria-label="5 saat ke belakang" title="5 saat ke belakang">
+                <span class="vn-skip-arrow">←</span><span>5s</span>
+              </button>
+              <button class="vn-skip-btn" type="button" onclick="seekAudio(5)" aria-label="5 saat ke depan" title="5 saat ke depan">
+                <span>5s</span><span class="vn-skip-arrow">→</span>
+              </button>
+            </div>
           </div>
           <audio id="audioEl" preload="metadata" src="Bacaan Al-Kahfi 1-10 %26 100-110 - Ismail Annuri.mp3"></audio>
         </div>
@@ -1244,26 +1306,25 @@
   </div><!-- /content-wrapper -->
 </main>
 
-<!-- BOTTOM TAB NAV (fixed) -->
+<!-- BOTTOM TAB NAV (fixed) — 10 Ayat | MENU | Surah Penuh -->
 <nav class="bottom-nav">
   <div class="bottom-nav-inner">
     <button class="tab-btn active" id="tab1" onclick="switchMainTab(1)">✨ 10 Ayat</button>
     <div class="menu-fab-wrap" id="menuFabWrap">
-      <button class="menu-fab" id="menuFabBtn" onclick="toggleMenuFab(event)" aria-label="Buka menu" aria-haspopup="true">
+      <button class="menu-fab" id="menuFabBtn" onclick="toggleMenuFab(event)" aria-label="Buka menu" aria-haspopup="true" aria-expanded="false">
         <span class="menu-fab-ring"></span>
-        <span class="menu-fab-dot"></span>
         <span class="menu-fab-label">MENU</span>
       </button>
       <div class="menu-popup" id="menuFabPopup">
         <div class="menu-popup-eyebrow">Pautan Pantas</div>
-        <a href="https://deen-track.pages.dev/infaq-tahfiz-aqil" target="_blank" class="menu-popup-item">
+        <a href="https://deen-track.pages.dev/infaq-tahfiz-aqil" target="_blank" rel="noopener noreferrer" class="menu-popup-item">
           <span class="menu-popup-icon">🕌</span>
           <span class="menu-popup-text">
             <span class="menu-popup-title">Infaq Tahfiz</span>
           </span>
           <span class="menu-popup-arrow">›</span>
         </a>
-        <a href="https://deen-track.pages.dev" target="_blank" class="menu-popup-item">
+        <a href="https://deen-track.pages.dev" target="_blank" rel="noopener noreferrer" class="menu-popup-item">
           <span class="menu-popup-icon">📿</span>
           <span class="menu-popup-text">
             <span class="menu-popup-title">Deen Track</span>
@@ -1312,14 +1373,20 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2600);
 }
 
-// ═══ MENU FAB (kanan) ═══
+// ═══ MENU FAB (bottom nav) ═══
 function toggleMenuFab(e) {
   e.stopPropagation();
-  document.getElementById('menuFabWrap').classList.toggle('open');
+  const wrap = document.getElementById('menuFabWrap');
+  const btn = document.getElementById('menuFabBtn');
+  const isOpen = wrap.classList.toggle('open');
+  btn.setAttribute('aria-expanded', String(isOpen));
 }
 
 function closeMenuFab() {
-  document.getElementById('menuFabWrap').classList.remove('open');
+  const wrap = document.getElementById('menuFabWrap');
+  const btn = document.getElementById('menuFabBtn');
+  wrap.classList.remove('open');
+  btn.setAttribute('aria-expanded', 'false');
 }
 
 document.addEventListener('click', (e) => {
@@ -1534,6 +1601,13 @@ function toggleAudio() {
   }
 }
 
+function seekAudio(seconds) {
+  if (!isFinite(audioEl.duration) || audioEl.duration <= 0) return;
+  const nextTime = Math.min(Math.max(audioEl.currentTime + seconds, 0), audioEl.duration);
+  audioEl.currentTime = nextTime;
+  syncProgressUI(audioEl.currentTime, audioEl.duration);
+}
+
 // ═══ SEEK / SCRUB VIA <input type="range"> — klik ATAU seret di atas ombak ═══
 let isScrubbing = false;
 
@@ -1553,21 +1627,6 @@ audioRange.addEventListener('change', () => {
 });
 // Selamatkan kes klik/keyboard tanpa event 'change' berturutan (contoh: arrow keys)
 audioRange.addEventListener('blur', () => { isScrubbing = false; });
-
-// ═══ SKIP ±5s BUTTONS — undur / maju 5 saat, dikawal selia dalam sempadan 0..duration ═══
-function skipAudio(deltaSeconds) {
-  if (!isFinite(audioEl.duration) || audioEl.duration <= 0) return;
-  let target = audioEl.currentTime + deltaSeconds;
-  if (target < 0) target = 0;
-  if (target > audioEl.duration) target = audioEl.duration;
-  audioEl.currentTime = target;
-  syncProgressUI(target, audioEl.duration);
-}
-
-const skipBackBtn = document.getElementById('audioSkipBack');
-const skipFwdBtn = document.getElementById('audioSkipForward');
-if (skipBackBtn) skipBackBtn.addEventListener('click', () => skipAudio(-5));
-if (skipFwdBtn) skipFwdBtn.addEventListener('click', () => skipAudio(5));
 
 // ═══ BISMILLAH CLEANUP — ayat 1 setiap surah (kecuali At-Taubah) datang dengan
 // Bismillah terselit di hadapan teks dari API. Kita buang di sini kerana Bismillah
