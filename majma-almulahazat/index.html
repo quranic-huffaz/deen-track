@@ -309,46 +309,6 @@
     letter-spacing:.08em; margin-top:6px; display:block;
   }
 
-  /* ---------- Notice card (makluman premium — poster notagrafik AI) ---------- */
-  .notice-card{
-    display:flex; align-items:flex-start; gap:14px;
-    background:linear-gradient(155deg, rgba(201,164,92,.09), rgba(20,25,34,.55));
-    border:1px solid var(--border-strong);
-    border-radius:var(--radius);
-    padding:18px 20px;
-    margin-bottom:28px;
-    box-shadow:var(--shadow-card);
-    position:relative;
-    overflow:hidden;
-  }
-  .notice-card::before{
-    content:"";
-    position:absolute; inset:0;
-    background:radial-gradient(420px 140px at 0% 0%, rgba(201,164,92,.12), transparent 60%);
-    pointer-events:none;
-  }
-  .notice-icon{
-    width:36px; height:36px; border-radius:10px; flex-shrink:0;
-    display:flex; align-items:center; justify-content:center;
-    background:linear-gradient(155deg, rgba(201,164,92,.35), rgba(201,164,92,.08));
-    border:1px solid var(--border-strong);
-    color:var(--gold-bright);
-    position:relative;
-  }
-  .notice-body{ flex-grow:1; min-width:0; position:relative; }
-  .notice-title{
-    margin:0 0 6px;
-    font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
-    color:var(--gold-bright);
-  }
-  .notice-card p{
-    margin:0; font-size:13px; line-height:1.65; color:var(--text-secondary);
-  }
-  @media (max-width:640px){
-    .notice-card{ padding:15px 16px; gap:11px; margin-bottom:22px; }
-    .notice-icon{ width:32px; height:32px; }
-  }
-
   /* ---------- Search ---------- */
   .search-wrap{ position:relative; margin-bottom:32px; }
   .search-wrap input{
@@ -690,7 +650,6 @@
     back: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>',
     chevLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 18-6-6 6-6"/></svg>',
     chevRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m9 18 6-6-6-6"/></svg>',
-    info: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><path d="M12 7.5h.01"/></svg>',
   };
 
   /* ---------------- Utiliti ---------------- */
@@ -768,14 +727,6 @@
           <div class="stat"><span class="num mono">${SUBJEK.length}</span><span class="lbl">Subjek</span></div>
           <div class="stat"><span class="num mono">${totalTajuk()}</span><span class="lbl">Tajuk</span></div>
           <div class="stat"><span class="num mono">${totalSiri()}</span><span class="lbl">Siri</span></div>
-        </div>
-      </div>
-
-      <div class="notice-card">
-        <span class="notice-icon">${ICONS.info}</span>
-        <div class="notice-body">
-          <p class="notice-title">Makluman</p>
-          <p>Poster notagrafik dijana oleh AI sebagai gambaran penerangan topik—maklumat di dalamnya mungkin tidak 100% tepat (dari sudut baris, ejaan dan sebagainya). Penerangan penuh dan terperinci boleh dirujuk pada nota yang disediakan. Selamat membaca!</p>
         </div>
       </div>
 
