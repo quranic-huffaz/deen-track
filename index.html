@@ -328,6 +328,102 @@
             letter-spacing: -0.01em;
         }
 
+        /* ── PREMIUM BOX (Tap Selawat & Kalendar Zikir) ─────────── */
+        #tap-selawat {
+            scroll-margin-top: 100px;
+        }
+
+        .premium-box {
+            background: linear-gradient(160deg, #0f1829 0%, #111d33 55%, #0a1120 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px;
+            padding: 16px;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 24px -4px rgba(15,24,41,0.25);
+        }
+
+        .premium-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(34,211,238,0.4), rgba(59,130,246,0.4), transparent);
+        }
+
+        .premium-box-label {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.35);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .premium-btn-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .premium-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 14px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            transition: transform 0.18s ease, background 0.18s ease;
+        }
+
+        .premium-btn:active,
+        .premium-btn:hover {
+            transform: scale(0.96);
+            background: rgba(255,255,255,0.09);
+        }
+
+        .premium-btn-icon {
+            width: 42px; height: 42px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 8px;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+
+        .premium-btn-icon-cyan { background: linear-gradient(135deg, rgba(34,211,238,0.18), rgba(59,130,246,0.18)); color: #22d3ee; }
+        .premium-btn-icon-gold { background: linear-gradient(135deg, rgba(240,192,64,0.2), rgba(240,192,64,0.08)); color: #f0c040; }
+
+        .premium-btn-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+        }
+
+        .premium-btn-sub {
+            font-size: 9.5px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 2px;
+        }
+
+        #tap-selawat.anchor-highlight-selawat {
+            animation: anchorPulseSelawat 1.8s ease;
+        }
+
+        @keyframes anchorPulseSelawat {
+            0%   { box-shadow: 0 8px 24px -4px rgba(15,24,41,0.25); border-color: rgba(255,255,255,0.08); }
+            15%  { box-shadow: 0 0 0 3px rgba(34,211,238,0.35), 0 0 26px rgba(34,211,238,0.4); border-color: rgba(34,211,238,0.9); }
+            40%  { box-shadow: 0 0 0 1px rgba(34,211,238,0.2), 0 0 14px rgba(34,211,238,0.25); border-color: rgba(34,211,238,0.5); }
+            60%  { box-shadow: 0 0 0 3px rgba(34,211,238,0.3), 0 0 22px rgba(34,211,238,0.35); border-color: rgba(34,211,238,0.85); }
+            100% { box-shadow: 0 8px 24px -4px rgba(15,24,41,0.25); border-color: rgba(255,255,255,0.08); }
+        }
+
         /* ── INFAQ POPUP ─────────────────────────────── */
         .infaq-popup {
             position: fixed;
@@ -888,6 +984,28 @@
 
     <!-- ═══════════════ MAIN MENU (3 kad sahaja) ═══════════════ -->
     <main class="max-w-md mx-auto px-5 -mt-12">
+
+        <!-- Kotak Premium: Tap Selawat & Kalendar Zikir -->
+        <div id="tap-selawat" class="premium-box">
+            <div class="premium-box-label">Amalan Pantas</div>
+            <div class="premium-btn-row">
+                <a href="https://deen-track.pages.dev/jom-selawat" class="premium-btn">
+                    <div class="premium-btn-icon premium-btn-icon-cyan">
+                        <i class="fa-solid fa-hands-praying"></i>
+                    </div>
+                    <span class="premium-btn-label">Tap Selawat</span>
+                    <span class="premium-btn-sub">1 Tap, 1 Selawat</span>
+                </a>
+                <a href="https://deen-track.pages.dev/kalendar-zikir" class="premium-btn">
+                    <div class="premium-btn-icon premium-btn-icon-gold">
+                        <i class="fa-solid fa-calendar-days"></i>
+                    </div>
+                    <span class="premium-btn-label">Kalendar Zikir</span>
+                    <span class="premium-btn-sub">Jadual Zikir Harian</span>
+                </a>
+            </div>
+        </div>
+
         <div class="grid grid-cols-2 gap-4">
 
             <a href="tilawah.html" class="menu-card card-blue">
@@ -906,14 +1024,14 @@
                 <span style="font-size:11px;color:var(--text-muted);font-weight:500;">Hafal 1 Hari 1 Ayat</span>
             </a>
 
-            <!-- Tap Selawat (Lebar Penuh) -->
-            <a href="jom-selawat.html" class="menu-card card-indigo" style="grid-column: span 2;">
+            <!-- Majma' al-Mulahazat (Lebar Penuh) -->
+            <a href="https://deen-track.pages.dev/majma-almulahazat" class="menu-card card-indigo" style="grid-column: span 2;">
                 <div style="display:flex;align-items:center;gap:14px;width:100%;">
                     <div class="icon-wrap icon-indigo" style="margin-bottom:0;flex-shrink:0;">
                         <i class="fa-solid fa-layer-group"></i>
                     </div>
                     <div style="text-align:left;">
-                        <span class="menu-label" style="display:block;">Tap Selawat</span>
+                        <span class="menu-label" style="display:block;">Majma' al-Mulahazat</span>
                         <span style="font-size:11px;color:var(--text-muted);font-weight:500;">1 Tap, 1 Selawat, 10 Rahmat</span>
                     </div>
                     <div style="margin-left:auto;width:28px;height:28px;border-radius:10px;background:linear-gradient(135deg,#eef2ff,#e0e7ff);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -1464,6 +1582,36 @@
             setTimeout(() => { toast.classList.remove('show'); }, 2500);
         }
 
+        /* ── DEEP-LINK / AUTO SCROLL: TAP SELAWAT ────────── */
+        function highlightTapSelawat() {
+            const target = document.getElementById('tap-selawat');
+            if (!target) return;
+
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+
+            target.classList.remove('anchor-highlight-selawat');
+            void target.offsetWidth; // reset animasi jika dipanggil berulang kali
+
+            setTimeout(() => {
+                target.classList.add('anchor-highlight-selawat');
+                setTimeout(() => {
+                    target.classList.remove('anchor-highlight-selawat');
+                }, 1800);
+            }, 450);
+        }
+
+        function checkTapSelawatHash() {
+            if (window.location.hash === '#tap-selawat') {
+                highlightTapSelawat();
+            }
+        }
+
+        window.addEventListener('load', checkTapSelawatHash);
+        window.addEventListener('hashchange', checkTapSelawatHash);
+
         /* ── TUTUP MODAL DENGAN ESCAPE ───────────────────── */
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
@@ -1479,6 +1627,7 @@
         updateCountdown();
         setInterval(updateCountdown, 1000);
         handleInfaqPopup();
+        checkTapSelawatHash();
     </script>
 </body>
 </html>
