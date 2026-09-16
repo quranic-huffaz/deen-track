@@ -309,6 +309,93 @@
     letter-spacing:.08em; margin-top:6px; display:block;
   }
 
+  /* ---------- Notagrafik AI Notice ---------- */
+  .ai-notice{
+    position:relative;
+    margin:-8px 0 32px;
+    padding:18px 20px;
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+    background:
+      linear-gradient(135deg, rgba(201,164,92,.10), rgba(201,164,92,.035) 55%, rgba(79,184,172,.035));
+    border:1px solid rgba(201,164,92,.24);
+    border-radius:var(--radius);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.025) inset,
+      0 18px 36px -28px rgba(0,0,0,.7);
+    overflow:hidden;
+  }
+  .ai-notice::before{
+    content:"";
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:2px;
+    background:linear-gradient(180deg, var(--gold-bright), var(--gold), rgba(201,164,92,.15));
+  }
+  .ai-notice-icon{
+    width:34px;
+    height:34px;
+    flex:0 0 34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:9px;
+    color:var(--gold-bright);
+    background:rgba(201,164,92,.10);
+    border:1px solid rgba(201,164,92,.22);
+  }
+  .ai-notice-icon svg{
+    width:17px;
+    height:17px;
+  }
+  .ai-notice-content{
+    min-width:0;
+  }
+  .ai-notice-label{
+    margin:0 0 5px;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.10em;
+    text-transform:uppercase;
+    color:var(--gold-bright);
+  }
+  .ai-notice-text{
+    margin:0;
+    color:var(--text-secondary);
+    font-size:12.8px;
+    line-height:1.65;
+  }
+  .ai-notice-text strong{
+    color:var(--text-primary);
+    font-weight:600;
+  }
+  @media (max-width:640px){
+    .ai-notice{
+      margin:-8px 0 28px;
+      padding:15px 16px;
+      gap:11px;
+    }
+    .ai-notice-icon{
+      width:31px;
+      height:31px;
+      flex-basis:31px;
+      border-radius:8px;
+    }
+    .ai-notice-icon svg{
+      width:15px;
+      height:15px;
+    }
+    .ai-notice-label{
+      font-size:9px;
+      margin-bottom:4px;
+    }
+    .ai-notice-text{
+      font-size:12.2px;
+      line-height:1.62;
+    }
+  }
+
   /* ---------- Search ---------- */
   .search-wrap{ position:relative; margin-bottom:32px; }
   .search-wrap input{
@@ -650,6 +737,7 @@
     back: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>',
     chevLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 18-6-6 6-6"/></svg>',
     chevRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m9 18 6-6-6-6"/></svg>',
+    ai: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v3"/><path d="M12 18v3"/><path d="m4.93 4.93 2.12 2.12"/><path d="m16.95 16.95 2.12 2.12"/><path d="M3 12h3"/><path d="M18 12h3"/><path d="m4.93 19.07 2.12-2.12"/><path d="m16.95 7.05 2.12-2.12"/><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Z"/></svg>'
   };
 
   /* ---------------- Utiliti ---------------- */
@@ -727,6 +815,20 @@
           <div class="stat"><span class="num mono">${SUBJEK.length}</span><span class="lbl">Subjek</span></div>
           <div class="stat"><span class="num mono">${totalTajuk()}</span><span class="lbl">Tajuk</span></div>
           <div class="stat"><span class="num mono">${totalSiri()}</span><span class="lbl">Siri</span></div>
+        </div>
+      </div>
+
+      <div class="ai-notice">
+        <div class="ai-notice-icon">
+          ${ICONS.ai}
+        </div>
+        <div class="ai-notice-content">
+          <p class="ai-notice-label">Makluman Notagrafik</p>
+          <p class="ai-notice-text">
+            <strong>Poster notagrafik dijana oleh AI</strong> sebagai gambaran penerangan topik—maklumat di dalamnya mungkin tidak 100% tepat (dari sudut baris, ejaan dan sebagainya).
+            <br>
+            Penerangan penuh dan terperinci boleh dirujuk pada nota yang disediakan. Selamat membaca!
+          </p>
         </div>
       </div>
 
