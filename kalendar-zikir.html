@@ -2,33 +2,263 @@
 <html lang="ms">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Zikir</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Kalendar Zikir</title>
 <style>
-:root{--bg:#f5f7fb;--card:#fff;--text:#18212f;--muted:#6b7280;--line:#e7eaf0;--gold:#c99a2e;--green:#198754;--red:#dc3545;--blue:#4263eb;--shadow:0 10px 30px rgba(20,30,50,.08)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Segoe UI,Arial,sans-serif}
-header{background:linear-gradient(135deg,#111827,#26354d);color:#fff;padding:28px 18px 70px}
-.wrap{max-width:1100px;margin:auto}.head{display:flex;justify-content:space-between;align-items:center;gap:20px}.brand h1{margin:0;font-size:30px}.brand p{margin:7px 0 0;color:#cbd5e1}.actions{display:flex;gap:8px;flex-wrap:wrap}
-button,.btn{border:0;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:700}.btn-light{background:#fff;color:#18212f}.btn-dark{background:#334155;color:#fff}.btn-gold{background:var(--gold);color:#fff}
-main{margin:-42px auto 40px}
-.panel{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-top:18px;padding:20px}.panel-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}.panel-title h2{margin:0;font-size:20px}.filters{display:flex;gap:8px;flex-wrap:wrap}.filters input,.filters select{padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff}
-.monthbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.monthbar h3{margin:0;text-transform:capitalize}.cal-head,.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}.cal-head div{text-align:center;color:var(--muted);font-size:12px;font-weight:700;padding:5px}.day{min-height:110px;border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;cursor:pointer;transition:border-color .15s}.day:hover{border-color:var(--gold)}.day.empty{background:#fafafa;cursor:default}.day.empty:hover{border-color:var(--line)}.day.today{border:2px solid var(--gold)}.date{font-weight:800;margin-bottom:8px}.zrow{font-size:12px;display:flex;justify-content:space-between;gap:5px;margin:5px 0;background:#f6f7fb;border-radius:8px;padding:4px 7px}.zrow span:first-child{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70px}.zrow span:last-child{font-weight:800}.status{font-size:11px;margin-top:7px;font-weight:700}.ok{color:var(--green)}.less{color:var(--red)}.future{color:var(--muted)}
-table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px 8px;border-bottom:1px solid var(--line);font-size:14px}th{color:var(--muted);font-size:12px}.tag{display:inline-block;padding:5px 8px;border-radius:20px;background:#f0f2f6;font-size:12px;font-weight:700}.edit{background:#eef2ff;color:#3151c8}.del{background:#fff0f0;color:#c62828}
-.empty-state{text-align:center;padding:25px;color:var(--muted)}.fab{position:fixed;right:25px;bottom:25px;width:60px;height:60px;border-radius:50%;background:var(--gold);color:#fff;font-size:30px;box-shadow:0 12px 30px rgba(0,0,0,.2);z-index:10;border:0;cursor:pointer}
-.modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:20;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.modal-box{background:#fff;width:min(480px,100%);border-radius:18px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.25)}.modal-head{display:flex;justify-content:space-between}.close{background:#f1f3f5;color:#555}.field{margin:15px 0}.field label{display:block;font-weight:700;margin-bottom:7px}.field input,.field select,.field textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit}.field textarea{resize:vertical;min-height:70px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
-.notice{background:#fff8e5;border:1px solid #f0d78a;padding:12px;border-radius:12px;color:#745b16;font-size:13px}
-@media(max-width:800px){.calendar,.cal-head{gap:4px}.day{min-height:110px;padding:7px}.zrow{display:block}.zrow span{display:block;max-width:none}.brand h1{font-size:24px}.head{align-items:flex-start;flex-direction:column}}
-@media(max-width:520px){.calendar,.cal-head{grid-template-columns:repeat(7,minmax(70px,1fr))}.calendar-wrap{overflow-x:auto}.calendar,.cal-head{min-width:560px}.panel{padding:14px}.day{min-height:100px}.actions{width:100%}}
+:root{
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+  --header-h:60px;
+  --bg:#0a0f1a;
+  --bg2:#060a12;
+  --card:rgba(255,255,255,.035);
+  --card-solid:#101828;
+  --text:#eef1f6;
+  --muted:#8b96a8;
+  --line:rgba(255,255,255,.09);
+  --emerald:#22c55e;
+  --emerald-dim:#16a34a;
+  --gold:#cda349;
+  --red:#f87171;
+  --blue:#5b8def;
+  --shadow:0 18px 50px rgba(0,0,0,.45);
+  --radius:16px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100dvh;
+  background:
+    radial-gradient(1100px 500px at 15% -10%, rgba(205,163,73,.08), transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, rgba(34,197,94,.08), transparent 55%),
+    var(--bg);
+  color:var(--text);
+  font-family:"Inter","Segoe UI",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ===== Fixed premium header ===== */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:30;
+  padding-top:var(--safe-t);
+  background:rgba(8,12,20,.72);
+  backdrop-filter:blur(16px) saturate(140%);
+  -webkit-backdrop-filter:blur(16px) saturate(140%);
+  border-bottom:1px solid var(--line);
+}
+.topbar-inner{
+  max-width:1100px;margin:0 auto;
+  height:var(--header-h);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 18px;
+}
+.brand-title{
+  font-size:19px;
+  font-weight:600;
+  letter-spacing:.2px;
+  color:#f4f6fa;
+  white-space:nowrap;
+}
+.coffee-btn{
+  width:38px;height:38px;flex:0 0 38px;
+  border-radius:50%;
+  border:1px solid rgba(205,163,73,.35);
+  background:linear-gradient(160deg,rgba(205,163,73,.16),rgba(205,163,73,.05));
+  box-shadow:0 6px 18px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.03);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;padding:0;position:relative;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.coffee-btn:active{transform:scale(.92)}
+.coffee-btn svg{width:19px;height:19px;overflow:visible}
+.steam-line{
+  opacity:.85;
+  transform-origin:center bottom;
+  animation:steamRise 2.6s ease-in-out infinite;
+}
+.steam-line.s2{animation-delay:.5s}
+.steam-line.s3{animation-delay:1s}
+@keyframes steamRise{
+  0%{opacity:0;transform:translateY(2px) scaleY(.7)}
+  35%{opacity:.9}
+  100%{opacity:0;transform:translateY(-5px) scaleY(1.1)}
+}
+
+/* ===== Layout ===== */
+main{
+  max-width:1100px;margin:0 auto;
+  padding:calc(var(--header-h) + var(--safe-t) + 26px) 18px calc(150px + var(--safe-b)) 18px;
+}
+.panel{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  margin-top:16px;
+  padding:20px;
+  backdrop-filter:blur(6px);
+}
+.panel-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.panel-title h2{margin:0;font-size:17px;font-weight:600;color:#f4f6fa}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filters input,.filters select{
+  padding:10px 12px;border:1px solid var(--line);border-radius:10px;
+  background:rgba(255,255,255,.03);color:var(--text);font-size:14px;
+}
+.filters input::placeholder{color:var(--muted)}
+button,.btn{border:0;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:600;font-size:14px;font-family:inherit}
+.btn-dark{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--line)}
+.btn-dark:hover{background:rgba(255,255,255,.1)}
+.btn-gold{background:linear-gradient(160deg,var(--gold),#a97f2f);color:#1a1200}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+
+.notice{
+  background:rgba(205,163,73,.08);
+  border:1px solid rgba(205,163,73,.25);
+  padding:12px 14px;border-radius:12px;color:#e7d3a2;font-size:13px;line-height:1.5;
+}
+
+/* ===== Sync status bar ===== */
+.syncbar{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-top:10px;padding:9px 12px;border-radius:10px;
+  background:rgba(255,255,255,.03);border:1px solid var(--line);
+  font-size:12px;color:var(--muted);flex-wrap:wrap;
+}
+.syncbar .email{color:#c9d2e0;font-weight:600}
+.syncbar .status{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex:0 0 7px}
+.dot.ok{background:var(--emerald)}
+.dot.warn{background:var(--red)}
+.dot.busy{background:var(--gold);animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+.linklike{color:var(--gold);cursor:pointer;font-weight:600;background:none;border:0;padding:0;font-size:12px;font-family:inherit}
+
+/* ===== Calendar ===== */
+.monthbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px;flex-wrap:wrap}
+.monthbar h3{margin:0;text-transform:capitalize;font-weight:600;color:#f4f6fa}
+.monthbar .small{color:var(--muted);font-size:12px}
+.cal-head,.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.cal-head div{text-align:center;color:var(--muted);font-size:11px;font-weight:700;padding:4px}
+.day{
+  min-height:104px;border:1px solid var(--line);border-radius:12px;padding:9px;
+  background:rgba(255,255,255,.02);cursor:pointer;transition:border-color .15s, background .15s;
+}
+.day:hover{border-color:rgba(205,163,73,.5);background:rgba(255,255,255,.04)}
+.day.empty{background:transparent;border-color:transparent;cursor:default}
+.day.today{border:1px solid var(--gold);box-shadow:0 0 0 1px rgba(205,163,73,.25) inset}
+.date{font-weight:700;margin-bottom:7px;font-size:13px;color:#eef1f6}
+.zrow{
+  font-size:11.5px;display:flex;justify-content:space-between;gap:5px;margin:4px 0;
+  background:rgba(255,255,255,.04);border-radius:7px;padding:4px 7px;
+}
+.zrow span:first-child{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:64px}
+.zrow span:last-child{font-weight:700;color:#f0f3f8}
+.status{font-size:10.5px;margin-top:6px;font-weight:600}
+.ok{color:var(--emerald)}
+.less{color:var(--red)}
+.future{color:var(--muted)}
+
+/* ===== Records table ===== */
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:11px 8px;border-bottom:1px solid var(--line);font-size:13.5px}
+th{color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+td{color:#e6eaf1}
+.tag{display:inline-block;padding:5px 9px;border-radius:20px;background:rgba(255,255,255,.06);font-size:12px;font-weight:600;color:#e6eaf1}
+.edit,.del{border:0}
+.edit{background:rgba(91,141,239,.15);color:#8fb0f5}
+.del{background:rgba(248,113,113,.12);color:#f4a3a3}
+.empty-state{text-align:center;padding:24px;color:var(--muted)}
+
+/* ===== Floating add button (compact) ===== */
+.fab{
+  position:fixed;
+  right:20px;
+  bottom:calc(20px + var(--safe-b));
+  width:48px;height:48px;
+  border-radius:50%;
+  background:linear-gradient(160deg,var(--gold),#a97f2f);
+  color:#1a1200;font-size:24px;line-height:1;
+  box-shadow:0 10px 26px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.06) inset;
+  z-index:25;border:0;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .15s ease;
+}
+.fab:active{transform:scale(.92)}
+
+/* ===== Modal ===== */
+.modal{display:none;position:fixed;inset:0;background:rgba(4,7,12,.68);z-index:40;align-items:center;justify-content:center;padding:18px}
+.modal.show{display:flex}
+.modal-box{
+  background:var(--card-solid);border:1px solid var(--line);
+  width:min(460px,100%);border-radius:18px;padding:22px;
+  box-shadow:0 24px 70px rgba(0,0,0,.55);
+  max-height:calc(100dvh - 40px);overflow:auto;
+}
+.modal-head{display:flex;justify-content:space-between;align-items:center}
+.modal-head h2{margin:0;font-size:17px;font-weight:600;color:#f4f6fa}
+.close{background:rgba(255,255,255,.07);color:var(--muted);width:32px;height:32px;border-radius:9px;padding:0}
+.field{margin:14px 0}
+.field label{display:block;font-weight:600;margin-bottom:7px;font-size:13.5px;color:#dbe1ea}
+.field input,.field select,.field textarea{
+  width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;
+  font-size:15px;font-family:inherit;background:rgba(255,255,255,.03);color:var(--text);
+}
+.field textarea{resize:vertical;min-height:70px}
+.field p.hint{margin:6px 0 0;font-size:12px;color:var(--muted)}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+
+@media(max-width:800px){
+  .brand-title{font-size:17px}
+  .day{min-height:100px;padding:7px}
+  .zrow{display:block}
+  .zrow span{display:block;max-width:none}
+}
+@media(max-width:520px){
+  .calendar,.cal-head{grid-template-columns:repeat(7,minmax(58px,1fr))}
+  .calendar-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .calendar,.cal-head{min-width:470px}
+  .panel{padding:14px}
+  .day{min-height:92px}
+  main{padding-bottom:calc(130px + var(--safe-b))}
+  .fab{width:46px;height:46px;font-size:22px;right:16px}
+}
 </style>
 </head>
 <body>
-<header><div class="wrap head"><div class="brand"><h1>📿 Dashboard Zikir</h1><p>Rekod, pantau dan lihat perkembangan zikir harian anda.</p></div><div class="actions"><button class="btn-light" id="exportBtn">Export</button><button class="btn-light" id="importBtn">Import</button><input id="fileInput" type="file" accept=".json" hidden></div></div></header>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand-title">Kalendar Zikir</div>
+    <button class="coffee-btn" id="coffeeBtn" title="Sokong pembangun" aria-label="Sokong pembangun">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path class="steam-line s1" d="M9 3 C9 5, 8 5, 8 7" stroke="#f2c879" stroke-width="1.3" stroke-linecap="round"/>
+        <path class="steam-line s2" d="M12 3 C12 5, 11 5, 11 7" stroke="#f2c879" stroke-width="1.3" stroke-linecap="round"/>
+        <path class="steam-line s3" d="M15 3 C15 5, 14 5, 14 7" stroke="#f2c879" stroke-width="1.3" stroke-linecap="round"/>
+        <path d="M4 9h13a1 1 0 0 1 1 1v1.2a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z" fill="#e9c988" opacity=".92"/>
+        <path d="M17.5 10.3H19a2 2 0 0 1 0 4h-1.2" stroke="#e9c988" stroke-width="1.4" fill="none"/>
+        <path d="M4.5 17h12a1 1 0 0 1 1 1v.4a1.2 1.2 0 0 1-1.2 1.2H5.7A1.2 1.2 0 0 1 4.5 17.4V17Z" fill="#c99a2e"/>
+      </svg>
+    </button>
+  </div>
+</header>
 
-<main class="wrap">
+<main>
 
 <section class="panel">
-<div class="panel-title"><h2>Ringkasan</h2></div>
-<div class="notice">Sistem ini menggunakan rekod manual. Klik pada mana-mana tarikh di kalendar (atau butang +) untuk menambah rekod zikir; jumlah harian akan dipaparkan terus pada tarikh berkenaan.</div>
+  <div class="panel-title"><h2>Ringkasan</h2></div>
+  <div class="notice">Sistem ini menggunakan rekod manual. Klik pada mana-mana tarikh di kalendar (atau butang +) untuk menambah rekod zikir; jumlah harian akan dipaparkan terus pada tarikh berkenaan. Rekod disimpan pada peranti anda dan cuba disegerakkan ke Google Sheets apabila internet tersedia.</div>
+  <div class="syncbar">
+    <div class="status">
+      <span class="dot" id="syncDot"></span>
+      <span id="syncText">Menyemak status...</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span class="email" id="emailLabel"></span>
+      <button class="linklike" id="changeEmailBtn">Tukar emel</button>
+      <button class="linklike" id="manualSyncBtn">Segerak sekarang</button>
+    </div>
+  </div>
 </section>
 
 <section class="panel">
@@ -45,6 +275,7 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px 8px
 
 <button class="fab" id="addBtn" title="Tambah rekod">+</button>
 
+<!-- Modal: Tambah/Edit Rekod -->
 <div class="modal" id="modal"><div class="modal-box">
 <div class="modal-head"><h2 id="modalTitle">Tambah Rekod Zikir</h2><button class="close" id="closeModal">✕</button></div>
 <form id="form"><input type="hidden" id="editId">
@@ -55,8 +286,30 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px 8px
 <div class="modal-actions"><button type="button" class="btn-dark" id="cancelBtn">Batal</button><button class="btn-gold">Simpan Rekod</button></div>
 </form></div></div>
 
+<!-- Modal: Emel Pengguna -->
+<div class="modal" id="emailModal"><div class="modal-box">
+<div class="modal-head"><h2>Emel Anda</h2></div>
+<p class="hint" style="margin-top:10px;color:var(--muted);font-size:13.5px">Masukkan emel untuk menyimpan dan menyegerakkan rekod Kalendar Zikir anda merentasi peranti.</p>
+<form id="emailForm">
+  <div class="field"><label>Alamat emel</label><input id="emailInput" type="email" required placeholder="nama@contoh.com"></div>
+  <div class="modal-actions">
+    <button type="button" class="btn-dark" id="skipEmailBtn">Guna tanpa emel</button>
+    <button class="btn-gold">Simpan</button>
+  </div>
+</form>
+</div></div>
+
 <script>
-const KEY='dashboardZikir_v1';
+/* =========================================================
+   KALENDAR ZIKIR — data & fungsi teras (kekal daripada asal)
+   ========================================================= */
+const KEY='dashboardZikir_v1'; // kekal sama supaya rekod sedia ada tidak hilang
+const EMAIL_KEY='kalendarZikir_userEmail';
+const EMAIL_SKIP_KEY='kalendarZikir_emailSkipped';
+
+// TUKAR URL INI kepada Web App URL Google Apps Script anda selepas deploy.
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzo74hblb4i5LxvEqC1Dla9C5DVMlhXT0eSkaE5CzT39erPBCQzZ9elORX3xUUNmHvP/exec';
+
 let records=JSON.parse(localStorage.getItem(KEY)||'[]');
 let viewDate=new Date();
 viewDate.setDate(1);
@@ -71,7 +324,6 @@ function save(){localStorage.setItem(KEY,JSON.stringify(records)); render();}
 function daily(date,zikir){return records.filter(r=>r.zikir===zikir&&r.tarikh===date).reduce((s,r)=>s+Number(r.jumlah),0)}
 function dayZikirList(date){
  const names=[...new Set(records.filter(r=>r.tarikh===date).map(r=>r.zikir))];
- // order: Istighfar, Selawat first, then others alphabetically
  return names.sort((a,b)=>{
    const order=z=>z==='Istighfar'?0:z==='Selawat'?1:2;
    const oa=order(a),ob=order(b);
@@ -156,10 +408,20 @@ $('form').onsubmit=e=>{
   zikirName=$('zikirLain').value.trim();
   if(!zikirName){alert('Sila nyatakan nama zikir.');return}
  }
+ const now=Date.now();
+ const email=getUserEmail();
  const data={zikir:zikirName,jumlah:Math.round(Number($('jumlah').value)),tarikh:$('tarikh').value};
- if(id){const i=records.findIndex(r=>r.id===id);records[i]={...records[i],...data}}
- else records.push({...data,id:crypto.randomUUID(),createdAt:Date.now()});
+ let changedRecord=null;
+ if(id){
+   const i=records.findIndex(r=>r.id===id);
+   records[i]={...records[i],...data,email:records[i].email||email||'',updatedAt:now,synced:false};
+   changedRecord=records[i];
+ } else {
+   changedRecord={...data,id:crypto.randomUUID(),email:email||'',createdAt:now,updatedAt:now,synced:false};
+   records.push(changedRecord);
+ }
  save();closeModal();
+ syncOneRecord(changedRecord);
 };
 $('addBtn').onclick=()=>openModal();
 $('closeModal').onclick=closeModal;$('cancelBtn').onclick=closeModal;
@@ -168,21 +430,166 @@ $('prevMonth').onclick=()=>{viewDate.setMonth(viewDate.getMonth()-1);renderCalen
 $('nextMonth').onclick=()=>{viewDate.setMonth(viewDate.getMonth()+1);renderCalendar()};
 $('todayBtn').onclick=()=>{viewDate=new Date();viewDate.setDate(1);renderCalendar()};
 $('searchInput').oninput=renderRecords;$('filterZikir').onchange=renderRecords;
-$('exportBtn').onclick=()=>{
- const blob=new Blob([JSON.stringify(records,null,2)],{type:'application/json'}),a=document.createElement('a');
- a.href=URL.createObjectURL(blob);a.download='backup-zikir-'+today()+'.json';a.click();URL.revokeObjectURL(a.href);
+
+/* =========================================================
+   EMEL PENGGUNA (identifier untuk Google Sheets)
+   ========================================================= */
+function getUserEmail(){return (localStorage.getItem(EMAIL_KEY)||'').trim().toLowerCase()}
+function setUserEmail(email){localStorage.setItem(EMAIL_KEY,email.trim().toLowerCase())}
+function hasSkippedEmail(){return localStorage.getItem(EMAIL_SKIP_KEY)==='1'}
+
+function openEmailModal(){$('emailInput').value=getUserEmail();$('emailModal').classList.add('show')}
+function closeEmailModal(){$('emailModal').classList.remove('show')}
+
+$('emailForm').onsubmit=e=>{
+ e.preventDefault();
+ const val=$('emailInput').value.trim().toLowerCase();
+ if(!val){return}
+ setUserEmail(val);
+ localStorage.removeItem(EMAIL_SKIP_KEY);
+ closeEmailModal();
+ updateSyncStatusUI('idle');
+ pullFromSheet();
 };
-$('importBtn').onclick=()=>$('fileInput').click();
-$('fileInput').onchange=e=>{
- const file=e.target.files[0];if(!file)return;
- const reader=new FileReader();reader.onload=()=>{
-  try{const data=JSON.parse(reader.result);if(!Array.isArray(data))throw 0;
-   const clean=data.filter(r=>r&&r.zikir&&Number(r.jumlah)>0&&r.tarikh).map(r=>({...r,id:r.id||crypto.randomUUID(),createdAt:r.createdAt||Date.now()}));
-   if(confirm(`Import ${clean.length} rekod? Rekod sedia ada akan digabungkan.`)){records=[...records,...clean];save()}
-  }catch{alert('Fail tidak sah. Sila gunakan fail JSON yang dieksport daripada sistem ini.')}
- };reader.readAsText(file);e.target.value='';
+$('skipEmailBtn').onclick=()=>{
+ localStorage.setItem(EMAIL_SKIP_KEY,'1');
+ closeEmailModal();
+ updateSyncStatusUI('idle');
 };
+$('changeEmailBtn').onclick=openEmailModal;
+$('manualSyncBtn').onclick=()=>attemptFullSync();
+
+/* =========================================================
+   GOOGLE SHEETS SYNC (Local -> Sync -> Google Sheets)
+   Arkitektur: rekod sentiasa disimpan local dahulu (localStorage).
+   Selepas itu sistem cuba menyegerakkannya ke Google Apps Script
+   Web App. Jika gagal (offline / URL belum disetup / timeout),
+   rekod kekal tersimpan local dan status "belum disegerakkan"
+   dipaparkan tanpa mengganggu penggunaan aplikasi.
+   ========================================================= */
+function isSyncConfigured(){
+ return GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.indexOf('https://script.google.com/macros/s/AKfycbzo74hblb4i5LxvEqC1Dla9C5DVMlhXT0eSkaE5CzT39erPBCQzZ9elORX3xUUNmHvP/exec')===-1;
+}
+
+function updateSyncStatusUI(state){
+ const dot=$('syncDot'), text=$('syncText'), emailLabel=$('emailLabel');
+ const email=getUserEmail();
+ emailLabel.textContent=email?email:(hasSkippedEmail()?'(tiada emel)':'');
+ dot.className='dot';
+ if(!email){
+   dot.classList.add('warn');
+   text.textContent='Emel belum disetkan — sync dimatikan';
+   return;
+ }
+ if(!isSyncConfigured()){
+   dot.classList.add('warn');
+   text.textContent='Google Sheets belum disetup';
+   return;
+ }
+ if(state==='busy'){dot.classList.add('busy');text.textContent='Menyegerak...';return}
+ if(state==='ok'){dot.classList.add('ok');text.textContent='✓ Disegerak ke Google';return}
+ if(state==='error'){dot.classList.add('warn');text.textContent='⚠ Belum disegerakkan';return}
+ const unsynced=records.filter(r=>!r.synced).length;
+ if(unsynced>0){dot.classList.add('warn');text.textContent=`⚠ ${unsynced} rekod belum disegerak`;}
+ else{dot.classList.add('ok');text.textContent='● Disimpan';}
+}
+
+async function fetchWithTimeout(url,options={},ms=9000){
+ const controller=new AbortController();
+ const t=setTimeout(()=>controller.abort(),ms);
+ try{
+   const res=await fetch(url,{...options,signal:controller.signal});
+   return res;
+ } finally {
+   clearTimeout(t);
+ }
+}
+
+// Hantar satu rekod ke Google Sheets (POST). Tidak memblok UI.
+async function syncOneRecord(record){
+ const email=getUserEmail();
+ if(!email||!isSyncConfigured()){updateSyncStatusUI();return}
+ updateSyncStatusUI('busy');
+ try{
+   const res=await fetchWithTimeout(GOOGLE_SCRIPT_URL,{
+     method:'POST',
+     headers:{'Content-Type':'text/plain;charset=utf-8'}, // elak preflight CORS pada Apps Script
+     body:JSON.stringify({action:'save',email,record})
+   });
+   const json=await res.json().catch(()=>null);
+   if(json&&json.ok){
+     const i=records.findIndex(r=>r.id===record.id);
+     if(i>-1){records[i].synced=true;localStorage.setItem(KEY,JSON.stringify(records));}
+     updateSyncStatusUI('ok');
+   } else {
+     updateSyncStatusUI('error');
+   }
+ } catch(err){
+   updateSyncStatusUI('error');
+ }
+}
+
+// Ambil rekod dari Google Sheets berdasarkan emel dan gabungkan (tiada duplicate ID)
+async function pullFromSheet(){
+ const email=getUserEmail();
+ if(!email||!isSyncConfigured()){updateSyncStatusUI();return}
+ updateSyncStatusUI('busy');
+ try{
+   const url=GOOGLE_SCRIPT_URL+'?action=list&email='+encodeURIComponent(email);
+   const res=await fetchWithTimeout(url,{method:'GET'});
+   const json=await res.json().catch(()=>null);
+   if(json&&json.ok&&Array.isArray(json.records)){
+     mergeRemoteRecords(json.records);
+     updateSyncStatusUI('ok');
+   } else {
+     updateSyncStatusUI('error');
+   }
+ } catch(err){
+   updateSyncStatusUI('error');
+ }
+}
+
+// Gabungkan rekod jauh (remote) dengan rekod local tanpa duplicate, guna id sebagai kunci.
+// Rekod dengan updatedAt lebih baharu akan diguna pakai.
+function mergeRemoteRecords(remoteList){
+ let changed=false;
+ remoteList.forEach(rr=>{
+   if(!rr||!rr.id)return;
+   const i=records.findIndex(r=>r.id===rr.id);
+   const remote={...rr,jumlah:Number(rr.jumlah),synced:true};
+   if(i===-1){
+     records.push(remote);
+     changed=true;
+   } else if(Number(remote.updatedAt||0) > Number(records[i].updatedAt||0)){
+     records[i]={...records[i],...remote};
+     changed=true;
+   }
+ });
+ if(changed){localStorage.setItem(KEY,JSON.stringify(records));render();}
+}
+
+// Segerak penuh: tolak semua rekod belum synced, kemudian tarik rekod terkini dari Sheets.
+async function attemptFullSync(){
+ const email=getUserEmail();
+ if(!email){openEmailModal();return}
+ if(!isSyncConfigured()){updateSyncStatusUI();return}
+ const pending=records.filter(r=>!r.synced);
+ for(const r of pending){
+   await syncOneRecord(r);
+ }
+ await pullFromSheet();
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
 render();
+updateSyncStatusUI();
+if(!getUserEmail() && !hasSkippedEmail()){
+ openEmailModal();
+} else if(getUserEmail()){
+ pullFromSheet();
+}
 </script>
 </body>
 </html>
