@@ -60,18 +60,6 @@ body{
   color:#f4f6fa;
   white-space:nowrap;
 }
-.coffee-btn{
-  width:38px;height:38px;flex:0 0 38px;
-  border-radius:50%;
-  border:1px solid rgba(205,163,73,.35);
-  background:linear-gradient(160deg,rgba(205,163,73,.16),rgba(205,163,73,.05));
-  box-shadow:0 6px 18px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.03);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;padding:0;position:relative;
-  transition:transform .15s ease, box-shadow .15s ease;
-}
-.coffee-btn:active{transform:scale(.92)}
-.coffee-btn svg{width:19px;height:19px;overflow:visible}
 .steam-line{
   opacity:.85;
   transform-origin:center bottom;
@@ -83,6 +71,48 @@ body{
   0%{opacity:0;transform:translateY(2px) scaleY(.7)}
   35%{opacity:.9}
   100%{opacity:0;transform:translateY(-5px) scaleY(1.1)}
+}
+.support-btn-wrapper{position:relative;display:flex;align-items:center}
+.study-bubble{
+  position:absolute;right:46px;top:50%;transform:translateY(-50%) translateX(6px);
+  background:linear-gradient(135deg,#1a1200,#241a00);
+  border:1px solid rgba(205,163,73,.4);
+  border-radius:20px;padding:6px 12px;
+  font-family:inherit;font-size:.7rem;font-weight:600;color:var(--text);
+  white-space:nowrap;
+  box-shadow:0 4px 18px rgba(0,0,0,.5), 0 0 0 1px rgba(205,163,73,.08);
+  opacity:0;pointer-events:none;
+  transition:opacity .35s ease, transform .35s ease;
+}
+.study-bubble.show{opacity:1;transform:translateY(-50%) translateX(0)}
+.study-bubble::after{
+  content:'';position:absolute;right:-6px;top:50%;transform:translateY(-50%);
+  border:6px solid transparent;border-left-color:rgba(205,163,73,.4);border-right:0;
+}
+.study-bubble::before{
+  content:'';position:absolute;right:-5px;top:50%;transform:translateY(-50%);
+  border:5px solid transparent;border-left-color:#241a00;border-right:0;z-index:1;
+}
+.study-btn{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(205,163,73,.18),rgba(205,163,73,.06));
+  border:1px solid rgba(205,163,73,.3);
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;transition:all .25s ease;position:relative;overflow:visible;
+}
+.study-btn:hover{
+  background:rgba(205,163,73,.25);border-color:rgba(205,163,73,.55);
+  box-shadow:0 0 16px rgba(205,163,73,.25);transform:scale(1.06);
+}
+.study-btn svg{width:18px;height:18px;overflow:visible}
+.study-btn path{stroke-linecap:round;stroke-linejoin:round}
+.steam{stroke:var(--gold);stroke-width:2;fill:none;stroke-dasharray:8;stroke-dashoffset:0}
+.steam-1{animation:steam-rise 2.2s ease-in-out infinite}
+.steam-2{animation:steam-rise 2.2s ease-in-out .5s infinite}
+@keyframes steam-rise{
+  0%{stroke-dashoffset:0;opacity:.8}
+  50%{opacity:1}
+  100%{stroke-dashoffset:-20;opacity:0}
 }
 
 /* ===== Layout ===== */
@@ -118,22 +148,6 @@ button,.btn{border:0;border-radius:10px;padding:10px 14px;cursor:pointer;font-we
   border:1px solid rgba(205,163,73,.25);
   padding:12px 14px;border-radius:12px;color:#e7d3a2;font-size:13px;line-height:1.5;
 }
-
-/* ===== Sync status bar ===== */
-.syncbar{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  margin-top:10px;padding:9px 12px;border-radius:10px;
-  background:rgba(255,255,255,.03);border:1px solid var(--line);
-  font-size:12px;color:var(--muted);flex-wrap:wrap;
-}
-.syncbar .email{color:#c9d2e0;font-weight:600}
-.syncbar .status{display:flex;align-items:center;gap:6px;white-space:nowrap}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex:0 0 7px}
-.dot.ok{background:var(--emerald)}
-.dot.warn{background:var(--red)}
-.dot.busy{background:var(--gold);animation:pulse 1s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
-.linklike{color:var(--gold);cursor:pointer;font-weight:600;background:none;border:0;padding:0;font-size:12px;font-family:inherit}
 
 /* ===== Calendar ===== */
 .monthbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px;flex-wrap:wrap}
@@ -230,16 +244,17 @@ td{color:#e6eaf1}
 <header class="topbar">
   <div class="topbar-inner">
     <div class="brand-title">Kalendar Zikir</div>
-    <button class="coffee-btn" id="coffeeBtn" title="Sokong pembangun" aria-label="Sokong pembangun">
-      <svg viewBox="0 0 24 24" fill="none">
-        <path class="steam-line s1" d="M9 3 C9 5, 8 5, 8 7" stroke="#f2c879" stroke-width="1.3" stroke-linecap="round"/>
-        <path class="steam-line s2" d="M12 3 C12 5, 11 5, 11 7" stroke="#f2c879" stroke-width="1.3" stroke-linecap="round"/>
-        <path class="steam-line s3" d="M15 3 C15 5, 14 5, 14 7" stroke="#f2c879" stroke-width="1.3" stroke-linecap="round"/>
-        <path d="M4 9h13a1 1 0 0 1 1 1v1.2a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9Z" fill="#e9c988" opacity=".92"/>
-        <path d="M17.5 10.3H19a2 2 0 0 1 0 4h-1.2" stroke="#e9c988" stroke-width="1.4" fill="none"/>
-        <path d="M4.5 17h12a1 1 0 0 1 1 1v.4a1.2 1.2 0 0 1-1.2 1.2H5.7A1.2 1.2 0 0 1 4.5 17.4V17Z" fill="#c99a2e"/>
-      </svg>
-    </button>
+    <div class="support-btn-wrapper">
+      <div id="studyBubble" class="study-bubble">Sokong Tabung Belajar 🎓</div>
+      <a href="https://deen-track.pages.dev/tabung-belajar" target="_blank" rel="noopener" class="study-btn" title="Sokong Tabung Belajar">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path class="steam steam-1" d="M9 4C9 4 7.5 5.5 9 7C10.5 8.5 9 10 9 10" />
+          <path class="steam steam-2" d="M13 3C13 3 11.5 4.5 13 6C14.5 7.5 13 9 13 9" />
+          <path d="M18 10H4C2.89543 10 2 10.8954 2 12V15C2 18.3137 4.68629 21 8 21H14C17.3137 21 20 18.3137 20 15V12C20 10.8954 19.1046 10 18 10Z" fill="#cda349" fill-opacity="0.9"/>
+          <path d="M20 12C20 12 22 12 22 14.5C22 17 20 17 20 17" stroke="#cda349" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </a>
+    </div>
   </div>
 </header>
 
@@ -247,18 +262,7 @@ td{color:#e6eaf1}
 
 <section class="panel">
   <div class="panel-title"><h2>Ringkasan</h2></div>
-  <div class="notice">Sistem ini menggunakan rekod manual. Klik pada mana-mana tarikh di kalendar (atau butang +) untuk menambah rekod zikir; jumlah harian akan dipaparkan terus pada tarikh berkenaan. Rekod disimpan pada peranti anda dan cuba disegerakkan ke Google Sheets apabila internet tersedia.</div>
-  <div class="syncbar">
-    <div class="status">
-      <span class="dot" id="syncDot"></span>
-      <span id="syncText">Menyemak status...</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:12px">
-      <span class="email" id="emailLabel"></span>
-      <button class="linklike" id="changeEmailBtn">Tukar emel</button>
-      <button class="linklike" id="manualSyncBtn">Segerak sekarang</button>
-    </div>
-  </div>
+  <div class="notice">Sistem ini menggunakan rekod manual. Klik pada mana-mana tarikh di kalendar (atau butang +) untuk menambah rekod zikir; jumlah harian akan dipaparkan terus pada tarikh berkenaan.</div>
 </section>
 
 <section class="panel">
@@ -286,29 +290,12 @@ td{color:#e6eaf1}
 <div class="modal-actions"><button type="button" class="btn-dark" id="cancelBtn">Batal</button><button class="btn-gold">Simpan Rekod</button></div>
 </form></div></div>
 
-<!-- Modal: Emel Pengguna -->
-<div class="modal" id="emailModal"><div class="modal-box">
-<div class="modal-head"><h2>Emel Anda</h2></div>
-<p class="hint" style="margin-top:10px;color:var(--muted);font-size:13.5px">Masukkan emel untuk menyimpan dan menyegerakkan rekod Kalendar Zikir anda merentasi peranti.</p>
-<form id="emailForm">
-  <div class="field"><label>Alamat emel</label><input id="emailInput" type="email" required placeholder="nama@contoh.com"></div>
-  <div class="modal-actions">
-    <button type="button" class="btn-dark" id="skipEmailBtn">Guna tanpa emel</button>
-    <button class="btn-gold">Simpan</button>
-  </div>
-</form>
-</div></div>
 
 <script>
 /* =========================================================
    KALENDAR ZIKIR — data & fungsi teras (kekal daripada asal)
    ========================================================= */
 const KEY='dashboardZikir_v1'; // kekal sama supaya rekod sedia ada tidak hilang
-const EMAIL_KEY='kalendarZikir_userEmail';
-const EMAIL_SKIP_KEY='kalendarZikir_emailSkipped';
-
-// TUKAR URL INI kepada Web App URL Google Apps Script anda selepas deploy.
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyfZdoR5Cz6X31oUCo7r5-sK9hyySmhZDP8nuYJidbm7LVeB8wCdC0rhWhE7wGvb7Bh/exec';
 
 let records=JSON.parse(localStorage.getItem(KEY)||'[]');
 let viewDate=new Date();
@@ -408,20 +395,10 @@ $('form').onsubmit=e=>{
   zikirName=$('zikirLain').value.trim();
   if(!zikirName){alert('Sila nyatakan nama zikir.');return}
  }
- const now=Date.now();
- const email=getUserEmail();
  const data={zikir:zikirName,jumlah:Math.round(Number($('jumlah').value)),tarikh:$('tarikh').value};
- let changedRecord=null;
- if(id){
-   const i=records.findIndex(r=>r.id===id);
-   records[i]={...records[i],...data,email:records[i].email||email||'',updatedAt:now,synced:false};
-   changedRecord=records[i];
- } else {
-   changedRecord={...data,id:crypto.randomUUID(),email:email||'',createdAt:now,updatedAt:now,synced:false};
-   records.push(changedRecord);
- }
+ if(id){const i=records.findIndex(r=>r.id===id);records[i]={...records[i],...data}}
+ else records.push({...data,id:crypto.randomUUID(),createdAt:Date.now()});
  save();closeModal();
- syncOneRecord(changedRecord);
 };
 $('addBtn').onclick=()=>openModal();
 $('closeModal').onclick=closeModal;$('cancelBtn').onclick=closeModal;
@@ -432,164 +409,29 @@ $('todayBtn').onclick=()=>{viewDate=new Date();viewDate.setDate(1);renderCalenda
 $('searchInput').oninput=renderRecords;$('filterZikir').onchange=renderRecords;
 
 /* =========================================================
-   EMEL PENGGUNA (identifier untuk Google Sheets)
+   SUPPORT BUBBLE (ikut logik tepat daripada tilawah.html)
    ========================================================= */
-function getUserEmail(){return (localStorage.getItem(EMAIL_KEY)||'').trim().toLowerCase()}
-function setUserEmail(email){localStorage.setItem(EMAIL_KEY,email.trim().toLowerCase())}
-function hasSkippedEmail(){return localStorage.getItem(EMAIL_SKIP_KEY)==='1'}
-
-function openEmailModal(){$('emailInput').value=getUserEmail();$('emailModal').classList.add('show')}
-function closeEmailModal(){$('emailModal').classList.remove('show')}
-
-$('emailForm').onsubmit=e=>{
- e.preventDefault();
- const val=$('emailInput').value.trim().toLowerCase();
- if(!val){return}
- setUserEmail(val);
- localStorage.removeItem(EMAIL_SKIP_KEY);
- closeEmailModal();
- updateSyncStatusUI('idle');
- pullFromSheet();
-};
-$('skipEmailBtn').onclick=()=>{
- localStorage.setItem(EMAIL_SKIP_KEY,'1');
- closeEmailModal();
- updateSyncStatusUI('idle');
-};
-$('changeEmailBtn').onclick=openEmailModal;
-$('manualSyncBtn').onclick=()=>attemptFullSync();
-
-/* =========================================================
-   GOOGLE SHEETS SYNC (Local -> Sync -> Google Sheets)
-   Arkitektur: rekod sentiasa disimpan local dahulu (localStorage).
-   Selepas itu sistem cuba menyegerakkannya ke Google Apps Script
-   Web App. Jika gagal (offline / URL belum disetup / timeout),
-   rekod kekal tersimpan local dan status "belum disegerakkan"
-   dipaparkan tanpa mengganggu penggunaan aplikasi.
-   ========================================================= */
-function isSyncConfigured(){
- return GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.indexOf('https://script.google.com/macros/s/AKfycbyfZdoR5Cz6X31oUCo7r5-sK9hyySmhZDP8nuYJidbm7LVeB8wCdC0rhWhE7wGvb7Bh/exec')===-1;
-}
-
-function updateSyncStatusUI(state){
- const dot=$('syncDot'), text=$('syncText'), emailLabel=$('emailLabel');
- const email=getUserEmail();
- emailLabel.textContent=email?email:(hasSkippedEmail()?'(tiada emel)':'');
- dot.className='dot';
- if(!email){
-   dot.classList.add('warn');
-   text.textContent='Emel belum disetkan — sync dimatikan';
-   return;
- }
- if(!isSyncConfigured()){
-   dot.classList.add('warn');
-   text.textContent='Google Sheets belum disetup';
-   return;
- }
- if(state==='busy'){dot.classList.add('busy');text.textContent='Menyegerak...';return}
- if(state==='ok'){dot.classList.add('ok');text.textContent='✓ Disegerak ke Google';return}
- if(state==='error'){dot.classList.add('warn');text.textContent='⚠ Belum disegerakkan';return}
- const unsynced=records.filter(r=>!r.synced).length;
- if(unsynced>0){dot.classList.add('warn');text.textContent=`⚠ ${unsynced} rekod belum disegerak`;}
- else{dot.classList.add('ok');text.textContent='● Disimpan';}
-}
-
-async function fetchWithTimeout(url,options={},ms=9000){
- const controller=new AbortController();
- const t=setTimeout(()=>controller.abort(),ms);
- try{
-   const res=await fetch(url,{...options,signal:controller.signal});
-   return res;
- } finally {
-   clearTimeout(t);
- }
-}
-
-// Hantar satu rekod ke Google Sheets (POST). Tidak memblok UI.
-async function syncOneRecord(record){
- const email=getUserEmail();
- if(!email||!isSyncConfigured()){updateSyncStatusUI();return}
- updateSyncStatusUI('busy');
- try{
-   const res=await fetchWithTimeout(GOOGLE_SCRIPT_URL,{
-     method:'POST',
-     headers:{'Content-Type':'text/plain;charset=utf-8'}, // elak preflight CORS pada Apps Script
-     body:JSON.stringify({action:'save',email,record})
-   });
-   const json=await res.json().catch(()=>null);
-   if(json&&json.ok){
-     const i=records.findIndex(r=>r.id===record.id);
-     if(i>-1){records[i].synced=true;localStorage.setItem(KEY,JSON.stringify(records));}
-     updateSyncStatusUI('ok');
-   } else {
-     updateSyncStatusUI('error');
-   }
- } catch(err){
-   updateSyncStatusUI('error');
- }
-}
-
-// Ambil rekod dari Google Sheets berdasarkan emel dan gabungkan (tiada duplicate ID)
-async function pullFromSheet(){
- const email=getUserEmail();
- if(!email||!isSyncConfigured()){updateSyncStatusUI();return}
- updateSyncStatusUI('busy');
- try{
-   const url=GOOGLE_SCRIPT_URL+'?action=list&email='+encodeURIComponent(email);
-   const res=await fetchWithTimeout(url,{method:'GET'});
-   const json=await res.json().catch(()=>null);
-   if(json&&json.ok&&Array.isArray(json.records)){
-     mergeRemoteRecords(json.records);
-     updateSyncStatusUI('ok');
-   } else {
-     updateSyncStatusUI('error');
-   }
- } catch(err){
-   updateSyncStatusUI('error');
- }
-}
-
-// Gabungkan rekod jauh (remote) dengan rekod local tanpa duplicate, guna id sebagai kunci.
-// Rekod dengan updatedAt lebih baharu akan diguna pakai.
-function mergeRemoteRecords(remoteList){
- let changed=false;
- remoteList.forEach(rr=>{
-   if(!rr||!rr.id)return;
-   const i=records.findIndex(r=>r.id===rr.id);
-   const remote={...rr,jumlah:Number(rr.jumlah),synced:true};
-   if(i===-1){
-     records.push(remote);
-     changed=true;
-   } else if(Number(remote.updatedAt||0) > Number(records[i].updatedAt||0)){
-     records[i]={...records[i],...remote};
-     changed=true;
-   }
- });
- if(changed){localStorage.setItem(KEY,JSON.stringify(records));render();}
-}
-
-// Segerak penuh: tolak semua rekod belum synced, kemudian tarik rekod terkini dari Sheets.
-async function attemptFullSync(){
- const email=getUserEmail();
- if(!email){openEmailModal();return}
- if(!isSyncConfigured()){updateSyncStatusUI();return}
- const pending=records.filter(r=>!r.synced);
- for(const r of pending){
-   await syncOneRecord(r);
- }
- await pullFromSheet();
-}
+(function(){
+  const bubble = document.getElementById('studyBubble');
+  if(!bubble) return;
+  function showBubble(){bubble.classList.add('show')}
+  function hideBubble(){bubble.classList.remove('show')}
+  setTimeout(function(){
+    showBubble();
+    setTimeout(function(){
+      hideBubble();
+      setInterval(function(){
+        showBubble();
+        setTimeout(hideBubble,4000);
+      },10000);
+    },5000);
+  },1000);
+})();
 
 /* =========================================================
    INIT
    ========================================================= */
 render();
-updateSyncStatusUI();
-if(!getUserEmail() && !hasSkippedEmail()){
- openEmailModal();
-} else if(getUserEmail()){
- pullFromSheet();
-}
 </script>
 </body>
 </html>
