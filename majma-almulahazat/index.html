@@ -25,9 +25,13 @@
     --radius-sm:9px;
     --shadow-card: 0 1px 0 rgba(255,255,255,.02) inset, 0 20px 40px -24px rgba(0,0,0,.6);
     --ease: cubic-bezier(.22,1,.36,1);
+    --topbar-bg: rgba(10,13,18,.72);
   }
 
   *{box-sizing:border-box;}
+  body, .card, .row, .btn, header.topbar, .support-btn, .icon-btn, .search-wrap input{
+    transition: background-color .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease);
+  }
   html{scroll-behavior:smooth;}
   body{
     margin:0;
@@ -57,7 +61,7 @@
   header.topbar{
     position:sticky; top:0; z-index:40;
     backdrop-filter:blur(14px) saturate(140%);
-    background:rgba(10,13,18,.72);
+    background:var(--topbar-bg);
     border-bottom:1px solid var(--border);
   }
   .topbar-inner{
@@ -170,9 +174,57 @@
     color:#141110; border-color:transparent; transform:translateX(2px);
   }
 
-  /* ---------- Butang bulat MENU (ala iPhone, tepi kanan skrin) ---------- */
+  /* ---------- Icon button (salin pautan) ---------- */
+  .icon-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:30px; height:30px; border-radius:50%; flex-shrink:0;
+    border:1px solid var(--border-strong);
+    background:rgba(201,164,92,.06);
+    color:var(--text-secondary);
+    cursor:pointer;
+    transition:background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease), transform .15s var(--ease);
+  }
+  .icon-btn svg{ width:14px; height:14px; }
+  .icon-btn:hover{ background:var(--surface-hover); border-color:var(--gold); color:var(--gold-bright); }
+  .icon-btn:active{ transform:scale(.9); }
+  .icon-btn.copied{ color:var(--teal); border-color:rgba(79,184,172,.5); background:rgba(79,184,172,.1); }
+  .card-foot-actions, .row-actions{ display:flex; align-items:center; gap:8px; }
+
+  /* ---------- Page actions (Kembali + Share) ---------- */
+  .page-actions{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    margin-bottom:18px;
+  }
+  .share-wrap{ position:relative; }
+  .share-popup{
+    position:absolute; left:0; top:calc(100% + 8px);
+    min-width:190px; z-index:50;
+    background:linear-gradient(160deg, #171310, #0b0908);
+    border:1px solid rgba(201,164,92,.4);
+    border-radius:16px;
+    padding:6px;
+    box-shadow:0 20px 44px -14px rgba(0,0,0,.7), 0 0 0 1px rgba(201,164,92,.08) inset;
+    opacity:0; pointer-events:none;
+    transform:translateY(6px);
+    transition:opacity .2s var(--ease), transform .2s var(--ease);
+  }
+  .share-wrap.open .share-popup{ opacity:1; pointer-events:auto; transform:translateY(0); }
+  .share-option{
+    display:flex; align-items:center; gap:10px; width:100%;
+    padding:10px 12px; border-radius:11px;
+    background:transparent; border:none;
+    color:var(--text-primary); font-size:13px; font-weight:500;
+    cursor:pointer; text-align:left;
+    transition:background .16s var(--ease), color .16s var(--ease);
+  }
+  .share-option svg{ width:16px; height:16px; flex-shrink:0; color:var(--gold-bright); }
+  .share-option:hover{ background:rgba(201,164,92,.12); }
+  .share-option.copied{ color:var(--teal); }
+  .share-option.copied svg{ color:var(--teal); }
+
+  /* ---------- Butang bulat MENU (ala iPhone, bawah kanan skrin) ---------- */
   .fab-wrap{
-    position:fixed; right:16px; top:50%; transform:translateY(-50%);
+    position:fixed; right:20px; bottom:28px;
     z-index:70;
   }
   .fab-btn{
@@ -223,7 +275,7 @@
   }
 
   .fab-popup{
-    position:absolute; right:62px; top:50%; transform:translateY(-50%) scale(.85);
+    position:absolute; right:0; bottom:62px;
     width:230px;
     background:linear-gradient(160deg, #171310, #0b0908);
     border:1px solid rgba(201,164,92,.4);
@@ -231,17 +283,18 @@
     padding:16px;
     box-shadow:0 20px 44px -14px rgba(0,0,0,.7), 0 0 0 1px rgba(201,164,92,.08) inset;
     opacity:0; pointer-events:none;
-    transform-origin:right center;
+    transform:translateY(8px) scale(.9);
+    transform-origin:bottom right;
     transition:opacity .22s var(--ease), transform .22s var(--ease);
   }
-  .fab-wrap.open .fab-popup{ opacity:1; pointer-events:auto; transform:translateY(-50%) scale(1); }
+  .fab-wrap.open .fab-popup{ opacity:1; pointer-events:auto; transform:translateY(0) scale(1); }
   .fab-popup::after{
     content:"";
-    position:absolute; right:-7px; top:50%; transform:translateY(-50%) rotate(45deg);
+    position:absolute; right:20px; bottom:-7px; transform:rotate(45deg);
     width:14px; height:14px;
     background:#171310;
     border-right:1px solid rgba(201,164,92,.4);
-    border-top:1px solid rgba(201,164,92,.4);
+    border-bottom:1px solid rgba(201,164,92,.4);
   }
   .fab-eyebrow{
     font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
@@ -263,11 +316,13 @@
   }
   .fab-list-item .txt{ flex-grow:1; font-size:13px; font-weight:500; }
   .fab-list-item .chev{ font-size:14px; color:var(--text-tertiary); }
+  .fab-list-item.as-button{ background:transparent; border:none; font:inherit; text-align:left; width:100%; }
+  .fab-list-item.as-button .ico svg{ width:16px; height:16px; }
   @media (max-width:640px){
-    .fab-wrap{ right:12px; }
+    .fab-wrap{ right:16px; bottom:20px; }
     .fab-btn{ width:40px; height:40px; }
     .fab-label{ font-size:6.5px; }
-    .fab-popup{ width:200px; right:54px; padding:13px; }
+    .fab-popup{ width:200px; bottom:54px; padding:13px; }
   }
 
   /* ---------- Breadcrumb ---------- */
@@ -326,6 +381,59 @@
     color:var(--text-tertiary); pointer-events:none;
   }
 
+  /* ---------- Search row (kotak carian + butang Bidang) ---------- */
+  .search-row{
+    display:flex; align-items:stretch; gap:10px;
+    margin-bottom:32px;
+  }
+  .search-row .search-wrap{ flex:1 1 auto; margin-bottom:0; min-width:0; }
+
+  .filter-wrap{ position:relative; flex-shrink:0; }
+  .filter-toggle{
+    height:100%; gap:8px; padding:0 16px;
+  }
+  .filter-toggle svg{ width:14px; height:14px; flex-shrink:0; }
+  .filter-toggle .chev{ display:flex; transition:transform .2s var(--ease); }
+  .filter-wrap.open .filter-toggle .chev{ transform:rotate(180deg); }
+  .filter-toggle .filter-label-text{ white-space:nowrap; }
+  .filter-toggle.active-filter{
+    border-color:var(--gold); color:var(--gold-bright);
+    background:rgba(201,164,92,.1);
+  }
+
+  .filter-popup{
+    position:absolute; right:0; top:calc(100% + 8px);
+    min-width:210px; max-height:280px; overflow-y:auto;
+    z-index:50;
+    background:linear-gradient(160deg, #171310, #0b0908);
+    border:1px solid rgba(201,164,92,.4);
+    border-radius:16px;
+    padding:6px;
+    box-shadow:0 20px 44px -14px rgba(0,0,0,.7), 0 0 0 1px rgba(201,164,92,.08) inset;
+    opacity:0; pointer-events:none;
+    transform:translateY(6px);
+    transition:opacity .2s var(--ease), transform .2s var(--ease);
+  }
+  .filter-wrap.open .filter-popup{ opacity:1; pointer-events:auto; transform:translateY(0); }
+  .filter-option{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%;
+    padding:10px 12px; border-radius:11px;
+    background:transparent; border:none;
+    color:var(--text-primary); font-size:13px; font-weight:500;
+    cursor:pointer; text-align:left;
+    transition:background .16s var(--ease), color .16s var(--ease);
+  }
+  .filter-option:hover{ background:rgba(201,164,92,.12); }
+  .filter-option.active{ color:var(--gold-bright); }
+  .filter-option .tick{ opacity:0; font-size:12px; transition:opacity .15s var(--ease); }
+  .filter-option.active .tick{ opacity:1; }
+
+  @media (max-width:640px){
+    .filter-toggle .filter-label-text{ display:none; }
+    .filter-toggle{ padding:0 13px; }
+    .filter-popup{ min-width:180px; }
+  }
+
   /* ---------- Card grid (Subjek = folders) ---------- */
   .grid{
     display:grid;
@@ -357,7 +465,7 @@
     background:var(--surface-hover);
   }
   .card:hover::after{ opacity:1; }
-  .card-top{ display:flex; align-items:flex-start; justify-content:flex-end; }
+  .card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
   .card-kod{
     font-size:11px; color:var(--gold-bright);
     background:rgba(201,164,92,.1);
@@ -370,6 +478,7 @@
     display:flex; align-items:center; justify-content:center;
     background:var(--bg-elevated); border:1px solid var(--border);
     color:var(--text-tertiary);
+    flex-shrink:0;
     transition:color .2s var(--ease), border-color .2s var(--ease);
   }
   .card:hover .card-icon{ color:var(--gold-bright); border-color:var(--border-strong); }
@@ -390,6 +499,88 @@
   .card-foot .count{ color:var(--text-secondary); }
   .card-foot .arrow{ color:var(--text-tertiary); transition:transform .22s var(--ease), color .22s var(--ease); }
   .card:hover .card-foot .arrow{ transform:translateX(3px); color:var(--gold-bright); }
+
+  /* ---------- Rak Kitab: persembahan bookshelf untuk kad Subjek di Utama ---------- */
+  .shelf-case{
+    position:relative;
+    padding:26px 24px 4px;
+    border-radius:var(--radius);
+    border:1px solid var(--border);
+    background:
+      radial-gradient(900px 220px at 50% -10%, rgba(201,164,92,.07), transparent 60%),
+      var(--bg-elevated);
+    box-shadow:var(--shadow-card);
+    overflow:hidden;
+  }
+  .shelf-case::before{
+    content:"";
+    position:absolute; inset:0;
+    border-radius:inherit;
+    border-left:11px solid transparent;
+    border-right:11px solid transparent;
+    border-image:linear-gradient(180deg, #4a3620, #241a10 45%, #1c130c) 1;
+    pointer-events:none;
+    opacity:.92;
+  }
+  .shelf-case-head{
+    display:flex; align-items:center; gap:8px;
+    margin-bottom:16px; padding:0 2px;
+    font-size:10.5px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--text-tertiary);
+  }
+  .shelf-case-head svg{ width:13px; height:13px; color:var(--gold-bright); flex-shrink:0; }
+
+  .shelf-grid{
+    --shelf-h:226px;
+    --shelf-gap:30px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(168px, 1fr));
+    grid-auto-rows:var(--shelf-h);
+    gap:var(--shelf-gap);
+    padding-bottom:var(--shelf-gap);
+    background-image:repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent var(--shelf-h),
+      rgba(0,0,0,.5) var(--shelf-h),
+      #1c130c calc(var(--shelf-h) + 4px),
+      #4a3620 calc(var(--shelf-h) + (var(--shelf-gap) * .5)),
+      #1c130c calc(var(--shelf-h) + var(--shelf-gap) - 5px),
+      transparent calc(var(--shelf-h) + var(--shelf-gap))
+    );
+  }
+
+  .book-card{
+    --spine:var(--gold-bright);
+    box-shadow:inset 0 5px 0 0 var(--spine), var(--shadow-card);
+    border-radius:7px 7px 3px 3px;
+    padding-top:24px;
+    padding-right:26px;
+  }
+  .book-card::before{
+    content:"";
+    position:absolute; top:14px; right:9px; bottom:14px; width:4px;
+    background-image:repeating-linear-gradient(to bottom, rgba(255,255,255,.1) 0 2px, transparent 2px 5px);
+    border-radius:2px;
+    pointer-events:none;
+    opacity:.55;
+  }
+  .book-card h3{
+    display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .shelf-grid .book-card:nth-child(4n+1){ --spine:var(--gold-bright); }
+  .shelf-grid .book-card:nth-child(4n+2){ --spine:var(--teal); }
+  .shelf-grid .book-card:nth-child(4n+3){ --spine:#C98F5C; }
+  .shelf-grid .book-card:nth-child(4n+4){ --spine:#B9A4D8; }
+  .book-card:hover{ transform:translateY(-10px) rotate(-.6deg); }
+
+  @media (max-width:640px){
+    .shelf-case{ padding:18px 16px 4px; }
+    .shelf-case-head{ margin-bottom:12px; }
+    .shelf-grid{ --shelf-h:182px; --shelf-gap:22px; grid-template-columns:repeat(auto-fill, minmax(126px, 1fr)); }
+    .book-card{ padding:16px 20px 12px 14px; }
+  }
 
   /* ---------- Topic list (rows, ledger style) ---------- */
   .row-list{ display:flex; flex-direction:column; gap:1px; background:var(--border); border-radius:var(--radius); overflow:hidden; border:1px solid var(--border); }
@@ -456,49 +647,33 @@
     overflow:hidden;
     background:var(--surface);
     box-shadow:var(--shadow-card);
+    user-select:none;
   }
   .frame-chrome{
     display:flex; align-items:center; gap:8px;
     padding:12px 16px;
     border-bottom:1px solid var(--border);
     background:var(--bg-elevated);
+    cursor:grab;
   }
+  .frame-chrome:active{ cursor:grabbing; }
   .frame-chrome .dot{ width:9px; height:9px; border-radius:50%; background:var(--border-strong); }
   .frame-chrome span{ margin-left:6px; font-size:11.5px; color:var(--text-tertiary); }
   iframe{
     width:100%; height:74vh; min-height:520px; border:none; display:block; background:#0d1117;
   }
 
-  /* ---------- Page nav (swipe / prev-next macam muka surat) ---------- */
+  /* ---------- Page nav (swipe / drag prev-next macam muka surat) ---------- */
   .page-nav{
     position:relative;
   }
-  .page-arrow{
-    position:absolute; top:50%; transform:translateY(-50%);
-    width:44px; height:44px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    background:rgba(13,17,23,.82); backdrop-filter:blur(6px);
-    border:1px solid var(--border-strong);
-    color:var(--text-primary);
-    cursor:pointer; z-index:20;
-    transition:background .18s var(--ease), transform .18s var(--ease), opacity .18s var(--ease), border-color .18s var(--ease);
-    box-shadow:0 8px 20px -8px rgba(0,0,0,.6);
-  }
-  .page-arrow:hover{ background:var(--surface-hover); border-color:var(--gold); }
-  .page-arrow:active{ transform:translateY(-50%) scale(.92); }
-  .page-arrow.left{ left:-18px; }
-  .page-arrow.right{ right:-18px; }
-  .page-arrow[disabled]{ opacity:.28; pointer-events:none; }
-  .page-arrow svg{ width:18px; height:18px; }
-  @media (max-width:640px){
-    .page-arrow{ width:38px; height:38px; }
-    .page-arrow.left{ left:4px; }
-    .page-arrow.right{ right:4px; }
-  }
 
   .page-indicator{
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+    margin-top:16px;
+  }
+  .page-indicator .dots-row{
     display:flex; align-items:center; justify-content:center; gap:6px;
-    margin-top:14px;
   }
   .page-indicator .dot{
     width:6px; height:6px; border-radius:50%;
@@ -509,6 +684,12 @@
   .page-indicator .lbl{
     margin-left:8px; font-size:11.5px; color:var(--text-tertiary);
   }
+  .page-indicator .hint{
+    display:flex; align-items:center; gap:6px;
+    font-size:11px; color:var(--text-tertiary);
+    letter-spacing:.02em;
+  }
+  .page-indicator .hint svg{ width:12px; height:12px; opacity:.7; }
 
   .frame-wrap.sliding-left{ animation:slideOutLeft .22s var(--ease); }
   .frame-wrap.sliding-right{ animation:slideOutRight .22s var(--ease); }
@@ -562,12 +743,32 @@
     .badge{ display:none; }
     .viewer-head{ flex-direction:column; align-items:stretch; }
     .btn{ justify-content:center; }
+    .page-actions{ margin-bottom:14px; }
   }
 
   @media (prefers-reduced-motion: reduce){
     html{ scroll-behavior:auto; }
     #view, .card, .row, .btn{ animation:none !important; transition:none !important; }
   }
+
+  /* ---------- Mod Cerah (Light Theme) — nuansa kertas manuskrip ---------- */
+  body.theme-light{
+    --bg:#F6F1E6;
+    --bg-elevated:#FFFFFF;
+    --surface:#FFFFFF;
+    --surface-hover:#FAF4E7;
+    --border:rgba(120,88,40,.16);
+    --border-strong:rgba(120,88,40,.38);
+    --gold:#B0833F;
+    --gold-bright:#8A5F22;
+    --teal:#1F8577;
+    --text-primary:#241C10;
+    --text-secondary:#5B4E39;
+    --text-tertiary:#8C7C61;
+    --topbar-bg:rgba(255,255,255,.8);
+    --shadow-card: 0 1px 0 rgba(255,255,255,.6) inset, 0 20px 40px -26px rgba(90,66,26,.28);
+  }
+  body.theme-light ::selection{ background:rgba(176,131,63,.28); color:#241C10; }
 </style>
 </head>
 <body>
@@ -586,7 +787,7 @@
 
     <!-- Support Button: cawan kopi beranimasi + bubble tooltip -->
     <div class="support-wrap">
-      <a class="support-btn" id="supportBtn" href="#" target="_blank" rel="noopener" title="Sokong Tabung Belajar" aria-label="Sokong Tabung Belajar">
+      <a class="support-btn" id="supportBtn" href="https://deen-track.pages.dev/tabung-belajar" target="_blank" rel="noopener" title="Sokong Tabung Belajar" aria-label="Sokong Tabung Belajar">
         <svg viewBox="0 0 24 24">
           <path class="cup-body" d="M5 9h11v6.5A3.5 3.5 0 0 1 12.5 19h-4A3.5 3.5 0 0 1 5 15.5V9Z"/>
           <path class="cup-handle" d="M16 10.5h1.6a2.2 2.2 0 0 1 0 4.4H16"/>
@@ -605,22 +806,27 @@
 </main>
 
 <footer>
-  <span>Majma' al-Mulahazat &mdash; Himpunan Nota</span>
+  <span>Majma' al-Mulahazat &mdash; Himpunan Notagrafik</span>
 </footer>
 
-<!-- Butang bulat MENU (ala iPhone), tepi kanan skrin -->
+<!-- Butang bulat MENU (ala iPhone), bawah kanan skrin -->
 <div class="fab-wrap" id="fabWrap">
   <div class="fab-popup" id="fabPopup">
     <p class="fab-eyebrow">Pautan Pantas</p>
     <div class="fab-list">
-      <a class="fab-list-item" href="#/" id="fabHome">
+      <a class="fab-list-item" href="https://deen-track.pages.dev/" id="fabHome" target="_blank" rel="noopener">
         <span class="ico">🏠</span>
-        <span class="txt">Ke Utama</span>
+        <span class="txt">Deen Track</span>
         <span class="chev">›</span>
       </a>
-      <button class="fab-list-item" id="fabTop" type="button">
-        <span class="ico">⬆️</span>
-        <span class="txt">Kembali ke Atas</span>
+      <a class="fab-list-item" href="https://deen-track.pages.dev/akses-pantas" id="fabTop" target="_blank" rel="noopener">
+        <span class="ico">⚡</span>
+        <span class="txt">Akses Pantas</span>
+        <span class="chev">›</span>
+      </a>
+      <button type="button" class="fab-list-item as-button" id="themeToggle">
+        <span class="ico" id="themeIcon"></span>
+        <span class="txt" id="themeLabel">Mod Cerah</span>
         <span class="chev">›</span>
       </button>
     </div>
@@ -640,6 +846,10 @@
   const view = document.getElementById('view');
   const crumbEl = document.getElementById('crumb');
 
+  // Bidang (kategori) yang sedang dipilih pada paparan Utama.
+  // 'semua' = tiada penapisan kategori.
+  let selectedBidangFilter = 'semua';
+
   /* ---------------- Ikon (inline SVG, ringan tanpa dependency) ---------------- */
   const ICONS = {
     folder: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>',
@@ -648,8 +858,17 @@
     doc: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"/><path d="M14 3v5h5"/></svg>',
     ext: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>',
     back: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>',
-    chevLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 18-6-6 6-6"/></svg>',
-    chevRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m9 18 6-6-6-6"/></svg>',
+    swipe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 9l-4 3 4 3"/><path d="M16 9l4 3-4 3"/><path d="M4 12h16"/></svg>',
+    copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>',
+    share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.4 10.6l7.2-4.2M8.4 13.4l7.2 4.2"/></svg>',
+    whatsapp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 0 1-12.9 7.3L4 20l1.2-4.1A8.5 8.5 0 1 1 21 11.5Z"/><path d="M8.8 10.3c.4 2.2 2.3 4.1 4.5 4.5"/></svg>',
+    filter: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M7 12h10M10 18h4"/></svg>',
+    chevDown: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>',
+    book: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5c-.8 0-1.5-.7-1.5-1.5v-13Z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5c.8 0 1.5-.7 1.5-1.5v-13Z"/><path d="M12 4v16"/></svg>',
+    shelf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4v16M20 4v16M4 9h16M4 15h16"/></svg>',
+    candle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--gold-bright)"><rect x="9" y="10" width="6" height="10" rx="1.3"/><path d="M12 10V6.4"/><path d="M12 6.4c1.1-.9 1.4-2 .5-3.3-.5.9-1.5.9-2 0-.9 1.3-.6 2.4.5 3.3Z" fill="currentColor"/></svg>',
+    moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--gold-bright)"><path d="M20 14.2A8.3 8.3 0 1 1 9.8 4a6.8 6.8 0 0 0 10.2 10.2Z"/></svg>',
   };
 
   /* ---------------- Utiliti ---------------- */
@@ -667,11 +886,188 @@
   function escapeHtml(str){
     return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   }
+  // Label paparan bagi satu siri: guna `nama` (bab) jika diisi dalam nota-data.js,
+  // jika tidak, kembali kepada "Siri N" seperti biasa.
+  function siriLabel(r){
+    return (r && r.nama && String(r.nama).trim()) ? String(r.nama).trim() : `Siri ${r.siri}`;
+  }
+  // Label bidang bagi satu subjek: guna `bidang` jika diisi, jika tidak "Umum".
+  function bidangLabel(s){
+    return (s && s.bidang && String(s.bidang).trim()) ? String(s.bidang).trim() : 'Umum';
+  }
+  // Bina blok butang "Share" (dengan popup Salin / WhatsApp) untuk sesuatu ruang.
+  function shareBlock(hash, titleText){
+    const fullUrl = location.origin + location.pathname + hash;
+    const waMsg = encodeURIComponent(`${titleText} — ${fullUrl}`);
+    return `
+      <div class="share-wrap">
+        <button type="button" class="btn share-toggle">${ICONS.share} Share</button>
+        <div class="share-popup">
+          <button type="button" class="share-option share-copy" data-copy-url="${escapeHtml(fullUrl)}">${ICONS.copy}<span>Salin</span></button>
+          <a class="share-option share-wa" href="https://wa.me/?text=${waMsg}" target="_blank" rel="noopener">${ICONS.whatsapp}<span>WhatsApp</span></a>
+        </div>
+      </div>
+    `;
+  }
+
+  /* ---------------- Salin pautan (delegasi klik) ---------------- */
+  function fallbackCopy(text, cb){
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta);
+    cb();
+  }
+  function performCopy(text, onDone){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(onDone).catch(() => fallbackCopy(text, onDone));
+    } else {
+      fallbackCopy(text, onDone);
+    }
+  }
+  function copyToClipboard(text, btn){
+    performCopy(text, () => {
+      btn.classList.add('copied');
+      btn.innerHTML = ICONS.check;
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = ICONS.copy;
+      }, 1500);
+    });
+  }
+  // Terapkan carian teks + penapis bidang serentak pada grid Subjek (Utama).
+  function applyBerandaFilters(){
+    const input = document.getElementById('cari');
+    const grid = document.getElementById('gridSubjek');
+    if(!input || !grid) return;
+    const q = input.value.trim().toLowerCase();
+    grid.querySelectorAll('.card').forEach(card => {
+      const matchSearch = card.dataset.search.includes(q);
+      const matchBidang = selectedBidangFilter === 'semua' || card.dataset.bidang === selectedBidangFilter;
+      card.style.display = (matchSearch && matchBidang) ? '' : 'none';
+    });
+  }
+
+  view.addEventListener('click', (e) => {
+    // Salin pautan (butang bulat pada baris/kad)
+    const copyBtn = e.target.closest('.copy-btn');
+    if(copyBtn){
+      e.preventDefault();
+      e.stopPropagation();
+      const url = location.origin + location.pathname + copyBtn.dataset.copy;
+      copyToClipboard(url, copyBtn);
+      return;
+    }
+    // Togol popup Share (Salin / WhatsApp)
+    const shareToggle = e.target.closest('.share-toggle');
+    if(shareToggle){
+      e.preventDefault();
+      e.stopPropagation();
+      const wrap = shareToggle.closest('.share-wrap');
+      const willOpen = !wrap.classList.contains('open');
+      document.querySelectorAll('.share-wrap.open, .filter-wrap.open').forEach(w => w.classList.remove('open'));
+      if(willOpen) wrap.classList.add('open');
+      return;
+    }
+    // Pilihan "Salin" dalam popup Share
+    const shareCopy = e.target.closest('.share-copy');
+    if(shareCopy){
+      e.preventDefault();
+      e.stopPropagation();
+      const url = shareCopy.dataset.copyUrl;
+      const original = shareCopy.innerHTML;
+      performCopy(url, () => {
+        shareCopy.classList.add('copied');
+        shareCopy.innerHTML = `${ICONS.check}<span>Disalin!</span>`;
+        setTimeout(() => {
+          shareCopy.classList.remove('copied');
+          shareCopy.innerHTML = original;
+        }, 1500);
+      });
+      return;
+    }
+    // Pilihan "WhatsApp" dalam popup Share — tutup popup selepas dibuka
+    const shareWa = e.target.closest('.share-wa');
+    if(shareWa){
+      e.stopPropagation();
+      const wrap = shareWa.closest('.share-wrap');
+      setTimeout(() => { if(wrap) wrap.classList.remove('open'); }, 150);
+    }
+    // Togol popup Bidang (dropdown kategori pada Utama)
+    const filterToggle = e.target.closest('.filter-toggle');
+    if(filterToggle){
+      e.preventDefault();
+      e.stopPropagation();
+      const wrap = filterToggle.closest('.filter-wrap');
+      const willOpen = !wrap.classList.contains('open');
+      document.querySelectorAll('.share-wrap.open, .filter-wrap.open').forEach(w => w.classList.remove('open'));
+      if(willOpen) wrap.classList.add('open');
+      return;
+    }
+    // Pilihan bidang dalam popup
+    const filterOption = e.target.closest('.filter-option');
+    if(filterOption){
+      e.preventDefault();
+      e.stopPropagation();
+      const wrap = filterOption.closest('.filter-wrap');
+      wrap.querySelectorAll('.filter-option').forEach(o => o.classList.remove('active'));
+      filterOption.classList.add('active');
+      selectedBidangFilter = filterOption.dataset.val;
+      const toggleBtn = wrap.querySelector('.filter-toggle');
+      const labelEl = toggleBtn.querySelector('.filter-label-text');
+      const isSemua = selectedBidangFilter === 'semua';
+      if(labelEl) labelEl.textContent = isSemua ? 'Bidang' : filterOption.textContent.trim();
+      toggleBtn.classList.toggle('active-filter', !isSemua);
+      wrap.classList.remove('open');
+      applyBerandaFilters();
+      return;
+    }
+  });
+  // Tutup mana-mana popup (Share / Bidang) bila klik di luar
+  document.addEventListener('click', (e) => {
+    if(!e.target.closest('.share-wrap')){
+      document.querySelectorAll('.share-wrap.open').forEach(w => w.classList.remove('open'));
+    }
+    if(!e.target.closest('.filter-wrap')){
+      document.querySelectorAll('.filter-wrap.open').forEach(w => w.classList.remove('open'));
+    }
+  });
 
   /* ---------------- Router ---------------- */
   function parseHash(){
     const raw = location.hash.replace(/^#\/?/, '');
     return raw.split('/').filter(Boolean).map(decodeURIComponent);
+  }
+
+  /* ---------------- Bina semula susunan history untuk pautan dalam (deep link) ----------------
+   * Jika laman dibuka terus melalui pautan dalam (cth: #/s/subjek/t/tajuk atau .../r/siri)
+   * tanpa melalui navigasi biasa, browser tidak mempunyai rekod peringkat atasnya
+   * (Utama, Subjek). Akibatnya butang "Back" akan terus keluar dari laman.
+   * Fungsi ini membina rekod history secara senyap (tanpa memaparkan semula/flicker)
+   * supaya "Back" sentiasa berperingkat seperti biasa: Siri/Tajuk → Subjek (folder kitab) → Utama.
+   */
+  function primeHistoryForDeepLink(){
+    const parts = parseHash();
+    if(parts[0] !== 's' || !parts[1]) return; // bukan pautan dalam (deep link), tiada apa perlu dibina
+
+    const ancestors = ['#/'];
+    ancestors.push(`#/s/${parts[1]}`);
+    if(parts[2] === 't' && parts[3]){
+      ancestors.push(`#/s/${parts[1]}/t/${parts[3]}`);
+    }
+
+    const currentFullHash = location.hash || '#/';
+    const chain = ancestors.filter(h => h !== currentFullHash);
+    if(chain.length === 0) return; // sudah di peringkat Utama, tiada apa perlu dibina
+
+    try{
+      history.replaceState(null, '', chain[0]);
+      for(let i = 1; i < chain.length; i++){
+        history.pushState(null, '', chain[i]);
+      }
+      history.pushState(null, '', currentFullHash);
+    } catch(e){ /* senyap jika sekatan persekitaran (mis. sandboxed iframe) */ }
   }
 
   function render(){
@@ -705,23 +1101,45 @@
     document.title = "Majma' al-Mulahazat";
     setCrumb([{ label:'Utama' }]);
 
+    // Reset penapis bidang setiap kali kembali ke Utama (paparan baharu)
+    selectedBidangFilter = 'semua';
+
+    // Senarai bidang unik, diambil terus daripada nota-data.js (tiada perlu daftar berasingan)
+    const bidangList = Array.from(new Set(SUBJEK.map(s => bidangLabel(s))))
+      .sort((a, b) => a.localeCompare(b, 'ms'));
+
     const cards = SUBJEK.map((s, i) => `
-      <a class="card" href="#/s/${slug(s.nama)}" data-search="${escapeHtml(s.nama.toLowerCase())}">
+      <a class="card book-card" href="#/s/${slug(s.nama)}" data-search="${escapeHtml(s.nama.toLowerCase())}" data-bidang="${escapeHtml(bidangLabel(s).toLowerCase())}">
         <div class="card-top">
-          <span class="card-icon">${ICONS.folder}</span>
+          <span class="card-kod">${escapeHtml(bidangLabel(s))}</span>
+          <span class="card-icon">${ICONS.book}</span>
         </div>
         <h3>${escapeHtml(s.nama)}</h3>
         <div class="card-foot">
           <span class="count">${s.tajuk.length} tajuk</span>
-          <span class="chip-btn">Buka ${ICONS.arrow}</span>
+          <div class="card-foot-actions">
+            <button type="button" class="icon-btn copy-btn" data-copy="#/s/${slug(s.nama)}" title="Salin pautan">${ICONS.copy}</button>
+            <span class="chip-btn">Buka ${ICONS.arrow}</span>
+          </div>
         </div>
       </a>
     `).join('');
 
+    const filterOptions = `
+      <button type="button" class="filter-option active" data-val="semua">
+        <span>Semua Bidang</span><span class="tick">${ICONS.check}</span>
+      </button>
+      ${bidangList.map(b => `
+        <button type="button" class="filter-option" data-val="${escapeHtml(b.toLowerCase())}">
+          <span>${escapeHtml(b)}</span><span class="tick">${ICONS.check}</span>
+        </button>
+      `).join('')}
+    `;
+
     view.innerHTML = `
       <div class="page-head">
         <div>
-          <h2>Rak Pengajian</h2>
+          <h2>Rak Kitab - Notagrafik</h2>
         </div>
         <div class="page-stats">
           <div class="stat"><span class="num mono">${SUBJEK.length}</span><span class="lbl">Subjek</span></div>
@@ -730,22 +1148,29 @@
         </div>
       </div>
 
-      <div class="search-wrap">
-        ${ICONS.search}
-        <input type="text" id="cari" placeholder="Cari subjek atau tajuk…" autocomplete="off">
+      <div class="search-row">
+        <div class="search-wrap">
+          ${ICONS.search}
+          <input type="text" id="cari" placeholder="Cari subjek atau tajuk…" autocomplete="off">
+        </div>
+        <div class="filter-wrap" id="filterWrap">
+          <button type="button" class="btn filter-toggle">
+            ${ICONS.filter}
+            <span class="filter-label-text">Bidang</span>
+            <span class="chev">${ICONS.chevDown}</span>
+          </button>
+          <div class="filter-popup">${filterOptions}</div>
+        </div>
       </div>
 
-      <div class="grid" id="gridSubjek">${cards}</div>
+      <div class="shelf-case">
+        <div class="shelf-case-head">${ICONS.shelf} Rak Kitab &middot; ${SUBJEK.length} subjek tersusun</div>
+        <div class="grid shelf-grid" id="gridSubjek">${cards}</div>
+      </div>
     `;
 
     const input = document.getElementById('cari');
-    const grid = document.getElementById('gridSubjek');
-    input.addEventListener('input', () => {
-      const q = input.value.trim().toLowerCase();
-      grid.querySelectorAll('.card').forEach(card => {
-        card.style.display = card.dataset.search.includes(q) ? '' : 'none';
-      });
-    });
+    input.addEventListener('input', applyBerandaFilters);
   }
 
   /* ---------------- Paparan: Subjek (senarai tajuk) ---------------- */
@@ -761,20 +1186,27 @@
     const rows = s.tajuk.map((t, i) => {
       const adaBil = t.siri.filter(r => r.embed && r.embed.trim()).length;
       return `
-        <a class="row" href="#/s/${slug(s.nama)}/t/${slug(t.nama)}">
+        <a class="row" href="#/s/${slug(s.nama)}/t/${slug(t.nama)}" data-search="${escapeHtml(t.nama.toLowerCase())}">
           <span class="row-kod mono">${subjKod}.${i + 1}</span>
           <span class="row-main">
             <h4>${escapeHtml(t.nama)}</h4>
           </span>
           <span class="row-meta">
             <span class="badge ${adaBil > 0 ? 'ready' : 'pending'}">${adaBil} / ${t.siri.length} siri tersedia</span>
-            <span class="chip-btn">Buka ${ICONS.arrow}</span>
+            <div class="row-actions">
+              <button type="button" class="icon-btn copy-btn" data-copy="#/s/${slug(s.nama)}/t/${slug(t.nama)}" title="Salin pautan">${ICONS.copy}</button>
+              <span class="chip-btn">Buka ${ICONS.arrow}</span>
+            </div>
           </span>
         </a>
       `;
     }).join('');
 
     view.innerHTML = `
+      <div class="page-actions">
+        <a class="btn" href="#/">${ICONS.back} Kembali</a>
+        ${shareBlock(`#/s/${slug(s.nama)}`, s.nama)}
+      </div>
       <div class="page-head">
         <div>
           <h2>${escapeHtml(s.nama)}</h2>
@@ -783,8 +1215,25 @@
           <div class="stat"><span class="num mono">${s.tajuk.length}</span><span class="lbl">Tajuk</span></div>
         </div>
       </div>
-      <div class="row-list">${rows || '<div style="padding:32px;color:var(--text-tertiary);font-size:13.5px;">Belum ada tajuk dalam subjek ini.</div>'}</div>
+
+      <div class="search-wrap">
+        ${ICONS.search}
+        <input type="text" id="cariTajuk" placeholder="Cari tajuk…" autocomplete="off">
+      </div>
+
+      <div class="row-list" id="senaraiTajuk">${rows || '<div style="padding:32px;color:var(--text-tertiary);font-size:13.5px;">Belum ada tajuk dalam subjek ini.</div>'}</div>
     `;
+
+    const inputTajuk = document.getElementById('cariTajuk');
+    const senaraiTajuk = document.getElementById('senaraiTajuk');
+    if(inputTajuk){
+      inputTajuk.addEventListener('input', () => {
+        const q = inputTajuk.value.trim().toLowerCase();
+        senaraiTajuk.querySelectorAll('.row').forEach(row => {
+          row.style.display = row.dataset.search.includes(q) ? '' : 'none';
+        });
+      });
+    }
   }
 
   /* ---------------- Paparan: Tajuk (senarai siri) ---------------- */
@@ -801,21 +1250,32 @@
 
     const rows = t.siri.map(r => {
       const ada = Boolean(r.embed && r.embed.trim());
+      const label = siriLabel(r);
+      const adaNama = Boolean(r.nama && String(r.nama).trim());
+      const rowHash = `#/s/${slug(s.nama)}/t/${slug(t.nama)}/r/${r.siri}`;
       return `
-        <a class="row" href="#/s/${slug(s.nama)}/t/${slug(t.nama)}/r/${r.siri}">
+        <a class="row" href="${rowHash}" data-search="${escapeHtml((label + ' siri ' + r.siri).toLowerCase())}">
           <span class="row-kod mono">${tajukKod}.${r.siri}</span>
           <span class="row-main">
-            <h4>Siri ${r.siri}</h4>
+            <h4>${escapeHtml(label)}</h4>
+            ${adaNama ? `<p>Siri ${r.siri}</p>` : ''}
           </span>
           <span class="row-meta">
             <span class="badge ${ada ? 'ready' : 'pending'}">${ada ? 'Tersedia' : 'Belum siap'}</span>
-            <span class="chip-btn">Buka ${ICONS.arrow}</span>
+            <div class="row-actions">
+              <button type="button" class="icon-btn copy-btn" data-copy="${rowHash}" title="Salin pautan">${ICONS.copy}</button>
+              <span class="chip-btn">Buka ${ICONS.arrow}</span>
+            </div>
           </span>
         </a>
       `;
     }).join('');
 
     view.innerHTML = `
+      <div class="page-actions">
+        <a class="btn" href="#/s/${slug(s.nama)}">${ICONS.back} Kembali</a>
+        ${shareBlock(`#/s/${slug(s.nama)}/t/${slug(t.nama)}`, t.nama)}
+      </div>
       <div class="page-head">
         <div>
           <h2>${escapeHtml(t.nama)}</h2>
@@ -825,8 +1285,25 @@
           <div class="stat"><span class="num mono">${t.siri.length}</span><span class="lbl">Siri</span></div>
         </div>
       </div>
-      <div class="row-list">${rows || '<div style="padding:32px;color:var(--text-tertiary);font-size:13.5px;">Belum ada siri dalam tajuk ini.</div>'}</div>
+
+      <div class="search-wrap">
+        ${ICONS.search}
+        <input type="text" id="cariSiri" placeholder="Cari siri…" autocomplete="off">
+      </div>
+
+      <div class="row-list" id="senaraiSiri">${rows || '<div style="padding:32px;color:var(--text-tertiary);font-size:13.5px;">Belum ada siri dalam tajuk ini.</div>'}</div>
     `;
+
+    const inputSiri = document.getElementById('cariSiri');
+    const senaraiSiri = document.getElementById('senaraiSiri');
+    if(inputSiri){
+      inputSiri.addEventListener('input', () => {
+        const q = inputSiri.value.trim().toLowerCase();
+        senaraiSiri.querySelectorAll('.row').forEach(row => {
+          row.style.display = row.dataset.search.includes(q) ? '' : 'none';
+        });
+      });
+    }
   }
 
   /* ---------------- Paparan: Siri (nota + embed) ---------------- */
@@ -836,17 +1313,19 @@
     const r = t && findSiri(t, siriId);
     if(!s || !t || !r){ renderNotFound('Siri tidak dijumpai.'); return; }
 
-    document.title = `${t.nama} · Siri ${r.siri} — Majma' al-Mulahazat`;
+    const label = siriLabel(r);
+    const adaNamaSiri = Boolean(r.nama && String(r.nama).trim());
+    document.title = `${t.nama} · ${label} — Majma' al-Mulahazat`;
     setCrumb([
       { label:'Utama', href:'#/' },
       { label:s.nama, href:`#/s/${slug(s.nama)}` },
       { label:t.nama, href:`#/s/${slug(s.nama)}/t/${slug(t.nama)}` },
-      { label:`Siri ${r.siri}` }
+      { label: label }
     ]);
 
     const ada = Boolean(r.embed && r.embed.trim());
 
-    // Kedudukan siri semasa dalam tajuk (untuk navigasi ‹ ›, macam muka surat)
+    // Kedudukan siri semasa dalam tajuk (untuk navigasi leret/drag, macam muka surat)
     const idx = t.siri.indexOf(r);
     const adaSebelum = idx > 0;
     const adaSelepas = idx < t.siri.length - 1;
@@ -863,20 +1342,19 @@
     view.innerHTML = `
       <div class="viewer-head">
         <div class="viewer-title">
-          <h2>${escapeHtml(t.nama)} — Siri ${r.siri}</h2>
+          <h2>${escapeHtml(t.nama)} — ${escapeHtml(label)}</h2>
+          ${adaNamaSiri ? `<div class="meta"><span class="mono">Siri ${r.siri}</span></div>` : ''}
         </div>
-        <div style="display:flex; gap:10px;">
+        <div class="page-actions">
           <a class="btn primary" href="#/s/${slug(s.nama)}/t/${slug(t.nama)}">${ICONS.back} Kembali</a>
+          ${shareBlock(`#/s/${slug(s.nama)}/t/${slug(t.nama)}/r/${r.siri}`, `${t.nama} — ${label}`)}
         </div>
       </div>
 
       <div class="page-nav" id="pageNav">
-        <button class="page-arrow left" id="btnPrev" title="Siri sebelum (←)" ${adaSebelum ? '' : 'disabled'}>${ICONS.chevLeft}</button>
-        <button class="page-arrow right" id="btnNext" title="Siri seterusnya (→)" ${adaSelepas ? '' : 'disabled'}>${ICONS.chevRight}</button>
-
         ${ada ? `
           <div class="frame-wrap entering" id="frameWrap">
-            <div class="frame-chrome">
+            <div class="frame-chrome" id="frameChrome">
               <span class="dot"></span><span class="dot"></span><span class="dot"></span>
               <span class="mono">nota.site/${slug(s.nama)}/${slug(t.nama)}/siri-${r.siri}</span>
             </div>
@@ -887,24 +1365,25 @@
             <div class="glyph">${ICONS.doc}</div>
             <h3>Nota belum tersedia</h3>
             <p>Siri ini belum mempunyai pautan nota. Tambah pautan "Embed this page" dari Notion pada medan <code>embed</code> bagi siri ini di dalam nota-data.js.</p>
-            <code>siri: ${r.siri} → embed: "https://…notion.site/…"</code>
+            <code>siri: ${r.siri}, nama: "…" → embed: "https://…notion.site/…"</code>
           </div>
         `}
       </div>
 
       ${t.siri.length > 1 ? `
         <div class="page-indicator">
-          ${dots}
-          <span class="lbl mono">Siri ${idx + 1} / ${t.siri.length}</span>
+          <div class="dots-row">
+            ${dots}
+            <span class="lbl mono">Siri ${idx + 1} / ${t.siri.length}</span>
+          </div>
+          <span class="hint">${ICONS.swipe} Leret di mana-mana skrin atau seret bar atas untuk tukar siri — kekunci ← → juga berfungsi</span>
         </div>
       ` : ''}
     `;
 
-    // ---- Navigasi: butang, kekunci panah, swipe ----
-    const btnPrev = document.getElementById('btnPrev');
-    const btnNext = document.getElementById('btnNext');
-    const pageNav = document.getElementById('pageNav');
+    // ---- Navigasi: leret (mobile, seluruh skrin), seret tetikus (desktop), kekunci panah ----
     const frameWrap = document.getElementById('frameWrap');
+    const frameChrome = document.getElementById('frameChrome');
 
     const navigate = (dir) => {
       const target = dir === 'prev' ? siriSebelum : siriSelepas;
@@ -913,32 +1392,64 @@
       setTimeout(() => gotoSiri(target), 140);
     };
 
-    btnPrev.addEventListener('click', () => navigate('prev'));
-    btnNext.addEventListener('click', () => navigate('next'));
-
     function onKey(e){
       if(e.key === 'ArrowLeft') navigate('prev');
       else if(e.key === 'ArrowRight') navigate('next');
     }
     document.addEventListener('keydown', onKey);
-    // Bersihkan listener bila pandangan bertukar
-    const cleanup = () => document.removeEventListener('keydown', onKey);
-    window.addEventListener('hashchange', cleanup, { once:true });
 
-    // Swipe (sentuh) — berfungsi di kawasan chrome/luar iframe.
+    // Leret sentuhan (mobile) — dipasang pada seluruh dokumen supaya
+    // sentuhan di mana-mana bahagian skrin (bukan setakat kad nota) boleh
+    // menukar siri, lebih mudah dan selesa digunakan sebelah tangan.
     // Nota: sentuhan di ATAS iframe Notion sendiri tidak boleh dikesan
-    // oleh halaman induk disebabkan sekatan cross-origin browser.
+    // oleh halaman induk disebabkan sekatan cross-origin browser; oleh itu
+    // bar judul (frame-chrome) turut disediakan sebagai kawasan seret khas (desktop).
     let touchStartX = null;
-    pageNav.addEventListener('touchstart', (e) => {
+    let touchStartY = null;
+    function onTouchStart(e){
       touchStartX = e.touches[0].clientX;
-    }, { passive:true });
-    pageNav.addEventListener('touchend', (e) => {
+      touchStartY = e.touches[0].clientY;
+    }
+    function onTouchEnd(e){
       if(touchStartX === null) return;
       const dx = e.changedTouches[0].clientX - touchStartX;
-      touchStartX = null;
-      if(Math.abs(dx) < 60) return;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      touchStartX = null; touchStartY = null;
+      if(Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy)) return; // pastikan leret mendatar, elak konflik dgn scroll menegak
       if(dx > 0) navigate('prev'); else navigate('next');
-    }, { passive:true });
+    }
+    document.addEventListener('touchstart', onTouchStart, { passive:true });
+    document.addEventListener('touchend', onTouchEnd, { passive:true });
+
+    // Bersihkan semua listener bila pandangan bertukar
+    window.addEventListener('hashchange', () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('touchstart', onTouchStart);
+      document.removeEventListener('touchend', onTouchEnd);
+    }, { once:true });
+
+    // Seret tetikus (desktop) — pada bar judul kad nota, sebab kandungan
+    // iframe sendiri tidak boleh dikesan gerakan tetikusnya (cross-origin).
+    if(frameChrome){
+      let isDragging = false;
+      let dragStartX = 0;
+
+      frameChrome.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        dragStartX = e.clientX;
+      });
+      window.addEventListener('mousemove', (e) => {
+        if(!isDragging) return;
+        e.preventDefault();
+      });
+      window.addEventListener('mouseup', (e) => {
+        if(!isDragging) return;
+        isDragging = false;
+        const dx = e.clientX - dragStartX;
+        if(Math.abs(dx) < 60) return;
+        if(dx > 0) navigate('prev'); else navigate('next');
+      });
+    }
   }
 
   function renderNotFound(mesej){
@@ -964,7 +1475,6 @@
     fabWrap.classList.toggle('open');
   });
   fabTop.addEventListener('click', () => {
-    window.scrollTo({ top:0, behavior:'smooth' });
     fabWrap.classList.remove('open');
   });
   fabHome.addEventListener('click', () => {
@@ -973,6 +1483,32 @@
   document.addEventListener('click', (e) => {
     if(!fabWrap.contains(e.target)) fabWrap.classList.remove('open');
   });
+
+  /* ---------------- Togol Mod Cerah / Gelap ----------------
+   * Nota: state disimpan dalam memori JS sahaja (bukan localStorage),
+   * jadi ia akan reset kepada Mod Gelap (asal) bila laman dimuat semula.
+   * Jika laman ini dihoskan di luar (bukan dalam pratonton artifact),
+   * anda boleh tambah localStorage.setItem/getItem di sini untuk
+   * mengekalkan pilihan pengguna merentasi lawatan.
+   */
+  let isLightTheme = false;
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+  const themeLabel = document.getElementById('themeLabel');
+  function applyTheme(){
+    document.body.classList.toggle('theme-light', isLightTheme);
+    if(themeIcon) themeIcon.innerHTML = isLightTheme ? ICONS.moon : ICONS.candle;
+    if(themeLabel) themeLabel.textContent = isLightTheme ? 'Mod Gelap' : 'Mod Cerah';
+  }
+  if(themeToggle){
+    themeToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isLightTheme = !isLightTheme;
+      applyTheme();
+      fabWrap.classList.remove('open');
+    });
+  }
+  applyTheme();
 
   /* ---------------- Support Button: bubble tooltip berulang ---------------- */
   const supportBubble = document.getElementById('supportBubble');
@@ -987,6 +1523,7 @@
 
   window.addEventListener('hashchange', render);
   window.addEventListener('DOMContentLoaded', render);
+  primeHistoryForDeepLink();
   render();
 })();
 </script>
