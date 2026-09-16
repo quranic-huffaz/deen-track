@@ -298,8 +298,8 @@ body::before {
   position:relative; overflow:hidden;
   background:linear-gradient(140deg,#0d1e3a 0%,#080d1a 100%);
   border:1px solid rgba(74,158,255,.18);
-  border-radius:var(--r-lg); padding:18px 18px 16px; margin:4px 0 14px;
-  animation:fadeUp .4s var(--ease) both; animation-delay:.1s;
+  border-radius:var(--r-lg); padding:18px 18px 18px; margin:4px 0 14px;
+  animation:fadeUp .4s var(--ease) both;
 }
 .zk-today-card::before {
   content:''; position:absolute; top:0; left:0; right:0; height:1px;
@@ -307,15 +307,18 @@ body::before {
 }
 .zk-today-lbl { font-size:.6rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--t3); margin-bottom:7px; }
 .zk-today-date { font-family:var(--font-serif); font-size:1.2rem; color:var(--t1); }
-.zk-today-day { font-size:.74rem; color:var(--t2); margin-top:3px; margin-bottom:14px; }
-.zk-today-chips { display:flex; flex-wrap:wrap; gap:8px; }
-.zk-chip {
-  display:inline-flex; align-items:center; gap:6px;
-  background:rgba(255,255,255,.04); border:1px solid var(--border);
-  border-radius:99px; padding:7px 13px; font-size:.72rem; color:var(--t2);
+.zk-today-day { font-size:.74rem; color:var(--t2); margin-top:3px; margin-bottom:16px; }
+.zk-today-btn {
+  display:inline-flex; align-items:center; gap:7px;
+  background:var(--blue-dim); border:1px solid rgba(74,158,255,.3);
+  color:var(--blue); font-family:var(--font); font-weight:600; font-size:.78rem;
+  letter-spacing:.02em; padding:10px 18px; border-radius:99px; cursor:pointer;
+  transition:all .22s var(--ease);
 }
-.zk-chip b { font-family:var(--font-mono); color:var(--t1); font-weight:600; }
-.zk-chip.dim { color:var(--t3); }
+.zk-today-btn svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; transition:transform .22s var(--ease); }
+.zk-today-btn:hover { background:rgba(74,158,255,.2); box-shadow:0 0 18px rgba(74,158,255,.25); }
+.zk-today-btn:hover svg { transform:translateY(2px); }
+.zk-today-btn:active { transform:scale(.97); }
 
 /* ═══════════════════════════════════════════════
    SECTION TITLE + MONTH NAV
@@ -343,6 +346,7 @@ body::before {
 .zk-cal-card {
   background:var(--bg-card); border:1px solid var(--border); border-radius:var(--r-lg);
   padding:14px 16px; margin-bottom:10px; animation:fadeUp .35s var(--ease) both;
+  scroll-margin-top:16px;
 }
 .zk-cal-card.is-today { border-color:rgba(74,158,255,.3); background:linear-gradient(135deg, rgba(74,158,255,.05), var(--bg-card) 60%); }
 .zk-cal-date-row { display:flex; align-items:baseline; gap:8px; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid var(--border); }
@@ -413,7 +417,7 @@ body::before {
 .zk-empty-sub { font-size:.76rem; color:var(--t3); line-height:1.5; }
 
 /* ═══════════════════════════════════════════════
-   FLOATING ACTION BUTTON
+   FLOATING ACTION BUTTON (tab Rekod)
 ═══════════════════════════════════════════════ */
 .fab {
   position:absolute; right:18px; bottom:calc(88px + var(--safe-b));
@@ -428,6 +432,24 @@ body::before {
 .fab svg { width:24px; height:24px; stroke:currentColor; fill:none; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; }
 .fab:hover { box-shadow:0 8px 30px rgba(0,214,143,.5), var(--green-glow); transform:translateY(-2px) scale(1); }
 .fab:active { transform:scale(.92); }
+
+/* ═══════════════════════════════════════════════
+   SCROLL-TO-BOTTOM ARROW (tab Dashboard)
+═══════════════════════════════════════════════ */
+.scroll-arrow-btn {
+  position:absolute; right:18px; bottom:calc(88px + var(--safe-b));
+  width:50px; height:50px; border-radius:50%;
+  background:var(--bg-card2); border:1px solid var(--border-hi);
+  color:var(--t2); display:flex; align-items:center; justify-content:center;
+  cursor:pointer; z-index:29; transition:all .25s var(--ease);
+  box-shadow:0 8px 24px rgba(0,0,0,.4);
+  opacity:0; pointer-events:none; transform:scale(.7) translateY(6px);
+}
+.scroll-arrow-btn.show { opacity:1; pointer-events:all; transform:scale(1) translateY(0); }
+.scroll-arrow-btn svg { width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; animation:arrowBob 1.8s ease-in-out infinite; }
+@keyframes arrowBob { 0%,100% { transform:translateY(0); } 50% { transform:translateY(3px); } }
+.scroll-arrow-btn:hover { border-color:var(--green); color:var(--green); background:var(--green-dim); box-shadow:0 8px 26px rgba(0,214,143,.25); }
+.scroll-arrow-btn:active { transform:scale(.92); }
 </style>
 </head>
 <body>
@@ -445,16 +467,19 @@ body::before {
       <div class="zk-header-sub">Amalan harian &bull; Istiqamah setiap hari</div>
     </div>
 
-    <!-- 3 kad utama -->
-    <div id="summary-cards"></div>
-
-    <!-- Hari Ini -->
+    <!-- Hari Ini (dipindah ke atas) -->
     <div class="zk-today-card">
       <div class="zk-today-lbl">Hari Ini</div>
       <div class="zk-today-date" id="today-date">&mdash;</div>
       <div class="zk-today-day" id="today-day">&mdash;</div>
-      <div class="zk-today-chips" id="today-chips"></div>
+      <button class="zk-today-btn" id="today-view-btn" type="button">
+        Lihat
+        <svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>
+      </button>
     </div>
+
+    <!-- 3 kad utama -->
+    <div id="summary-cards"></div>
 
     <!-- Kalendar Zikir -->
     <div class="zk-section-title">Kalendar Zikir</div>
@@ -488,9 +513,14 @@ body::before {
     <div class="page-bot"></div>
   </div>
 
-  <!-- ═══════ FLOATING ACTION BUTTON ═══════ -->
+  <!-- ═══════ FLOATING ACTION BUTTON (Rekod) ═══════ -->
   <button class="fab" id="fab-add" aria-label="Tambah rekod zikir">
     <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
+
+  <!-- ═══════ SCROLL-TO-BOTTOM ARROW (Dashboard) ═══════ -->
+  <button class="scroll-arrow-btn" id="scroll-arrow" aria-label="Skrol ke bawah">
+    <svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>
   </button>
 
   <!-- ═══════ BOTTOM TAB BAR — 2 tabs ═══════ -->
@@ -518,7 +548,7 @@ body::before {
       <select class="zk-form-select" id="f-zikir">
         <option value="istighfar">Istighfar</option>
         <option value="selawat">Selawat</option>
-        <option value="pendinding">Pendinding Diri</option>
+        <option value="pendinding">Bacaan Ruqyah</option>
       </select>
     </div>
 
@@ -560,11 +590,14 @@ body::before {
 
 /* ═══════════════════════════════════════════════
    CONFIG — LOCKED. Jangan sediakan UI untuk edit ini.
+   (Key dalaman "pendinding" dikekalkan; hanya label paparan
+   ditukar kepada "Bacaan Ruqyah" supaya struktur data asal
+   tidak terjejas.)
 ═══════════════════════════════════════════════ */
 const ZIKIR_CONFIG = {
   istighfar:  { name: 'Istighfar',        dailyTarget: 1000, startDate: '2026-09-01', accent: 'green' },
   selawat:    { name: 'Selawat',          dailyTarget: 1000, startDate: '2026-09-01', accent: 'blue'  },
-  pendinding: { name: 'Pendinding Diri',  dailyTarget: 20,   startDate: '2026-09-13', accent: 'gold'  }
+  pendinding: { name: 'Bacaan Ruqyah',    dailyTarget: 20,   startDate: '2026-09-13', accent: 'gold'  }
 };
 const ZIKIR_ORDER = ['istighfar', 'selawat', 'pendinding'];
 
@@ -578,6 +611,23 @@ const MONTH_NAMES = ['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogo
 const DAY_NAMES = ['Ahad','Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu'];
 
 const STORAGE_KEY = 'zikirTrackerRecords_v1';
+
+/* ═══════════════════════════════════════════════
+   GOOGLE SHEETS INTEGRATION
+   ---------------------------------------------------------
+   1. Deploy skrip "Code.gs" (disediakan berasingan) sebagai
+      Google Apps Script Web App: Deploy > New deployment >
+      Type: Web app > Execute as: Me > Who has access: Anyone.
+   2. Salin URL Web App yang dihasilkan (bermula dengan
+      https://script.google.com/macros/s/.../exec).
+   3. Tampal URL tersebut di dalam GOOGLE_SHEET_API_URL di
+      bawah, di antara tanda petikan ''.
+   4. Jika medan ini dibiarkan kosong (''), aplikasi akan
+      terus berfungsi sepenuhnya menggunakan localStorage
+      sahaja — tiada ralat akan berlaku.
+   ---------------------------------------------------------
+═══════════════════════════════════════════════ */
+const GOOGLE_SHEET_API_URL = ''; // <-- MASUKKAN URL WEB APP GOOGLE APPS SCRIPT DI SINI
 
 /* ═══════════════════════════════════════════════
    STATE
@@ -612,6 +662,37 @@ function saveRecords(records) {
   } catch (e) {
     console.error('Gagal menyimpan rekod:', e);
     return false;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   GOOGLE SHEET SYNC (fire-and-forget, tidak sekat UI)
+═══════════════════════════════════════════════ */
+function syncRecordToSheet(record, action) {
+  if (!GOOGLE_SHEET_API_URL) return; // endpoint belum dikonfigurasikan — guna localStorage sahaja
+
+  const payload = {
+    id: record.id,
+    zikir: record.zikir,
+    jumlah: record.jumlah,
+    tarikh: record.tarikh,
+    createdAt: record.createdAt || '',
+    updatedAt: record.updatedAt || '',
+    action: action // 'create' | 'update' | 'delete'
+  };
+
+  try {
+    fetch(GOOGLE_SHEET_API_URL, {
+      method: 'POST',
+      mode: 'no-cors', // Apps Script tidak selalu hantar header CORS; ini elak fetch gagal
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).catch(function (err) {
+      console.warn('Segerak Google Sheet gagal (data selamat di localStorage):', err);
+    });
+  } catch (err) {
+    // Jangan biarkan sebarang ralat di sini menjejaskan aplikasi
+    console.warn('Ralat semasa cuba segerak Google Sheet:', err);
   }
 }
 
@@ -725,17 +806,6 @@ function renderHariIni() {
   const today = todayISO();
   $('today-date').textContent = formatDateMY(today);
   $('today-day').textContent = dayNameMY(today);
-
-  let html = '';
-  ZIKIR_ORDER.forEach(key => {
-    const cfg = ZIKIR_CONFIG[key];
-    if (today < cfg.startDate) {
-      html += `<div class="zk-chip dim">${escapeHtml(cfg.name)} &middot; Belum Bermula</div>`;
-    } else {
-      html += `<div class="zk-chip">${escapeHtml(cfg.name)} <b>+${fmt(cfg.dailyTarget)}</b></div>`;
-    }
-  });
-  $('today-chips').innerHTML = html;
 }
 
 function renderCalendar() {
@@ -795,7 +865,7 @@ function renderCalendar() {
         }
       });
       html += `
-        <div class="zk-cal-card${isToday ? ' is-today' : ''}">
+        <div class="zk-cal-card${isToday ? ' is-today' : ''}" id="cal-day-${iso}">
           <div class="zk-cal-date-row">
             <span class="zk-cal-date-num">${formatDateMY(iso)}</span>
             <span class="zk-cal-date-day">${dayNameMY(iso)}</span>
@@ -813,6 +883,7 @@ function renderDashboard() {
   renderSummaryCards();
   renderHariIni();
   renderCalendar();
+  updateScrollArrow();
 }
 
 /* ═══════════════════════════════════════════════
@@ -942,16 +1013,20 @@ function saveRecordFromForm() {
     if (rec) {
       rec.zikir = zikir; rec.jumlah = jumlah; rec.tarikh = tarikh;
       rec.updatedAt = new Date().toISOString();
+      saveRecords(state.records);
+      syncRecordToSheet(rec, 'update');
     }
-    saveRecords(state.records);
     closeModal($('modal-record'));
     toast('Rekod berjaya dikemaskini');
   } else {
-    state.records.push({
+    const newRec = {
       id: genId(), zikir, jumlah, tarikh,
-      createdAt: new Date().toISOString()
-    });
+      createdAt: new Date().toISOString(),
+      updatedAt: ''
+    };
+    state.records.push(newRec);
     saveRecords(state.records);
+    syncRecordToSheet(newRec, 'create');
     closeModal($('modal-record'));
     toast('Rekod berjaya disimpan');
   }
@@ -968,8 +1043,13 @@ function openDeleteModal(id) {
 
 function confirmDelete() {
   if (!state.deletingId) return;
+  const rec = state.records.find(r => r.id === state.deletingId);
   state.records = state.records.filter(r => r.id !== state.deletingId);
   saveRecords(state.records);
+  if (rec) {
+    rec.updatedAt = new Date().toISOString();
+    syncRecordToSheet(rec, 'delete');
+  }
   state.deletingId = null;
   closeModal($('modal-delete'));
   toast('Rekod telah dipadam');
@@ -987,6 +1067,43 @@ function toast(msg) {
   t.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+/* ═══════════════════════════════════════════════
+   SCROLL-TO-BOTTOM ARROW (Dashboard)
+═══════════════════════════════════════════════ */
+function updateScrollArrow() {
+  const btn = $('scroll-arrow');
+  const page = $('pg-dashboard');
+  if (!page.classList.contains('active')) {
+    btn.classList.remove('show');
+    return;
+  }
+  const distanceToBottom = page.scrollHeight - page.scrollTop - page.clientHeight;
+  const needsScroll = page.scrollHeight > page.clientHeight + 30;
+  btn.classList.toggle('show', needsScroll && distanceToBottom > 40);
+}
+
+function scrollDashboardToBottom() {
+  const page = $('pg-dashboard');
+  page.scrollTo({ top: page.scrollHeight, behavior: 'smooth' });
+}
+
+/* ═══════════════════════════════════════════════
+   "LIHAT" — SCROLL AUTO KE TARIKH HARI INI
+═══════════════════════════════════════════════ */
+function scrollToToday() {
+  const todayD = new Date();
+  state.viewYear = todayD.getFullYear();
+  state.viewMonth = todayD.getMonth();
+  renderCalendar();
+  requestAnimationFrame(() => {
+    const el = document.getElementById('cal-day-' + todayISO());
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    setTimeout(updateScrollArrow, 450);
+  });
 }
 
 /* ═══════════════════════════════════════════════
@@ -1014,6 +1131,11 @@ function switchTab(key) {
     t.page.classList.toggle('active', k === key);
   });
   $('fab-add').classList.toggle('show', key === 'rekod');
+  if (key === 'dashboard') {
+    setTimeout(updateScrollArrow, 60);
+  } else {
+    $('scroll-arrow').classList.remove('show');
+  }
 }
 
 /* ═══════════════════════════════════════════════
@@ -1050,12 +1172,19 @@ function bindEvents() {
     state.viewMonth--;
     if (state.viewMonth < 0) { state.viewMonth = 11; state.viewYear--; }
     renderCalendar();
+    setTimeout(updateScrollArrow, 60);
   });
   $('cal-next').addEventListener('click', () => {
     state.viewMonth++;
     if (state.viewMonth > 11) { state.viewMonth = 0; state.viewYear++; }
     renderCalendar();
+    setTimeout(updateScrollArrow, 60);
   });
+
+  $('today-view-btn').addEventListener('click', scrollToToday);
+  $('scroll-arrow').addEventListener('click', scrollDashboardToBottom);
+  $('pg-dashboard').addEventListener('scroll', updateScrollArrow);
+  window.addEventListener('resize', () => setTimeout(updateScrollArrow, 60));
 
   $('fab-add').addEventListener('click', () => openRecordModal(null));
   $('record-cancel').addEventListener('click', () => closeModal($('modal-record')));
