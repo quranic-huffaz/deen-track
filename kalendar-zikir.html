@@ -308,7 +308,7 @@ const EMAIL_KEY='kalendarZikir_userEmail';
 const EMAIL_SKIP_KEY='kalendarZikir_emailSkipped';
 
 // TUKAR URL INI kepada Web App URL Google Apps Script anda selepas deploy.
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzo74hblb4i5LxvEqC1Dla9C5DVMlhXT0eSkaE5CzT39erPBCQzZ9elORX3xUUNmHvP/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyfZdoR5Cz6X31oUCo7r5-sK9hyySmhZDP8nuYJidbm7LVeB8wCdC0rhWhE7wGvb7Bh/exec';
 
 let records=JSON.parse(localStorage.getItem(KEY)||'[]');
 let viewDate=new Date();
@@ -468,7 +468,7 @@ $('manualSyncBtn').onclick=()=>attemptFullSync();
    dipaparkan tanpa mengganggu penggunaan aplikasi.
    ========================================================= */
 function isSyncConfigured(){
- return GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.indexOf('https://script.google.com/macros/s/AKfycbzo74hblb4i5LxvEqC1Dla9C5DVMlhXT0eSkaE5CzT39erPBCQzZ9elORX3xUUNmHvP/exec')===-1;
+ return GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.indexOf('https://script.google.com/macros/s/AKfycbyfZdoR5Cz6X31oUCo7r5-sK9hyySmhZDP8nuYJidbm7LVeB8wCdC0rhWhE7wGvb7Bh/exec')===-1;
 }
 
 function updateSyncStatusUI(state){
