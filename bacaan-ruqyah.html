@@ -270,8 +270,13 @@
             </div>
 
             <div class="py-2">
-                <p class="text-slate-400 text-sm font-medium tracking-wide" id="reading-label">Al-Fatihah</p>
-                <h2 class="text-4xl font-serif mb-6 text-slate-100 leading-relaxed drop-shadow-lg" id="reading-arabic">الفَاتِحَة</h2>
+                <div class="relative inline-block mb-6">
+                    <button id="reading-label-btn" onclick="toggleReadingDropdown(event)" class="flex items-center gap-2 text-slate-100 text-3xl md:text-4xl font-serif font-semibold tracking-wide hover:text-emerald-300 transition mx-auto">
+                        <span id="reading-label">Al-Fatihah</span>
+                        <i class="fa-solid fa-chevron-down text-sm text-emerald-400"></i>
+                    </button>
+                    <div id="reading-dropdown" class="hidden absolute left-1/2 -translate-x-1/2 mt-2 w-64 max-w-[78vw] glass-card rounded-2xl p-2 z-40 text-left max-h-72 overflow-y-auto" style="background: rgba(5,26,20,0.98);"></div>
+                </div>
 
                 <div id="tasbih-wrap">
                     <div id="tasbih-center">
@@ -370,11 +375,15 @@
             <div class="space-y-4 text-left">
                 <div>
                     <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Nama Zikir</label>
-                    <input type="text" id="manual-name" placeholder="Contoh: Astaghfirullah" class="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500/50">
+                    <select id="manual-name" class="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500/50">
+                        <option value="" disabled selected>Pilih bacaan...</option>
+                    </select>
                 </div>
                 <div>
                     <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Jumlah</label>
-                    <input type="number" id="manual-count" min="1" placeholder="Contoh: 33" class="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500/50">
+                    <select id="manual-count" class="w-full bg-slate-800/50 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500/50">
+                        <option value="" disabled selected>Pilih jumlah...</option>
+                    </select>
                 </div>
                 <p id="manual-error" class="hidden text-red-400 text-xs font-semibold"></p>
                 <button onclick="saveManualRecord()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-2xl transition shadow-lg shadow-emerald-900/40 text-sm uppercase tracking-wide">
@@ -472,14 +481,14 @@
     <script>
         /* ============ URUTAN BACAAN RUQYAH ============ */
         const READINGS = [
-            { id: 'fatihah',   label: 'Al-Fatihah',              arabic: 'الفَاتِحَة' },
-            { id: 'kursi',     label: 'Ayat Kursi',               arabic: 'آيَة الكُرْسِي' },
-            { id: 'ikhlas',    label: 'Surah Al-Ikhlas',          arabic: 'سُورَة الإِخْلاص' },
-            { id: 'falaq',     label: 'Surah Al-Falaq',           arabic: 'سُورَة الفَلَق' },
-            { id: 'naas',      label: 'Surah An-Naas',            arabic: 'سُورَة النَّاس' },
-            { id: 'bismillah', label: 'Bismillah 5',              arabic: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ' },
-            { id: 'selawat',   label: 'Selawat',                  arabic: 'اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ' },
-            { id: 'yunus81',   label: 'Surah Yunus, Ayat 81',     arabic: 'سُورَة يُونُس، آية ٨١' },
+            { id: 'fatihah',   label: 'Al-Fatihah' },
+            { id: 'kursi',     label: 'Ayat Kursi' },
+            { id: 'ikhlas',    label: 'Surah Al-Ikhlas' },
+            { id: 'falaq',     label: 'Surah Al-Falaq' },
+            { id: 'naas',      label: 'Surah An-Naas' },
+            { id: 'bismillah', label: 'Bismillah 5' },
+            { id: 'selawat',   label: 'Selawat' },
+            { id: 'yunus81',   label: 'Surah Yunus, Ayat 81' },
         ];
         const TARGET_PER_READING = 10;
 
@@ -505,6 +514,8 @@
         window.onload = () => {
             readingIndex = 0;
             count = 0;
+            buildReadingDropdown();
+            populateManualSelects();
             updateReadingUI();
             updateDisplay();
             buildTasbih();
@@ -513,14 +524,97 @@
             initStudyBubbleLoop();
             initTapZone();
             initGlobalResetHold();
+            initReadingDropdownOutsideClick();
         };
 
         /* ============ BACAAN SEMASA UI ============ */
         function updateReadingUI() {
             const r = READINGS[readingIndex];
             document.getElementById('reading-label').innerText = r.label;
-            document.getElementById('reading-arabic').innerText = r.arabic;
             document.getElementById('display-reading-index').innerText = (readingIndex + 1);
+            updateReadingDropdownActiveState();
+        }
+
+        /* ============ DROPDOWN PILIHAN BACAAN ============ */
+        function buildReadingDropdown() {
+            const dd = document.getElementById('reading-dropdown');
+            dd.innerHTML = READINGS.map((r, idx) => `
+                <button type="button" onclick="selectReading(${idx})" data-idx="${idx}" class="reading-option w-full text-left px-4 py-3 rounded-xl text-sm font-semibold text-slate-200 hover:bg-emerald-500/10 transition flex items-center justify-between">
+                    <span>${r.label}</span>
+                    <i class="fa-solid fa-check text-emerald-400 text-xs hidden check-icon"></i>
+                </button>
+            `).join('');
+            updateReadingDropdownActiveState();
+        }
+
+        function updateReadingDropdownActiveState() {
+            const dd = document.getElementById('reading-dropdown');
+            if (!dd) return;
+            const options = dd.querySelectorAll('.reading-option');
+            options.forEach((opt, idx) => {
+                const check = opt.querySelector('.check-icon');
+                if (idx === readingIndex) {
+                    opt.classList.add('text-emerald-400');
+                    if (check) check.classList.remove('hidden');
+                } else {
+                    opt.classList.remove('text-emerald-400');
+                    if (check) check.classList.add('hidden');
+                }
+            });
+        }
+
+        function toggleReadingDropdown(e) {
+            if (e) e.stopPropagation();
+            document.getElementById('reading-dropdown').classList.toggle('hidden');
+        }
+
+        function closeReadingDropdown() {
+            document.getElementById('reading-dropdown').classList.add('hidden');
+        }
+
+        function isReadingDropdownOpen() {
+            return !document.getElementById('reading-dropdown').classList.contains('hidden');
+        }
+
+        function initReadingDropdownOutsideClick() {
+            document.addEventListener('click', function (e) {
+                if (!isReadingDropdownOpen()) return;
+                if (e.target.closest('#reading-dropdown') || e.target.closest('#reading-label-btn')) return;
+                closeReadingDropdown();
+            });
+        }
+
+        function selectReading(idx) {
+            readingIndex = idx;
+            count = 0;
+            isTransitioning = false;
+            tasbihRotation = 0;
+            applyTasbihRotation();
+            document.getElementById('tasbih-wrap').classList.remove('congrats-glow');
+            updateReadingUI();
+            updateBeadsProgress();
+            updateDisplay();
+            closeReadingDropdown();
+            showToast("BACAAN DITUKAR: " + READINGS[idx].label.toUpperCase());
+        }
+
+        /* ============ PILIHAN DROPDOWN REKOD MANUAL ============ */
+        function populateManualSelects() {
+            const nameSelect = document.getElementById('manual-name');
+            READINGS.forEach((r) => {
+                const opt = document.createElement('option');
+                opt.value = r.label;
+                opt.textContent = r.label;
+                nameSelect.appendChild(opt);
+            });
+
+            const countSelect = document.getElementById('manual-count');
+            for (let i = 1; i <= 10; i++) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = i;
+                countSelect.appendChild(opt);
+            }
         }
 
         function goToNextReading() {
@@ -619,6 +713,7 @@
 
         function increment() {
             if (isTransitioning) return;
+            if (isReadingDropdownOpen()) return;
             count++;
             tasbihRotation += BEAD_STEP_DEG;
             applyTasbihRotation();
@@ -810,8 +905,8 @@
 
         /* ============ REKOD MANUAL ============ */
         function openManualModal() {
-            document.getElementById('manual-name').value = '';
-            document.getElementById('manual-count').value = '';
+            document.getElementById('manual-name').selectedIndex = 0;
+            document.getElementById('manual-count').selectedIndex = 0;
             document.getElementById('manual-error').classList.add('hidden');
             document.getElementById('manual-modal').classList.remove('hidden');
         }
@@ -824,16 +919,16 @@
             const nameInput = document.getElementById('manual-name');
             const countInput = document.getElementById('manual-count');
             const errorEl = document.getElementById('manual-error');
-            const name = nameInput.value.trim();
+            const name = nameInput.value;
             const jumlah = parseInt(countInput.value);
 
             if (!name) {
-                errorEl.innerText = "Sila isi nama zikir.";
+                errorEl.innerText = "Sila pilih nama zikir.";
                 errorEl.classList.remove('hidden');
                 return;
             }
-            if (!countInput.value || isNaN(jumlah) || jumlah <= 0) {
-                errorEl.innerText = "Sila isi jumlah yang sah (nombor positif).";
+            if (!countInput.value || isNaN(jumlah) || jumlah < 1 || jumlah > 10) {
+                errorEl.innerText = "Sila pilih jumlah antara 1 hingga 10.";
                 errorEl.classList.remove('hidden');
                 return;
             }
