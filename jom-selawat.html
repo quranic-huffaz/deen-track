@@ -202,6 +202,42 @@
             width: 18%;
             pointer-events: none;
         }
+
+        /* LONG-PRESS RESET OVERLAY FEEDBACK */
+        #reset-hold-ring {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 90px;
+            height: 90px;
+            transform: translate(-50%, -50%) scale(0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 200;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+        }
+        #reset-hold-ring.show {
+            opacity: 1;
+        }
+        #reset-hold-ring svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        #reset-hold-ring circle {
+            fill: none;
+            stroke-width: 6;
+        }
+        #reset-hold-ring .ring-bg {
+            stroke: rgba(255,255,255,0.08);
+        }
+        #reset-hold-ring .ring-progress {
+            stroke: #ef4444;
+            stroke-linecap: round;
+            stroke-dasharray: 251.2;
+            stroke-dashoffset: 251.2;
+        }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
@@ -255,9 +291,6 @@
                 </div>
                 <button onclick="saveToHistory()" class="glass-card px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-white/5 transition">
                     <i class="fa-solid fa-bookmark text-blue-400 text-xs"></i> Simpan
-                </button>
-                <button id="reset-btn" class="glass-card px-4 py-2 rounded-xl text-sm text-slate-500" title="Tekan &amp; tahan 5 saat untuk reset">
-                    <i class="fa-solid fa-arrow-rotate-left"></i>
                 </button>
             </div>
         </div>
@@ -422,6 +455,13 @@
         <p id="toast-msg" class="text-xs font-bold text-blue-100 tracking-wide"></p>
     </div>
 
+    <div id="reset-hold-ring">
+        <svg viewBox="0 0 90 90">
+            <circle class="ring-bg" cx="45" cy="45" r="40"></circle>
+            <circle class="ring-progress" cx="45" cy="45" r="40"></circle>
+        </svg>
+    </div>
+
     <script>
         let count = 0;
         let historyData = JSON.parse(localStorage.getItem('selawatHistory')) || [];
@@ -434,9 +474,12 @@
         const BEAD_STEP_DEG = 360 / TOTAL_BEADS;
         let tasbihRotation = 0;
 
-        /* ============ LONG-PRESS RESET STATE ============ */
+        /* ============ LONG-PRESS RESET STATE (ANYWHERE ON SCREEN) ============ */
         let resetTimerId = null;
+        let resetIntervalId = null;
+        let resetActivePointerId = null;
         const RESET_HOLD_MS = 5000;
+        const RESET_RING_CIRCUMFERENCE = 251.2;
 
         window.onload = () => {
             count = 0;
@@ -446,7 +489,7 @@
             renderManualList();
             initStudyBubbleLoop();
             initTapZone();
-            initResetHold();
+            initGlobalResetHold();
         };
 
         /* ============ TASBIH VISUAL ============ */
@@ -533,34 +576,62 @@
             showToast("TARGET DIKEMASKINI: " + newTarget);
         }
 
-        /* ============ RESET (LONG PRESS 5 SAAT) ============ */
-        function initResetHold() {
-            const resetBtn = document.getElementById('reset-btn');
-            if (!resetBtn) return;
+        /* ============ RESET (LONG PRESS 5 SAAT, MANA-MANA SKRIN) ============ */
+        function initGlobalResetHold() {
+            const ring = document.getElementById('reset-hold-ring');
+            const ringProgress = ring.querySelector('.ring-progress');
 
-            resetBtn.addEventListener('pointerdown', function (e) {
-                e.preventDefault();
-                if (resetTimerId) return;
-                if (resetBtn.setPointerCapture && e.pointerId !== undefined) {
-                    try { resetBtn.setPointerCapture(e.pointerId); } catch (err) {}
-                }
+            document.addEventListener('pointerdown', function (e) {
+                // Elak berbilang jari/pointer memulakan hold berasingan
+                if (resetActivePointerId !== null) return;
+                resetActivePointerId = e.pointerId;
+
+                const startX = e.clientX;
+                const startY = e.clientY;
+
+                // Posisikan cincin maklum balas pada titik sentuhan
+                ring.style.left = startX + 'px';
+                ring.style.top = startY + 'px';
+                ring.style.transform = 'translate(-50%, -50%) scale(1)';
+                ringProgress.style.transition = 'none';
+                ringProgress.style.strokeDashoffset = RESET_RING_CIRCUMFERENCE;
+
+                requestAnimationFrame(() => {
+                    ring.classList.add('show');
+                    requestAnimationFrame(() => {
+                        ringProgress.style.transition = 'stroke-dashoffset ' + RESET_HOLD_MS + 'ms linear';
+                        ringProgress.style.strokeDashoffset = '0';
+                    });
+                });
+
                 resetTimerId = setTimeout(() => {
                     performReset();
-                    resetTimerId = null;
+                    endResetHold(ring, ringProgress);
                 }, RESET_HOLD_MS);
             });
 
-            const cancelHold = function () {
+            const cancelHold = function (e) {
+                if (e && e.pointerId !== undefined && e.pointerId !== resetActivePointerId) return;
                 if (resetTimerId) {
                     clearTimeout(resetTimerId);
                     resetTimerId = null;
                 }
+                endResetHold(ring, ringProgress);
             };
 
-            resetBtn.addEventListener('pointerup', cancelHold);
-            resetBtn.addEventListener('pointerleave', cancelHold);
-            resetBtn.addEventListener('pointercancel', cancelHold);
-            resetBtn.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+            document.addEventListener('pointerup', cancelHold);
+            document.addEventListener('pointercancel', cancelHold);
+            // Jika jari/pointer keluar dari tetingkap semasa menahan
+            document.addEventListener('pointerleave', function (e) {
+                if (e.target === document.documentElement) cancelHold(e);
+            });
+        }
+
+        function endResetHold(ring, ringProgress) {
+            resetActivePointerId = null;
+            ring.classList.remove('show');
+            ringProgress.style.transition = 'none';
+            ringProgress.style.strokeDashoffset = RESET_RING_CIRCUMFERENCE;
         }
 
         function performReset() {
@@ -569,7 +640,9 @@
             applyTasbihRotation();
             document.getElementById('tasbih-wrap').classList.remove('congrats-glow');
             updateDisplay();
-            if ("vibrate" in navigator) navigator.vibrate([60, 40, 60]);
+            // Getaran lebih kuat & lebih panjang berbanding tap biasa (40ms)
+            // supaya pengguna jelas bezakan antara tap dan reset.
+            if ("vibrate" in navigator) navigator.vibrate([250, 80, 250, 80, 400]);
             showToast("KIRAAN DIRESET");
         }
 
