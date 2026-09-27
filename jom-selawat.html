@@ -162,6 +162,16 @@
             margin: 0 auto;
             position: relative;
         }
+        #tasbih-beads {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-origin: 50% 50%;
+            transition: transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+            will-change: transform;
+        }
         .tasbih-bead {
             position: absolute;
             width: 9.5%;
@@ -222,7 +232,7 @@
             </div>
 
             <div class="py-2">
-                <p class="text-slate-400 text-sm font-medium tracking-wide italic mb-2">Jom Selawat?</p>
+                <p class="text-slate-400 text-sm font-medium tracking-wide italic mb-2">Dah Selawat?</p>
                 <h2 class="text-4xl font-serif mb-6 text-slate-100 leading-relaxed drop-shadow-lg">اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ</h2>
 
                 <div id="tasbih-wrap">
@@ -246,7 +256,7 @@
                 <button onclick="saveToHistory()" class="glass-card px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-white/5 transition">
                     <i class="fa-solid fa-bookmark text-blue-400 text-xs"></i> Simpan
                 </button>
-                <button onclick="resetCounter()" class="glass-card px-4 py-2 rounded-xl text-sm text-slate-500">
+                <button id="reset-btn" class="glass-card px-4 py-2 rounded-xl text-sm text-slate-500" title="Tekan &amp; tahan 5 saat untuk reset">
                     <i class="fa-solid fa-arrow-rotate-left"></i>
                 </button>
             </div>
@@ -419,6 +429,15 @@
         let selectedItems = new Set();
         let selectedManualItems = new Set();
 
+        /* ============ TASBIH ROTATION STATE ============ */
+        const TOTAL_BEADS = 33;
+        const BEAD_STEP_DEG = 360 / TOTAL_BEADS;
+        let tasbihRotation = 0;
+
+        /* ============ LONG-PRESS RESET STATE ============ */
+        let resetTimerId = null;
+        const RESET_HOLD_MS = 5000;
+
         window.onload = () => {
             count = 0;
             updateDisplay();
@@ -427,12 +446,13 @@
             renderManualList();
             initStudyBubbleLoop();
             initTapZone();
+            initResetHold();
         };
 
         /* ============ TASBIH VISUAL ============ */
         function buildTasbih() {
             const wrap = document.getElementById('tasbih-beads');
-            const total = 33;
+            const total = TOTAL_BEADS;
             const radius = 44; // percent of container
             wrap.innerHTML = '';
             for (let i = 0; i < total; i++) {
@@ -446,6 +466,11 @@
                 bead.style.top = y + '%';
                 wrap.appendChild(bead);
             }
+        }
+
+        function applyTasbihRotation() {
+            const beadsEl = document.getElementById('tasbih-beads');
+            beadsEl.style.transform = 'rotate(' + tasbihRotation + 'deg)';
         }
 
         /* ============ TAP ZONE (delegation, single count) ============ */
@@ -485,6 +510,8 @@
 
         function increment() {
             count++;
+            tasbihRotation += BEAD_STEP_DEG;
+            applyTasbihRotation();
             const targetText = document.getElementById('display-target').innerText;
             const target = parseInt(targetText) || 100;
             if ("vibrate" in navigator) navigator.vibrate(40);
@@ -506,12 +533,44 @@
             showToast("TARGET DIKEMASKINI: " + newTarget);
         }
 
-        function resetCounter() {
-            if(confirm("Kosongkan kiraan semasa?")) {
-                count = 0;
-                document.getElementById('tasbih-wrap').classList.remove('congrats-glow');
-                updateDisplay();
-            }
+        /* ============ RESET (LONG PRESS 5 SAAT) ============ */
+        function initResetHold() {
+            const resetBtn = document.getElementById('reset-btn');
+            if (!resetBtn) return;
+
+            resetBtn.addEventListener('pointerdown', function (e) {
+                e.preventDefault();
+                if (resetTimerId) return;
+                if (resetBtn.setPointerCapture && e.pointerId !== undefined) {
+                    try { resetBtn.setPointerCapture(e.pointerId); } catch (err) {}
+                }
+                resetTimerId = setTimeout(() => {
+                    performReset();
+                    resetTimerId = null;
+                }, RESET_HOLD_MS);
+            });
+
+            const cancelHold = function () {
+                if (resetTimerId) {
+                    clearTimeout(resetTimerId);
+                    resetTimerId = null;
+                }
+            };
+
+            resetBtn.addEventListener('pointerup', cancelHold);
+            resetBtn.addEventListener('pointerleave', cancelHold);
+            resetBtn.addEventListener('pointercancel', cancelHold);
+            resetBtn.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+        }
+
+        function performReset() {
+            count = 0;
+            tasbihRotation = 0;
+            applyTasbihRotation();
+            document.getElementById('tasbih-wrap').classList.remove('congrats-glow');
+            updateDisplay();
+            if ("vibrate" in navigator) navigator.vibrate([60, 40, 60]);
+            showToast("KIRAAN DIRESET");
         }
 
         function saveToHistory() {
